@@ -1,7 +1,11 @@
 import libcamera
 import ast
 
-def parse_dictionary_to_html_page(camera, parsed_controls='None', processed_controls='None'):
+def parse_dictionary_to_html_page(camera, parsed_controls={}, processed_controls={}):
+    if not parsed_controls:
+        parsed_controls = 'None'
+    if not processed_controls:
+        processed_controls = 'None'
     html =  """
             <!DOCTYPE html>
             <html lang="en">

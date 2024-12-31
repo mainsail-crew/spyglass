@@ -10,7 +10,6 @@ if TYPE_CHECKING:
 
 def do_GET(handler: 'StreamingHandler'):
     parsed_controls = get_url_params(handler.path)
-    parsed_controls = parsed_controls if parsed_controls else None
     processed_controls = process_controls(handler.picam2, parsed_controls)
     handler.picam2.set_controls(processed_controls)
     content = parse_dictionary_to_html_page(handler.picam2, parsed_controls, processed_controls).encode('utf-8')

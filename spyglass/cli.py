@@ -8,7 +8,7 @@ import re
 import sys
 import libcamera
 
-from spyglass import camera_options, logger
+from spyglass import camera_options, logger, AIORTC_AVAILABLE
 from spyglass.exif import option_to_exif_orientation
 from spyglass.__version__ import __version__
 from spyglass.camera import init_camera
@@ -19,6 +19,7 @@ MAX_HEIGHT = 1920
 
 
 def main(args=None):
+    global AIORTC_AVAILABLE
     """Entry point for hello cli.
 
     The setup_py entry_point wraps this in sys.exit already so this effectively
@@ -44,6 +45,8 @@ def main(args=None):
     controls = parsed_args.controls
     if parsed_args.controls_string:
         controls += [c.split('=') for c in parsed_args.controls_string.split(',')]
+
+    AIORTC_AVAILABLE = AIORTC_AVAILABLE and not parsed_args.deactivate_webrtc
 
     cam = init_camera(
         parsed_args.camera_num,
@@ -147,6 +150,8 @@ def get_parser():
                         help='Sets the URL for snapshots (single frame of stream)')
     parser.add_argument('-w', '--webrtc_url', type=str, default='/webrtc',
                         help='Sets the URL for the WebRTC stream')
+    parser.add_argument('--deactivate_webrtc', action='store_true',
+                        help='Deactivates WebRTC encoding (recommended on Pi5)')
     parser.add_argument('-af', '--autofocus', type=str, default='continuous', choices=['manual', 'continuous'],
                         help='Autofocus mode')
     parser.add_argument('-l', '--lensposition', type=float, default=0.0,

@@ -65,6 +65,7 @@ def main(args=None):
                                  parsed_args.port,
                                  parsed_args.stream_url,
                                  parsed_args.snapshot_url,
+                                 parsed_args.webrtc_url,
                                  parsed_args.orientation_exif)
     finally:
         cam.stop()
@@ -144,6 +145,8 @@ def get_parser():
                         help='Sets the URL for the mjpeg stream')
     parser.add_argument('-sn', '--snapshot_url', type=str, default='/snapshot',
                         help='Sets the URL for snapshots (single frame of stream)')
+    parser.add_argument('-w', '--webrtc_url', type=str, default='/webrtc',
+                        help='Sets the URL for the WebRTC stream')
     parser.add_argument('-af', '--autofocus', type=str, default='continuous', choices=['manual', 'continuous'],
                         help='Autofocus mode')
     parser.add_argument('-l', '--lensposition', type=float, default=0.0,

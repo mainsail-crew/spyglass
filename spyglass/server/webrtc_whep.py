@@ -21,7 +21,7 @@ def send_default_headers(response_code: int, handler: 'StreamingHandler'):
     handler.send_header('Access-Control-Allow-Origin', '*')
     handler.send_header('Access-Control-Allow-Credentials', False)
 
-def do_OPTIONS(handler: 'StreamingHandler'):
+def do_OPTIONS(handler: 'StreamingHandler', webrtc_url='/webrtc'):
     # Adapted from MediaMTX http_server.go
     # https://github.com/bluenviron/mediamtx/blob/main/internal/servers/webrtc/http_server.go#L173-L189
     def response_headers():
@@ -32,8 +32,8 @@ def do_OPTIONS(handler: 'StreamingHandler'):
     if handler.headers.get("Access-Control-Request-Method") != None:
         response_headers()
         handler.end_headers()
-    elif check_urls_match('/webrtc/whip', handler.path) \
-    or check_urls_match('/webrtc/whep', handler.path):
+    elif check_urls_match(f'{webrtc_url}/whip', handler.path) \
+    or check_urls_match(f'{webrtc_url}/whep', handler.path):
         response_headers()
         handler.send_header('Access-Control-Expose-Headers', 'Link')
         handler.headers['Link'] = get_ICE_servers()

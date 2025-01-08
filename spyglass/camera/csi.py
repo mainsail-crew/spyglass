@@ -13,6 +13,7 @@ class CSI(camera.Camera):
             port,
             stream_url='/stream',
             snapshot_url='/snapshot',
+            webrtc_url='/webrtc',
             orientation_exif=0):
 
         class StreamingOutput(io.BufferedIOBase):
@@ -41,6 +42,7 @@ class CSI(camera.Camera):
             get_frame,
             stream_url=stream_url,
             snapshot_url=snapshot_url,
+            webrtc_url=webrtc_url,
             orientation_exif=orientation_exif
         )
 

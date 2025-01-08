@@ -66,18 +66,21 @@ class Camera(ABC):
                     get_frame,
                     stream_url='/stream',
                     snapshot_url='/snapshot',
+                    webrtc_url='/webrtc',
                     orientation_exif=0):
         logger.info(f'Server listening on {bind_address}:{port}')
         logger.info(f'Streaming endpoint: {stream_url}')
         logger.info(f'Snapshot endpoint: {snapshot_url}')
+        logger.info(f'WebRTC endpoint: {webrtc_url}')
         logger.info(f'Controls endpoint: /controls')
-        logger.info(f'WebRTC endpoint: /webrtc')
         address = (bind_address, port)
         streaming_handler.picam2 = self.picam2
         streaming_handler.media_track = self.media_track
         streaming_handler.get_frame = get_frame
         streaming_handler.stream_url = stream_url
         streaming_handler.snapshot_url = snapshot_url
+        streaming_handler.webrtc_url = webrtc_url
+
         if orientation_exif > 0:
             streaming_handler.exif_header = create_exif_header(orientation_exif)
         else:
@@ -93,6 +96,7 @@ class Camera(ABC):
             port,
             stream_url='/stream',
             snapshot_url='/snapshot',
+            webrtc_url='/webrtc',
             orientation_exif=0):
         pass
 

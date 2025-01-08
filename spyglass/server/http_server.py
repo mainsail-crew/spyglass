@@ -33,7 +33,7 @@ class StreamingHandler(server.BaseHTTPRequestHandler):
 
     def do_OPTIONS(self):
         if self.check_webrtc():
-            webrtc_whep.do_OPTIONS(self)
+            webrtc_whep.do_OPTIONS(self, self.webrtc_url)
         else:
             self.send_error(codes.not_found)
 
@@ -53,7 +53,7 @@ class StreamingHandler(server.BaseHTTPRequestHandler):
         return check_urls_match(url, self.path, match_full_path)
     
     def check_webrtc(self):
-        return self.check_url('/webrtc', match_full_path=False)
+        return self.check_url(self.webrtc_url, match_full_path=False)
 
     def run_async_request(self, method):
         asyncio.run_coroutine_threadsafe(method(self), StreamingHandler.loop).result()

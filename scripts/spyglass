@@ -101,6 +101,7 @@ run_spyglass() {
     --fps "${FPS:-15}" \
     --stream_url "${STREAM_URL:-\/stream}" \
     --snapshot_url "${SNAPSHOT_URL:-\/snapshot}" \
+    --webrtc_url "${WEBRTC_URL:-\/webrtc}" \
     --autofocus "${AUTO_FOCUS:-continuous}" \
     --lensposition "${FOCAL_DIST:-0.0}" \
     --autofocusspeed "${AF_SPEED:-normal}" \

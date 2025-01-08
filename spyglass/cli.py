@@ -62,7 +62,7 @@ def main(args=None):
                   controls,
                   parsed_args.upsidedown,
                   parsed_args.flip_horizontal,
-                  parsed_args.flip_vertical,)
+                  parsed_args.flip_vertical)
     try:
         cam.start_and_run_server(parsed_args.bindaddress,
                                  parsed_args.port,

@@ -112,23 +112,23 @@ def get_ICE_servers():
     return None
 
 def parse_ice_candidates(sdp_message):
-        sdp_message = sdp_message.replace('\\r\\n', '\r\n')
+    sdp_message = sdp_message.replace('\\r\\n', '\r\n')
 
-        lines = sdp_message.splitlines()
+    lines = sdp_message.splitlines()
 
-        candidates = []
-        cand_str = 'a=candidate:'
-        mid_str = 'a=mid:'
-        mid = ''
-        for line in lines:
-            if line.startswith(mid_str):
-                mid = line[len(mid_str):]
-            elif line.startswith(cand_str):
-                candidate_str = line[len(cand_str):]
-                candidate = sdp.candidate_from_sdp(candidate_str)
-                candidate.sdpMid = mid
-                candidates.append(candidate)
-        return candidates
+    candidates = []
+    cand_str = 'a=candidate:'
+    mid_str = 'a=mid:'
+    mid = ''
+    for line in lines:
+        if line.startswith(mid_str):
+            mid = line[len(mid_str):]
+        elif line.startswith(cand_str):
+            candidate_str = line[len(cand_str):]
+            candidate = sdp.candidate_from_sdp(candidate_str)
+            candidate.sdpMid = mid
+            candidates.append(candidate)
+    return candidates
 
 import av
 

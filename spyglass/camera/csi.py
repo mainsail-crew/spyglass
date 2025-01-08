@@ -4,7 +4,7 @@ from picamera2.encoders import MJPEGEncoder, H264Encoder
 from picamera2.outputs import FileOutput
 from threading import Condition
 
-from spyglass import camera
+from spyglass import camera, AIORTC_AVAILABLE
 from spyglass.server.http_server import StreamingHandler
 
 class CSI(camera.Camera):
@@ -32,7 +32,8 @@ class CSI(camera.Camera):
                 return output.frame
 
         self.picam2.start_encoder(MJPEGEncoder(), FileOutput(output))
-        self.picam2.start_encoder(H264Encoder(), self.media_track)
+        if AIORTC_AVAILABLE:
+            self.picam2.start_encoder(H264Encoder(), self.media_track)
         self.picam2.start()
 
         self._run_server(

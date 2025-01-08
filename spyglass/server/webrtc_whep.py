@@ -2,9 +2,6 @@ import uuid
 import asyncio
 
 from requests import codes
-from aiortc import RTCSessionDescription, RTCPeerConnection, sdp
-from aiortc.rtcrtpsender import RTCRtpSender
-from aiortc.contrib.media import MediaRelay
 
 from spyglass.url_parsing import check_urls_match
 
@@ -13,8 +10,13 @@ from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from spyglass.server.http_server import StreamingHandler
 
-pcs: dict[uuid.UUID, RTCPeerConnection] = {}
-media_relay = MediaRelay()
+from spyglass import AIORTC_AVAILABLE
+if AIORTC_AVAILABLE:
+    from aiortc import RTCSessionDescription, RTCPeerConnection, sdp
+    from aiortc.rtcrtpsender import RTCRtpSender
+    from aiortc.contrib.media import MediaRelay
+    pcs: dict[uuid.UUID, RTCPeerConnection] = {}
+    media_relay = MediaRelay()
 
 def send_default_headers(response_code: int, handler: 'StreamingHandler'):
     handler.send_response(response_code)
@@ -130,9 +132,13 @@ def parse_ice_candidates(sdp_message):
             candidates.append(candidate)
     return candidates
 
-import av
 
-from aiortc import MediaStreamTrack
+if AIORTC_AVAILABLE:
+    import av
+    from aiortc import MediaStreamTrack
+else:
+    class MediaStreamTrack():
+        pass
 from collections import deque
 from fractions import Fraction
 from picamera2.outputs import Output

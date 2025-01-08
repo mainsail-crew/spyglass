@@ -7,6 +7,7 @@ import socketserver
 from http import server
 from requests import codes
 
+from spyglass import AIORTC_AVAILABLE
 from spyglass.server import jpeg, webrtc_whep, controls
 from spyglass.url_parsing import check_urls_match
 
@@ -53,7 +54,7 @@ class StreamingHandler(server.BaseHTTPRequestHandler):
         return check_urls_match(url, self.path, match_full_path)
     
     def check_webrtc(self):
-        return self.check_url(self.webrtc_url, match_full_path=False)
+        return AIORTC_AVAILABLE and self.check_url(self.webrtc_url, match_full_path=False)
 
     def run_async_request(self, method):
         asyncio.run_coroutine_threadsafe(method(self), StreamingHandler.loop).result()

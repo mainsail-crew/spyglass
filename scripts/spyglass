@@ -99,9 +99,9 @@ run_spyglass() {
     --port "${HTTP_PORT:-8080}" \
     --resolution "${RESOLUTION:-640x480}" \
     --fps "${FPS:-15}" \
-    --stream_url "${STREAM_URL:-\/stream}" \
-    --snapshot_url "${SNAPSHOT_URL:-\/snapshot}" \
-    --webrtc_url "${WEBRTC_URL:-\/webrtc}" \
+    --stream_url "${STREAM_URL:-/stream}" \
+    --snapshot_url "${SNAPSHOT_URL:-/snapshot}" \
+    --webrtc_url "${WEBRTC_URL:-/webrtc}" \
     --autofocus "${AUTO_FOCUS:-continuous}" \
     --lensposition "${FOCAL_DIST:-0.0}" \
     --autofocusspeed "${AF_SPEED:-normal}" \

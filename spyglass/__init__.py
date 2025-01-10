@@ -1,6 +1,6 @@
 """init py module."""
 import logging
-import importlib
+import importlib.util
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)

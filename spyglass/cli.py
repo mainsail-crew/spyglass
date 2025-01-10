@@ -46,7 +46,7 @@ def main(args=None):
     if parsed_args.controls_string:
         controls += [c.split('=') for c in parsed_args.controls_string.split(',')]
 
-    AIORTC_AVAILABLE = AIORTC_AVAILABLE and not parsed_args.deactivate_webrtc
+    AIORTC_AVAILABLE = AIORTC_AVAILABLE and not parsed_args.disable_webrtc
 
     cam = init_camera(
         parsed_args.camera_num,
@@ -150,8 +150,8 @@ def get_parser():
                         help='Sets the URL for snapshots (single frame of stream)')
     parser.add_argument('-w', '--webrtc_url', type=str, default='/webrtc',
                         help='Sets the URL for the WebRTC stream')
-    parser.add_argument('--deactivate_webrtc', action='store_true',
-                        help='Deactivates WebRTC encoding (recommended on Pi5)')
+    parser.add_argument('--disable_webrtc', action='store_true',
+                        help='Disables WebRTC encoding (recommended on Pi5)')
     parser.add_argument('-af', '--autofocus', type=str, default='continuous', choices=['manual', 'continuous'],
                         help='Autofocus mode')
     parser.add_argument('-l', '--lensposition', type=float, default=0.0,

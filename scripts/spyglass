@@ -93,10 +93,10 @@ run_spyglass() {
         bind_adress="0.0.0.0"
     fi
 
-    if [[ "${DEACTIVATE_WEBRTC:-false}" == "true" ]]; then
-        deactivate_webrtc="--deactivate_webrtc"
+    if [[ "${DISABLE_WEBRTC:-false}" == "true" ]]; then
+        disable_webrtc="--disable_webrtc"
     else
-        deactivate_webrtc=""
+        disable_webrtc=""
     fi
 
     "${PY_BIN}" "$(dirname "${BASE_SPY_PATH}")/run.py" \
@@ -108,7 +108,7 @@ run_spyglass() {
     --stream_url "${STREAM_URL:-/stream}" \
     --snapshot_url "${SNAPSHOT_URL:-/snapshot}" \
     --webrtc_url "${WEBRTC_URL:-/webrtc}" \
-    ${deactivate_webrtc} \
+    ${disable_webrtc} \
     --autofocus "${AUTO_FOCUS:-continuous}" \
     --lensposition "${FOCAL_DIST:-0.0}" \
     --autofocusspeed "${AF_SPEED:-normal}" \

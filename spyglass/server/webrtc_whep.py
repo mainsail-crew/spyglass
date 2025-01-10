@@ -10,8 +10,8 @@ from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from spyglass.server.http_server import StreamingHandler
 
-from spyglass import AIORTC_AVAILABLE
-if AIORTC_AVAILABLE:
+from spyglass import WEBRTC_ENABLED
+if WEBRTC_ENABLED:
     from aiortc import RTCSessionDescription, RTCPeerConnection, sdp
     from aiortc.rtcrtpsender import RTCRtpSender
     from aiortc.contrib.media import MediaRelay
@@ -133,7 +133,7 @@ def parse_ice_candidates(sdp_message):
     return candidates
 
 
-if AIORTC_AVAILABLE:
+if WEBRTC_ENABLED:
     import av
     from aiortc import MediaStreamTrack
 else:

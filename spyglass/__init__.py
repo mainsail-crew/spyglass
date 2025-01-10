@@ -6,6 +6,6 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 if importlib.util.find_spec("aiortc"):
-    AIORTC_AVAILABLE=True
+    WEBRTC_ENABLED=True
 else:
-    AIORTC_AVAILABLE=False
+    WEBRTC_ENABLED=False

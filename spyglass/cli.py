@@ -8,7 +8,7 @@ import re
 import sys
 import libcamera
 
-from spyglass import camera_options, logger, AIORTC_AVAILABLE
+from spyglass import camera_options, logger, WEBRTC_ENABLED
 from spyglass.exif import option_to_exif_orientation
 from spyglass.__version__ import __version__
 from spyglass.camera import init_camera
@@ -19,7 +19,7 @@ MAX_HEIGHT = 1920
 
 
 def main(args=None):
-    global AIORTC_AVAILABLE
+    global WEBRTC_ENABLED
     """Entry point for hello cli.
 
     The setup_py entry_point wraps this in sys.exit already so this effectively
@@ -46,7 +46,7 @@ def main(args=None):
     if parsed_args.controls_string:
         controls += [c.split('=') for c in parsed_args.controls_string.split(',')]
 
-    AIORTC_AVAILABLE = AIORTC_AVAILABLE and not parsed_args.disable_webrtc
+    WEBRTC_ENABLED = WEBRTC_ENABLED and not parsed_args.disable_webrtc
 
     cam = init_camera(
         parsed_args.camera_num,

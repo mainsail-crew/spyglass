@@ -4,7 +4,7 @@ import threading
 from abc import ABC, abstractmethod
 from picamera2 import Picamera2
 
-from spyglass import logger, AIORTC_AVAILABLE
+from spyglass import logger, WEBRTC_ENABLED
 from spyglass.exif import create_exif_header
 from spyglass.camera_options import process_controls
 from spyglass.server.http_server import StreamingServer, StreamingHandler
@@ -71,7 +71,7 @@ class Camera(ABC):
         logger.info(f'Server listening on {bind_address}:{port}')
         logger.info(f'Streaming endpoint: {stream_url}')
         logger.info(f'Snapshot endpoint: {snapshot_url}')
-        if AIORTC_AVAILABLE:
+        if WEBRTC_ENABLED:
             logger.info(f'WebRTC endpoint: {webrtc_url}')
         logger.info(f'Controls endpoint: /controls')
         address = (bind_address, port)

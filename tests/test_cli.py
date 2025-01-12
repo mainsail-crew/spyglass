@@ -28,6 +28,7 @@ def mock_libraries(mocker):
     mock_picamera2 = MagicMock()
     mock_picamera2_encoders = MagicMock()
     mock_picamera2_outputs = MagicMock()
+    mock_picamera2_outputs.Output = object
     mocker.patch.dict('sys.modules', {
         'libcamera': mock_libcamera,
         'picamera2': mock_picamera2,
@@ -191,6 +192,7 @@ def test_run_server_with_configuration_from_arguments(mock_init_camera, mock_run
         '-p', '1234',
         '-st', 'streaming-url',
         '-sn', 'snapshot-url',
+        '-w', 'webrtc-url',
         '-or', 'h'
     ])
     cam_instance = mock_init_camera.return_value
@@ -199,6 +201,7 @@ def test_run_server_with_configuration_from_arguments(mock_init_camera, mock_run
         1234,
         'streaming-url',
         'snapshot-url',
+        'webrtc-url',
         1
     )
 
@@ -223,6 +226,7 @@ def test_run_server_with_orientation(mock_init_camera, mock_run_server, input_va
         '-p', '1234',
         '-st', 'streaming-url',
         '-sn', 'snapshot-url',
+        '-w', 'webrtc-url',
         '-or', input_value
     ])
     cam_instance = mock_init_camera.return_value
@@ -231,5 +235,6 @@ def test_run_server_with_orientation(mock_init_camera, mock_run_server, input_va
         1234,
         'streaming-url',
         'snapshot-url',
+        'webrtc-url',
         expected_output
     )

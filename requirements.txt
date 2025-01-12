@@ -1,2 +1,2 @@
-setuptools~=72.1.0
 aiortc~=1.9.0
+setuptools~=75.1.0

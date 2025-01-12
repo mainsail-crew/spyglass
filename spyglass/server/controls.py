@@ -1,5 +1,4 @@
-from requests import codes
-
+from spyglass.server import requests_codes
 from spyglass.url_parsing import get_url_params
 from spyglass.camera_options import parse_dictionary_to_html_page, process_controls
 
@@ -13,7 +12,7 @@ def do_GET(handler: 'StreamingHandler'):
     processed_controls = process_controls(handler.picam2, parsed_controls)
     handler.picam2.set_controls(processed_controls)
     content = parse_dictionary_to_html_page(handler.picam2, parsed_controls, processed_controls).encode('utf-8')
-    handler.send_response(codes.ok)
+    handler.send_response(requests_codes.OK)
     handler.send_header('Content-Type', 'text/html')
     handler.send_header('Content-Length', len(content))
     handler.end_headers()

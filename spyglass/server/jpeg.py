@@ -1,6 +1,5 @@
-from requests import codes
-
 from spyglass import logger
+from spyglass.server import requests_codes
 
 # Used for type hinting
 from typing import TYPE_CHECKING
@@ -44,7 +43,7 @@ def send_snapshot(handler: 'StreamingHandler'):
             handler.client_address, str(e))
 
 def send_default_headers(handler: 'StreamingHandler'):
-    handler.send_response(codes.ok)
+    handler.send_response(requests_codes.OK)
     handler.send_header('Age', 0)
     handler.send_header('Cache-Control', 'no-cache, private')
     handler.send_header('Pragma', 'no-cache')

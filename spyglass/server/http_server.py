@@ -5,10 +5,9 @@ import asyncio
 import socketserver
 
 from http import server
-from requests import codes
 
 from spyglass import WEBRTC_ENABLED
-from spyglass.server import jpeg, webrtc_whep, controls
+from spyglass.server import jpeg, webrtc_whep, controls, requests_codes
 from spyglass.url_parsing import check_urls_match
 
 class StreamingServer(socketserver.ThreadingMixIn, server.HTTPServer):
@@ -30,25 +29,25 @@ class StreamingHandler(server.BaseHTTPRequestHandler):
         elif self.check_webrtc():
             pass
         else:
-            self.send_error(codes.not_found)
+            self.send_error(requests_codes.NOT_FOUND)
 
     def do_OPTIONS(self):
         if self.check_webrtc():
             webrtc_whep.do_OPTIONS(self, self.webrtc_url)
         else:
-            self.send_error(codes.not_found)
+            self.send_error(requests_codes.NOT_FOUND)
 
     def do_POST(self):
         if self.check_webrtc():
             self.run_async_request(webrtc_whep.do_POST_async)
         else:
-            self.send_error(codes.not_found)
+            self.send_error(requests_codes.NOT_FOUND)
 
     def do_PATCH(self):
         if self.check_webrtc():
             self.run_async_request(webrtc_whep.do_PATCH_async)
         else:
-            self.send_error(codes.not_found)
+            self.send_error(requests_codes.NOT_FOUND)
 
     def check_url(self, url, match_full_path=True):
         return check_urls_match(url, self.path, match_full_path)

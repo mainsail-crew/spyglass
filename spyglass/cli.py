@@ -11,7 +11,6 @@ import libcamera
 from spyglass import camera_options, logger, WEBRTC_ENABLED
 from spyglass.exif import option_to_exif_orientation
 from spyglass.__version__ import __version__
-from spyglass.camera import init_camera
 
 
 MAX_WIDTH = 1920
@@ -47,6 +46,9 @@ def main(args=None):
         controls += [c.split('=') for c in parsed_args.controls_string.split(',')]
 
     WEBRTC_ENABLED = WEBRTC_ENABLED and not parsed_args.disable_webrtc
+
+    # Has to be imported after WEBRTC_ENABLED got set correctly
+    from spyglass.camera import init_camera
 
     cam = init_camera(
         parsed_args.camera_num,

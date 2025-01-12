@@ -2,7 +2,7 @@ import uuid
 import asyncio
 
 from spyglass.url_parsing import check_urls_match
-from spyglass.server import requests_codes
+from http import HTTPStatus
 
 # Used for type hinting
 from typing import TYPE_CHECKING
@@ -26,7 +26,7 @@ def do_OPTIONS(handler: 'StreamingHandler', webrtc_url='/webrtc'):
     # Adapted from MediaMTX http_server.go
     # https://github.com/bluenviron/mediamtx/blob/main/internal/servers/webrtc/http_server.go#L173-L189
     def response_headers():
-        send_default_headers(requests_codes.NO_CONTENT, handler)
+        send_default_headers(HTTPStatus.NO_CONTENT, handler)
         handler.send_header('Access-Control-Allow-Methods', 'OPTIONS, GET, POST, PATCH, DELETE')
         handler.send_header('Access-Control-Allow-Headers', 'Authorization, Content-Type, If-Match')
 
@@ -44,7 +44,7 @@ async def do_POST_async(handler: 'StreamingHandler'):
     # Adapted from MediaMTX http_server.go
     # https://github.com/bluenviron/mediamtx/blob/main/internal/servers/webrtc/http_server.go#L191-L246
     if handler.headers.get("Content-Type") != "application/sdp":
-        handler.send_error(requests_codes.BAD)
+        handler.send_error(HTTPStatus.BAD_REQUEST)
         return
     content_length = int(handler.headers['Content-Length'])
     offer_text = handler.rfile.read(content_length).decode('utf-8')
@@ -76,7 +76,7 @@ async def do_POST_async(handler: 'StreamingHandler'):
     while pc.iceGatheringState != "complete":
         await asyncio.sleep(1)
 
-    send_default_headers(requests_codes.CREATED, handler)
+    send_default_headers(HTTPStatus.CREATED, handler)
 
     handler.send_header("Content-Type", "application/sdp")
     handler.send_header("ETag", "*")
@@ -95,7 +95,7 @@ async def do_PATCH_async(streaming_handler: 'StreamingHandler'):
     # https://github.com/bluenviron/mediamtx/blob/main/internal/servers/webrtc/http_server.go#L248-L287
     if len(streaming_handler.path.split('/')) < 3 \
     or streaming_handler.headers.get('Content-Type') != 'application/trickle-ice-sdpfrag':
-        send_default_headers(requests_codes.BAD, streaming_handler)
+        send_default_headers(HTTPStatus.BAD, streaming_handler)
         streaming_handler.end_headers()
         return
     content_length = int(streaming_handler.headers['Content-Length'])
@@ -106,7 +106,7 @@ async def do_PATCH_async(streaming_handler: 'StreamingHandler'):
     for candidate in candidates:
         await pc.addIceCandidate(candidate)
 
-    send_default_headers(requests_codes.NO_CONTENT, streaming_handler)
+    send_default_headers(HTTPStatus.NO_CONTENT, streaming_handler)
     streaming_handler.end_headers()
 
 def get_ICE_servers():

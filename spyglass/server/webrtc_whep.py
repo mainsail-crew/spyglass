@@ -15,6 +15,7 @@ if WEBRTC_ENABLED:
     from aiortc.rtcrtpsender import RTCRtpSender
     from aiortc.contrib.media import MediaRelay
     pcs: dict[uuid.UUID, RTCPeerConnection] = {}
+    max_connections = 20
     media_relay = MediaRelay()
 
 def send_default_headers(response_code: int, handler: 'StreamingHandler'):
@@ -46,6 +47,12 @@ async def do_POST_async(handler: 'StreamingHandler'):
     if handler.headers.get("Content-Type") != "application/sdp":
         handler.send_error(HTTPStatus.BAD_REQUEST)
         return
+
+    # Limit simultanous clients to save resources
+    if len(pcs) >= max_connections:
+        handler.send_error(HTTPStatus.TOO_MANY_REQUESTS, message="Too many clients connected")
+        return
+
     content_length = int(handler.headers['Content-Length'])
     offer_text = handler.rfile.read(content_length).decode('utf-8')
     offer = RTCSessionDescription(sdp=offer_text, type='offer')

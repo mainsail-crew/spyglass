@@ -28,7 +28,7 @@ def mock_libraries(mocker):
     mock_picamera2 = MagicMock()
     mock_picamera2_encoders = MagicMock()
     mock_picamera2_outputs = MagicMock()
-    mock_picamera2_outputs.Output = object
+    mock_picamera2_outputs.Output = MagicMock
     mocker.patch.dict('sys.modules', {
         'libcamera': mock_libcamera,
         'picamera2': mock_picamera2,

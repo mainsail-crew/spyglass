@@ -46,18 +46,20 @@ On startup the following arguments are supported:
 | `-f`, `--fps`                 | Framerate in frames per second (fps).                                                                                              | `15`         |
 | `-st`, `--stream_url`         | Sets the URL for the mjpeg stream.                                                                                                 | `/stream`    |
 | `-sn`, `--snapshot_url`       | Sets the URL for snapshots (single frame of stream).                                                                               | `/snapshot`  |
+| `-w`, `--webrtc_url`          | Sets the URL for WebRTC (H264 compressed stream).                                                                                  | `/webrtc`    |
 | `-af`, `--autofocus`          | Autofocus mode. Supported modes: `manual`, `continuous`.                                                                           | `continuous` |
 | `-l`, `--lensposition`        | Set focal distance. 0 for infinite focus, 0.5 for approximate 50cm. Only used with Autofocus manual.                               | `0.0`        |
 | `-s`, `--autofocusspeed`      | Autofocus speed. Supported values: `normal`, `fast`. Only used with Autofocus continuous                                           | `normal`     |
-| `-ud`, `--upsidedown`         | Rotate the image by 180° (see below)                                                                                               |              |
-| `-fh`, `--flip_horizontal`    | Mirror the image horizontally (see below)                                                                                          |              |
-| `-fv`, `--flip_vertical`      | Mirror the image vertically (see below)                                                                                            |              |
-| `-or`, `--orientation_exif`   | Set the image orientation using an EXIF header (see below)                                                                         |              |
+| `-ud`, `--upsidedown`         | Rotate the image by 180° (see [below](#image-orientation))                                                                         |              |
+| `-fh`, `--flip_horizontal`    | Mirror the image horizontally (see [below](#image-orientation))                                                                    |              |
+| `-fv`, `--flip_vertical`      | Mirror the image vertically (see [below](#image-orientation))                                                                      |              |
+| `-or`, `--orientation_exif`   | Set the image orientation using an EXIF header (see [below](#image-orientation))                                                   |              |
 | `-c`, `--controls`            | Define camera controls to start spyglass with. Can be used multiple times. This argument expects the format \<control\>=\<value\>. |              |
-| `--list-controls`             | List all available libcamera controls onto the console. Those can be used with `--controls`                                        |              |
 | `-tf`, `--tuning_filter`      | Set a tuning filter file name.                                                                                                     |              |
 | `-tfd`, `--tuning_filter_dir` | Set the directory to look for tuning filters.                                                                                      |              |
 | `-n`, `--camera_num`          | Camera number to be used. All cameras with their number can be shown with `libcamera-hello`.                                       | `0`          |
+| `--disable_webrtc`            | Disables WebRTC encoding (recommended on Pi5).                                                                                     |              |
+| `--list-controls`             | List all available libcamera controls onto the console. Those can be used with `--controls`                                        |              |
 
 Starting the server without any argument is the same as
 
@@ -122,6 +124,14 @@ If you want to use Spyglass as a webcam source for [Mainsail]() add a webcam wit
 -   URL Stream: `/webcam/stream`
 -   URL Snapshot: `/webcam/snapshot`
 -   Service: `V4L-MJPEG`
+
+Alternatively you can use WebRTC. This will take less network bandwidth and might help to fix low fps:
+
+-   URL Stream: `/webcam/webrtc`
+-   URL Snapshot: `/webcam/snapshot`
+-   Service: `WebRTC (MediaMTX)`
+
+WebRTC needs [aiortc](https://github.com/aiortc/aiortc) installed. This gets automatically installed with `make install` for further instructions, please see the [install](#install) chapter below.
 
 ## Install as application
 

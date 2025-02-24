@@ -14,7 +14,7 @@ set -Eeou pipefail
 
 ### Global Variables
 BASE_SPY_PATH="$(dirname "$(readlink -f "${0}")")"
-PY_BIN="$(command -v python)"
+PY_BIN="$(. .venv/bin/activate && command -v python)"
 SPYGLASS_CFG="${HOME}/printer_data/config/spyglass.conf"
 
 ### Helper Messages
@@ -93,14 +93,22 @@ run_spyglass() {
         bind_adress="0.0.0.0"
     fi
 
+    if [[ "${DISABLE_WEBRTC:-false}" == "true" ]]; then
+        disable_webrtc="--disable_webrtc"
+    else
+        disable_webrtc=""
+    fi
+
     "${PY_BIN}" "$(dirname "${BASE_SPY_PATH}")/run.py" \
     --camera_num "${CAMERA_NUM:-0}" \
     --bindaddress "${bind_adress}" \
     --port "${HTTP_PORT:-8080}" \
     --resolution "${RESOLUTION:-640x480}" \
     --fps "${FPS:-15}" \
-    --stream_url "${STREAM_URL:-\/stream}" \
-    --snapshot_url "${SNAPSHOT_URL:-\/snapshot}" \
+    --stream_url "${STREAM_URL:-/stream}" \
+    --snapshot_url "${SNAPSHOT_URL:-/snapshot}" \
+    --webrtc_url "${WEBRTC_URL:-/webrtc}" \
+    ${disable_webrtc} \
     --autofocus "${AUTO_FOCUS:-continuous}" \
     --lensposition "${FOCAL_DIST:-0.0}" \
     --autofocusspeed "${AF_SPEED:-normal}" \

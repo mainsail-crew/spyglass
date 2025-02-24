@@ -8,10 +8,9 @@ import re
 import sys
 import libcamera
 
-from spyglass import camera_options, logger
+from spyglass import camera_options, logger, WEBRTC_ENABLED
 from spyglass.exif import option_to_exif_orientation
 from spyglass.__version__ import __version__
-from spyglass.camera import init_camera
 
 
 MAX_WIDTH = 1920
@@ -19,6 +18,7 @@ MAX_HEIGHT = 1920
 
 
 def main(args=None):
+    global WEBRTC_ENABLED
     """Entry point for hello cli.
 
     The setup_py entry_point wraps this in sys.exit already so this effectively
@@ -45,6 +45,11 @@ def main(args=None):
     if parsed_args.controls_string:
         controls += [c.split('=') for c in parsed_args.controls_string.split(',')]
 
+    WEBRTC_ENABLED = WEBRTC_ENABLED and not parsed_args.disable_webrtc
+
+    # Has to be imported after WEBRTC_ENABLED got set correctly
+    from spyglass.camera import init_camera
+
     cam = init_camera(
         parsed_args.camera_num,
         parsed_args.tuning_filter,
@@ -59,12 +64,13 @@ def main(args=None):
                   controls,
                   parsed_args.upsidedown,
                   parsed_args.flip_horizontal,
-                  parsed_args.flip_vertical,)
+                  parsed_args.flip_vertical)
     try:
         cam.start_and_run_server(parsed_args.bindaddress,
                                  parsed_args.port,
                                  parsed_args.stream_url,
                                  parsed_args.snapshot_url,
+                                 parsed_args.webrtc_url,
                                  parsed_args.orientation_exif)
     finally:
         cam.stop()
@@ -144,6 +150,10 @@ def get_parser():
                         help='Sets the URL for the mjpeg stream')
     parser.add_argument('-sn', '--snapshot_url', type=str, default='/snapshot',
                         help='Sets the URL for snapshots (single frame of stream)')
+    parser.add_argument('-w', '--webrtc_url', type=str, default='/webrtc',
+                        help='Sets the URL for the WebRTC stream')
+    parser.add_argument('--disable_webrtc', action='store_true',
+                        help='Disables WebRTC encoding (recommended on Pi5)')
     parser.add_argument('-af', '--autofocus', type=str, default='continuous', choices=['manual', 'continuous'],
                         help='Autofocus mode')
     parser.add_argument('-l', '--lensposition', type=float, default=0.0,
@@ -158,7 +168,7 @@ def get_parser():
     parser.add_argument('-fv', '--flip_vertical', action='store_true',
                         help='Mirror the image vertically (sensor level)')
     parser.add_argument('-or', '--orientation_exif', type=orientation_type, default='h',
-                        help='Set the image orientation using an EXIF header:\n'
+                        help='Set the image orientation using an EXIF header. This does not work with WebRTC:\n'
                              '  h      - Horizontal (normal)\n'
                              '  mh     - Mirror horizontal\n'
                              '  r180   - Rotate 180\n'

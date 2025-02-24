@@ -18,7 +18,14 @@ all:
 	$(MAKE) help
 
 install: ## Install Spyglass as service
+	@if [ "$$(id -u)" -eq 0 ]; then \
+		echo "Please run without sudo/not as root"; \
+		exit 1; \
+	fi
 	@mkdir -p $(CONF_PATH)
+	@printf "\nInstall virtual environment ...\n"
+	@python -m venv --system-site-packages .venv
+	@. .venv/bin/activate && pip install -r requirements.txt
 	@printf "\nCopying systemd service file ...\n"
 	@sudo cp -f "${PWD}/resources/spyglass.service" $(SYSTEMD)
 	@sudo sed -i "s/%USER%/$(USER)/g" $(SYSTEMD)/spyglass.service

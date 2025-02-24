@@ -28,6 +28,7 @@ def mock_libraries(mocker):
     mock_picamera2 = MagicMock()
     mock_picamera2_encoders = MagicMock()
     mock_picamera2_outputs = MagicMock()
+    mock_picamera2_outputs.Output = MagicMock
     mocker.patch.dict('sys.modules', {
         'libcamera': mock_libcamera,
         'picamera2': mock_picamera2,
@@ -80,19 +81,16 @@ def test_parse_tuning_filter_dir():
 @patch("spyglass.camera.init_camera")
 def test_init_camera_with_defaults(mock_spyglass_camera,):
     from spyglass import cli
-    import spyglass.camera
     cli.main(args=[])
-    spyglass.camera.init_camera.assert_called_once_with(
+    mock_spyglass_camera.assert_called_once_with(
         DEFAULT_CAMERA_NUM,
         DEFAULT_TUNING_FILTER,
         DEFAULT_TUNING_FILTER_DIR
     )
 
-@patch("spyglass.camera.camera.Camera.configure")
 @patch("spyglass.camera.init_camera")
-def test_configure_with_defaults(mock_init_camera, mock_configure):
+def test_configure_with_defaults(mock_init_camera):
     from spyglass import cli
-
     cli.main(args=[])
     cam_instance = mock_init_camera.return_value
     cam_instance.configure.assert_called_once_with(
@@ -108,11 +106,9 @@ def test_configure_with_defaults(mock_init_camera, mock_configure):
         DEFAULT_FLIP_VERTICALLY
     )
 
-@patch("spyglass.camera.camera.Camera.configure")
 @patch("spyglass.camera.init_camera")
-def test_configure_with_parameters(mock_init_camera, mock_configure):
+def test_configure_with_parameters(mock_init_camera):
     from spyglass import cli
-
     cli.main(args=[
         '-n', '1',
         '-tf', 'test',
@@ -157,11 +153,9 @@ def test_raise_error_when_height_greater_than_maximum():
         ])
 
 
-@patch("spyglass.camera.camera.Camera.configure")
 @patch("spyglass.camera.init_camera")
-def test_configure_camera_af_continuous_speed_fast(mock_init_camera, mock_configure):
+def test_configure_camera_af_continuous_speed_fast(mock_init_camera):
     from spyglass import cli
-
     cli.main(args=[
         '-af', 'continuous',
         '-s', 'fast'
@@ -181,16 +175,15 @@ def test_configure_camera_af_continuous_speed_fast(mock_init_camera, mock_config
     )
 
 
-@patch("spyglass.camera.csi.CSI.start_and_run_server")
 @patch("spyglass.camera.init_camera")
-def test_run_server_with_configuration_from_arguments(mock_init_camera, mock_run_server):
+def test_run_server_with_configuration_from_arguments(mock_init_camera):
     from spyglass import cli
-
     cli.main(args=[
         '-b', '1.2.3.4',
         '-p', '1234',
         '-st', 'streaming-url',
         '-sn', 'snapshot-url',
+        '-w', 'webrtc-url',
         '-or', 'h'
     ])
     cam_instance = mock_init_camera.return_value
@@ -199,11 +192,11 @@ def test_run_server_with_configuration_from_arguments(mock_init_camera, mock_run
         1234,
         'streaming-url',
         'snapshot-url',
+        'webrtc-url',
         1
     )
 
 
-@patch("spyglass.camera.csi.CSI.start_and_run_server")
 @patch("spyglass.camera.init_camera")
 @pytest.mark.parametrize("input_value, expected_output", [
     ('h', 1),
@@ -215,14 +208,14 @@ def test_run_server_with_configuration_from_arguments(mock_init_camera, mock_run
     ('mhr90', 7),
     ('r270', 8),
 ])
-def test_run_server_with_orientation(mock_init_camera, mock_run_server, input_value, expected_output):
+def test_run_server_with_orientation(mock_init_camera, input_value, expected_output):
     from spyglass import cli
-    import spyglass.server
     cli.main(args=[
         '-b', '1.2.3.4',
         '-p', '1234',
         '-st', 'streaming-url',
         '-sn', 'snapshot-url',
+        '-w', 'webrtc-url',
         '-or', input_value
     ])
     cam_instance = mock_init_camera.return_value
@@ -231,5 +224,6 @@ def test_run_server_with_orientation(mock_init_camera, mock_run_server, input_va
         1234,
         'streaming-url',
         'snapshot-url',
+        'webrtc-url',
         expected_output
     )

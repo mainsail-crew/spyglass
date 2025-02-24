@@ -13,7 +13,7 @@ mock_use_standalone_module = true
 
 [tool.commitizen]
 name = "cz_conventional_commits"
-version = "0.15.0"
+version = "0.16.0"
 tag_format = "v$version"
 version_files = [
     "spyglass/__version__.py",

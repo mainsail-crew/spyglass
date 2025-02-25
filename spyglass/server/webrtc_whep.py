@@ -158,7 +158,7 @@ class PicameraStreamTrack(MediaStreamTrack, Output):
         asyncio.set_event_loop(StreamingHandler.loop)
         self.condition = asyncio.Condition()
 
-    def outputframe(self, frame, keyframe=True, timestamp=None):
+    def outputframe(self, frame, keyframe=True, timestamp=None, packet=None, audio=False):
         from spyglass.server.http_server import StreamingHandler
         asyncio.run_coroutine_threadsafe(self.put_frame(frame, keyframe, timestamp), StreamingHandler.loop)
 

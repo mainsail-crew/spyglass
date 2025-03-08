@@ -38,28 +38,29 @@ This will start the server with the following default configuration:
 
 On startup the following arguments are supported:
 
-| Argument                      | Description                                                                                                                        | Default      |
-|-------------------------------|------------------------------------------------------------------------------------------------------------------------------------|--------------|
-| `-b`, `--bindaddress`         | Address where the server will listen for new incoming connections.                                                                 | `0.0.0.0`    |
-| `-p`, `--port`                | Port where the server will listen for new incoming connections.                                                                    | `8080`       |
-| `-r`, `--resolution`          | Resolution of the captured frames. This argument expects the format \<width\>x\<height\>                                           | `640x480`    |
-| `-f`, `--fps`                 | Framerate in frames per second (fps).                                                                                              | `15`         |
-| `-st`, `--stream_url`         | Sets the URL for the mjpeg stream.                                                                                                 | `/stream`    |
-| `-sn`, `--snapshot_url`       | Sets the URL for snapshots (single frame of stream).                                                                               | `/snapshot`  |
-| `-w`, `--webrtc_url`          | Sets the URL for WebRTC (H264 compressed stream).                                                                                  | `/webrtc`    |
-| `-af`, `--autofocus`          | Autofocus mode. Supported modes: `manual`, `continuous`.                                                                           | `continuous` |
-| `-l`, `--lensposition`        | Set focal distance. 0 for infinite focus, 0.5 for approximate 50cm. Only used with Autofocus manual.                               | `0.0`        |
-| `-s`, `--autofocusspeed`      | Autofocus speed. Supported values: `normal`, `fast`. Only used with Autofocus continuous                                           | `normal`     |
-| `-ud`, `--upsidedown`         | Rotate the image by 180° (see [below](#image-orientation))                                                                         |              |
-| `-fh`, `--flip_horizontal`    | Mirror the image horizontally (see [below](#image-orientation))                                                                    |              |
-| `-fv`, `--flip_vertical`      | Mirror the image vertically (see [below](#image-orientation))                                                                      |              |
-| `-or`, `--orientation_exif`   | Set the image orientation using an EXIF header (see [below](#image-orientation))                                                   |              |
-| `-c`, `--controls`            | Define camera controls to start spyglass with. Can be used multiple times. This argument expects the format \<control\>=\<value\>. |              |
-| `-tf`, `--tuning_filter`      | Set a tuning filter file name.                                                                                                     |              |
-| `-tfd`, `--tuning_filter_dir` | Set the directory to look for tuning filters.                                                                                      |              |
-| `-n`, `--camera_num`          | Camera number to be used. All cameras with their number can be shown with `libcamera-hello`.                                       | `0`          |
-| `--disable_webrtc`            | Disables WebRTC encoding (recommended on Pi5).                                                                                     |              |
-| `--list-controls`             | List all available libcamera controls onto the console. Those can be used with `--controls`                                        |              |
+| Argument                       | Description                                                                                                                        | Default      |
+|--------------------------------|------------------------------------------------------------------------------------------------------------------------------------|--------------|
+| `-b`, `--bindaddress`          | Address where the server will listen for new incoming connections.                                                                 | `0.0.0.0`    |
+| `-p`, `--port`                 | Port where the server will listen for new incoming connections.                                                                    | `8080`       |
+| `-r`, `--resolution`           | Resolution of the captured frames. This argument expects the format \<width\>x\<height\>                                           | `640x480`    |
+| `-f`, `--fps`                  | Framerate in frames per second (fps).                                                                                              | `15`         |
+| `-st`, `--stream_url`          | Sets the URL for the mjpeg stream.                                                                                                 | `/stream`    |
+| `-sn`, `--snapshot_url`        | Sets the URL for snapshots (single frame of stream).                                                                               | `/snapshot`  |
+| `-w`, `--webrtc_url`           | Sets the URL for WebRTC (H264 compressed stream).                                                                                  | `/webrtc`    |
+| `-af`, `--autofocus`           | Autofocus mode. Supported modes: `manual`, `continuous`.                                                                           | `continuous` |
+| `-l`, `--lensposition`         | Set focal distance. 0 for infinite focus, 0.5 for approximate 50cm. Only used with Autofocus manual.                               | `0.0`        |
+| `-s`, `--autofocusspeed`       | Autofocus speed. Supported values: `normal`, `fast`. Only used with Autofocus continuous                                           | `normal`     |
+| `-ud`, `--upsidedown`          | Rotate the image by 180° (see [below](#image-orientation))                                                                         |              |
+| `-fh`, `--flip_horizontal`     | Mirror the image horizontally (see [below](#image-orientation))                                                                    |              |
+| `-fv`, `--flip_vertical`       | Mirror the image vertically (see [below](#image-orientation))                                                                      |              |
+| `-or`, `--orientation_exif`    | Set the image orientation using an EXIF header (see [below](#image-orientation))                                                   |              |
+| `-c`, `--controls`             | Define camera controls to start spyglass with. Can be used multiple times. This argument expects the format \<control\>=\<value\>. |              |
+| `-tf`, `--tuning_filter`       | Set a tuning filter file name.                                                                                                     |              |
+| `-tfd`, `--tuning_filter_dir`  | Set the directory to look for tuning filters.                                                                                      |              |
+| `-n`, `--camera_num`           | Camera number to be used. All cameras with their number can be shown with `libcamera-hello`.                                       | `0`          |
+| `-sw`, `--use_sw_jpg_encoding` | Use software encoding for JPEG and MJPG (recommended on Pi5).                                                                      |              |
+| `--disable_webrtc`             | Disables WebRTC encoding (recommended on Pi5).                                                                                     |              |
+| `--list-controls`              | List all available libcamera controls onto the console. Those can be used with `--controls`                                        |              |
 
 Starting the server without any argument is the same as
 

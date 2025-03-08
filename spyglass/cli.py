@@ -71,7 +71,8 @@ def main(args=None):
                                  parsed_args.stream_url,
                                  parsed_args.snapshot_url,
                                  parsed_args.webrtc_url,
-                                 parsed_args.orientation_exif)
+                                 parsed_args.orientation_exif,
+                                 parsed_args.use_sw_jpg_encoding)
     finally:
         cam.stop()
 
@@ -147,9 +148,11 @@ def get_parser():
                         help='Resolution of the images width x height. Maximum is 1920x1920.')
     parser.add_argument('-f', '--fps', type=int, default=15, help='Frames per second to capture')
     parser.add_argument('-st', '--stream_url', type=str, default='/stream',
-                        help='Sets the URL for the mjpeg stream')
+                        help='Sets the URL for the MJPG stream')
     parser.add_argument('-sn', '--snapshot_url', type=str, default='/snapshot',
                         help='Sets the URL for snapshots (single frame of stream)')
+    parser.add_argument('-sw', '--use_sw_jpg_encoding', action='store_true',
+                        help='Use software encoding for JPEG and MJPG (recommended on Pi5)')
     parser.add_argument('-w', '--webrtc_url', type=str, default='/webrtc',
                         help='Sets the URL for the WebRTC stream')
     parser.add_argument('--disable_webrtc', action='store_true',

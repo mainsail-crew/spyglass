@@ -8,7 +8,9 @@ class USB(camera.Camera):
             stream_url='/stream',
             snapshot_url='/snapshot',
             webrtc_url='/webrtc',
-            orientation_exif=0):
+            orientation_exif=0,
+            # use_sw_jpg_encoding is not used for USB cameras
+            use_sw_jpg_encoding=False):
         def get_frame(inner_self):
             #TODO: Cuts framerate in 1/n with n streams open, add some kind of buffer
             return self.picam2.capture_buffer()

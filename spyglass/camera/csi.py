@@ -14,8 +14,10 @@ class CSI(camera.Camera):
             stream_url='/stream',
             snapshot_url='/snapshot',
             webrtc_url='/webrtc',
-            orientation_exif=0):
-
+            orientation_exif=0,
+            use_sw_jpg_encoding=False):
+        if use_sw_jpg_encoding:
+            from picamera2.encoders import JpegEncoder as MJPEGEncoder
         class StreamingOutput(io.BufferedIOBase):
             def __init__(self):
                 self.frame = None

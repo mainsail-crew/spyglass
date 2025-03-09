@@ -8,7 +8,7 @@ import re
 import sys
 import libcamera
 
-from spyglass import camera_options, logger, WEBRTC_ENABLED
+from spyglass import camera_options, logger, WEBRTC_ENABLED, set_webrtc_enabled
 from spyglass.exif import option_to_exif_orientation
 from spyglass.__version__ import __version__
 
@@ -45,7 +45,7 @@ def main(args=None):
     if parsed_args.controls_string:
         controls += [c.split('=') for c in parsed_args.controls_string.split(',')]
 
-    WEBRTC_ENABLED = WEBRTC_ENABLED and not parsed_args.disable_webrtc
+    set_webrtc_enabled(WEBRTC_ENABLED and not parsed_args.disable_webrtc)
 
     # Has to be imported after WEBRTC_ENABLED got set correctly
     from spyglass.camera import init_camera

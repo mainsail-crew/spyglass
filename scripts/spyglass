@@ -93,6 +93,12 @@ run_spyglass() {
         bind_adress="0.0.0.0"
     fi
 
+    if [[ "${USE_SW_JPG_ENCODING:-false}" == "true" ]]; then
+        use_sw_jpg_encoding="--use_sw_jpg_encoding"
+    else
+        use_sw_jpg_encoding=""
+    fi
+
     if [[ "${DISABLE_WEBRTC:-false}" == "true" ]]; then
         disable_webrtc="--disable_webrtc"
     else
@@ -107,6 +113,7 @@ run_spyglass() {
     --fps "${FPS:-15}" \
     --stream_url "${STREAM_URL:-/stream}" \
     --snapshot_url "${SNAPSHOT_URL:-/snapshot}" \
+    ${use_sw_jpg_encoding} \
     --webrtc_url "${WEBRTC_URL:-/webrtc}" \
     ${disable_webrtc} \
     --autofocus "${AUTO_FOCUS:-continuous}" \

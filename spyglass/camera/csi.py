@@ -1,6 +1,5 @@
 import io
 
-from picamera2.encoders import MJPEGEncoder, H264Encoder
 from picamera2.outputs import FileOutput
 from threading import Condition
 
@@ -18,6 +17,8 @@ class CSI(camera.Camera):
             use_sw_jpg_encoding=False):
         if use_sw_jpg_encoding:
             from picamera2.encoders import JpegEncoder as MJPEGEncoder
+        else:
+            from picamera2.encoders import MJPEGEncoder
         class StreamingOutput(io.BufferedIOBase):
             def __init__(self):
                 self.frame = None
@@ -35,6 +36,7 @@ class CSI(camera.Camera):
 
         self.picam2.start_encoder(MJPEGEncoder(), FileOutput(output))
         if WEBRTC_ENABLED:
+            from picamera2.encoders import H264Encoder
             self.picam2.start_encoder(H264Encoder(), self.media_track)
         self.picam2.start()
 

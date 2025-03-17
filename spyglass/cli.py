@@ -12,13 +12,11 @@ from spyglass import camera_options, logger, WEBRTC_ENABLED
 from spyglass.exif import option_to_exif_orientation
 from spyglass.__version__ import __version__
 
-
-MAX_WIDTH = 1920
-MAX_HEIGHT = 1920
-
+# Maximum resolution for hardware encoding
+MAX_WIDTH = MAX_HEIGHT = 1920
 
 def main(args=None):
-    global WEBRTC_ENABLED
+    global WEBRTC_ENABLED, MAX_WIDTH, MAX_HEIGHT
     """Entry point for hello cli.
 
     The setup_py entry_point wraps this in sys.exit already so this effectively
@@ -39,6 +37,10 @@ def main(args=None):
         else:
             print('Available controls:\n'+controls_str)
         return
+
+    # Increase max resolution for software encoding
+    if parsed_args.use_sw_jpg_encoding:
+        MAX_WIDTH = MAX_HEIGHT = 1000000
 
     width, height = split_resolution(parsed_args.resolution)
     controls = parsed_args.controls

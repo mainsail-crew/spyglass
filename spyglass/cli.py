@@ -38,7 +38,7 @@ def main(args=None):
             print('Available controls:\n'+controls_str)
         return
 
-    # Increase max resolution for software encoding
+    # Increase max resolution for software encoding of JPEG
     if parsed_args.use_sw_jpg_encoding:
         MAX_WIDTH = MAX_HEIGHT = 1000000
 

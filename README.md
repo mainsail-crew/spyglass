@@ -135,7 +135,7 @@ On startup the following arguments are supported:
 ### How can I add CLI arguments to my `spyglass.conf`?
 
 All supported CLI arguments are already inside the [defaul config](resources/spyglass.conf).
-If we add new arguments we will add them there, so please refer to it, if you want to use a new parameter.
+If we add new arguments we will add them there, so please refer to it, if you want to use a new argument.
 
 In the following sections we will only refer to the CLI arguments but you can use the `spyglass.conf` for all these too.
 
@@ -204,7 +204,7 @@ Predefined filters can be found at one of the picamera2 directories:
 
 You can use all the files present in there in our config, e.g.: `--tuning_filter=ov5647_noir.json`
 
-You can also define your own directory for filters using the `--tuning_filter_dir` parameter.
+You can also define your own directory for filters using the `--tuning_filter_dir` argument.
 
 ### How to use the WebRTC endpoint?
 

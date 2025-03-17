@@ -1,3 +1,9 @@
+## v0.16.3 (2025-03-09)
+
+### Fix
+
+- fix --disable_webrtc to update the module variable correctly (#102)
+
 ## v0.16.2 (2025-02-26)
 
 ### Fix

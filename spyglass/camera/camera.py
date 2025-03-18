@@ -98,7 +98,8 @@ class Camera(ABC):
             stream_url='/stream',
             snapshot_url='/snapshot',
             webrtc_url='/webrtc',
-            orientation_exif=0):
+            orientation_exif=0,
+            use_sw_jpg_encoding=False):
         pass
 
     @abstractmethod

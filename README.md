@@ -1,7 +1,7 @@
 # Spyglass
 
-> **Please note that this project is in a very early stage. Use at your own risk. Think about contributing to the project
-if you find that something is not working, and you are able to fix it. Every contribution is appreciated.**
+> **Please note that this project is in a very early stage. Use at your own risk. Think about contributing to the
+project if you find that something is not working, and you are able to fix it. Every contribution is appreciated.**
 
 A simple mjpeg server for the python module [Picamera2](https://github.com/raspberrypi/picamera2).
 

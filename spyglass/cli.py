@@ -16,7 +16,7 @@ from spyglass.__version__ import __version__
 MAX_WIDTH = MAX_HEIGHT = 1920
 
 def main(args=None):
-    global WEBRTC_ENABLED, MAX_WIDTH, MAX_HEIGHT
+    global WEBRTC_ENABLED
     """Entry point for hello cli.
 
     The setup_py entry_point wraps this in sys.exit already so this effectively
@@ -38,11 +38,9 @@ def main(args=None):
             print('Available controls:\n'+controls_str)
         return
 
-    # Increase max resolution for software encoding of JPEG
-    if parsed_args.use_sw_jpg_encoding:
-        MAX_WIDTH = MAX_HEIGHT = 1000000
-
-    width, height = split_resolution(parsed_args.resolution)
+    use_sw_jpg_encoding = parsed_args.use_sw_jpg_encoding
+    # Disable max resolution limit for software encoding of JPEG
+    width, height = split_resolution(parsed_args.resolution, not use_sw_jpg_encoding)
     controls = parsed_args.controls
     if parsed_args.controls_string:
         controls += [c.split('=') for c in parsed_args.controls_string.split(',')]
@@ -74,7 +72,7 @@ def main(args=None):
                                  parsed_args.snapshot_url,
                                  parsed_args.webrtc_url,
                                  parsed_args.orientation_exif,
-                                 parsed_args.use_sw_jpg_encoding)
+                                 use_sw_jpg_encoding)
     finally:
         cam.stop()
 
@@ -118,11 +116,11 @@ def parse_autofocus_speed(arg_value):
         raise argparse.ArgumentTypeError("invalid value: normal or fast expected.")
 
 
-def split_resolution(res):
+def split_resolution(res, check_limit=True):
     parts = res.split('x')
     w = int(parts[0])
     h = int(parts[1])
-    if w > MAX_WIDTH or h > MAX_HEIGHT:
+    if check_limit and (w > MAX_WIDTH or h > MAX_HEIGHT):
         raise argparse.ArgumentTypeError("Maximum supported resolution is 1920x1920")
     return w, h
 

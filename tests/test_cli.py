@@ -184,7 +184,8 @@ def test_run_server_with_configuration_from_arguments(mock_init_camera):
         '-st', 'streaming-url',
         '-sn', 'snapshot-url',
         '-w', 'webrtc-url',
-        '-or', 'h'
+        '-or', 'h',
+        '-sw'
     ])
     cam_instance = mock_init_camera.return_value
     cam_instance.start_and_run_server.assert_called_once_with(
@@ -193,7 +194,8 @@ def test_run_server_with_configuration_from_arguments(mock_init_camera):
         'streaming-url',
         'snapshot-url',
         'webrtc-url',
-        1
+        1,
+        True
     )
 
 
@@ -216,7 +218,8 @@ def test_run_server_with_orientation(mock_init_camera, input_value, expected_out
         '-st', 'streaming-url',
         '-sn', 'snapshot-url',
         '-w', 'webrtc-url',
-        '-or', input_value
+        '-or', input_value,
+        '-sw'
     ])
     cam_instance = mock_init_camera.return_value
     cam_instance.start_and_run_server.assert_called_once_with(
@@ -225,5 +228,6 @@ def test_run_server_with_orientation(mock_init_camera, input_value, expected_out
         'streaming-url',
         'snapshot-url',
         'webrtc-url',
-        expected_output
+        expected_output,
+        True
     )

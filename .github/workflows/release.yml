@@ -9,7 +9,7 @@ permissions:
 jobs:
   push_to_master:
     runs-on: ubuntu-latest
-    name: "fast-forward develop to main"
+    name: "FF Merge and Bump version"
     outputs:
       version: ${{ steps.bump.outputs.version }}
 

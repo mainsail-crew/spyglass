@@ -7,7 +7,7 @@ permissions:
   contents: write
 
 jobs:
-  push_to_master:
+  push_to_main:
     runs-on: ubuntu-latest
     name: "FF Merge and Bump version"
     outputs:
@@ -19,11 +19,11 @@ jobs:
       with:
         fetch-depth: 0
         ref: 'main'
-    - name: Fast Forward Merge To Master
+    - name: Fast Forward Merge To Main
       uses: MaximeHeckel/github-action-merge-fast-forward@v1.1.0
       with:
         branchtomerge: origin/develop
-        branch: master
+        branch: main
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -36,7 +36,7 @@ jobs:
     - name: Fast Forward Merge To Develop
       uses: MaximeHeckel/github-action-merge-fast-forward@v1.1.0
       with:
-        branchtomerge: master
+        branchtomerge: main
         branch: develop
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -48,7 +48,7 @@ jobs:
         path: release_body.md
 
   release:
-    needs: push_to_master
+    needs: push_to_main
     runs-on: ubuntu-latest
     name: "Create Release"
     steps:
@@ -74,7 +74,7 @@ jobs:
       uses: softprops/action-gh-release@v1
       with:
         body_path: release_body.md
-        tag_name: ${{ needs.push_to_master.outputs.version }}
+        tag_name: ${{ needs.push_to_main.outputs.version }}
         files: dist/*
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

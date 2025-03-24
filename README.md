@@ -110,7 +110,7 @@ On startup the following arguments are supported:
 | `-b`, `--bindaddress`          | Address where the server will listen for incoming connections.                                                                     | `0.0.0.0`    |
 | `-p`, `--port`                 | Port where the server will listen for incoming connections.                                                                        | `8080`       |
 | `-r`, `--resolution`           | Resolution of the captured frames. This argument expects the format \<width\>x\<height\>.                                          | `640x480`    |
-| `-f`, `--FPS`                  | Framerate in frames per second (FPS).                                                                                              | `15`         |
+| `-f`, `--fps`                  | Framerate in frames per second (FPS).                                                                                              | `15`         |
 | `-st`, `--stream_url`          | Set the URL for the mjpeg stream.                                                                                                  | `/stream`    |
 | `-sn`, `--snapshot_url`        | Set the URL for snapshots (single frame of stream).                                                                                | `/snapshot`  |
 | `-w`, `--webrtc_url`           | Set  the URL for WebRTC (H264 compressed stream).                                                                                  | `/webrtc`    |

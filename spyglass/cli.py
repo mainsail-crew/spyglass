@@ -40,7 +40,7 @@ def main(args=None):
 
     use_sw_jpg_encoding = parsed_args.use_sw_jpg_encoding
     # Disable max resolution limit for software encoding of JPEG
-    width, height = split_resolution(parsed_args.resolution, not use_sw_jpg_encoding)
+    width, height = split_resolution(parsed_args.resolution, check_limit=not use_sw_jpg_encoding)
     controls = parsed_args.controls
     if parsed_args.controls_string:
         controls += [c.split('=') for c in parsed_args.controls_string.split(',')]

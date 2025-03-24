@@ -1,53 +1,91 @@
 name: Release version
 
 on:
-  push:
-    branches: [ main ]
+  workflow_dispatch:
 
 permissions:
   contents: write
 
 jobs:
-  release-version:
-    if: "!startsWith(github.event.head_commit.message, 'bump:')"
+  push_to_main:
+    name: FF Merge and Bump version
     runs-on: ubuntu-latest
-    name: "Bump version, create changelog and release"
-
+    outputs:
+      version: ${{ steps.bump.outputs.version }}
     steps:
-      - name: Check out
-        uses: actions/checkout@v3
-        with:
-          token: "${{ secrets.PERSONAL_ACCESS_TOKEN }}"
-          fetch-depth: 0
+    - name: Check out
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+        ref: 'main'
 
-      - name: Set up Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: '3.10'
-          cache: 'pip'
+    - name: Fast Forward Merge To Main
+      uses: MaximeHeckel/github-action-merge-fast-forward@v1.1.0
+      with:
+        branchtomerge: origin/develop
+        branch: main
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install build
-          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+    - name: Create bump and changelog
+      uses: commitizen-tools/commitizen-action@master
+      id: bump
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        changelog_increment_filename: release_body.md
 
-      - name: Create bump and changelog
-        uses: commitizen-tools/commitizen-action@master
-        id: bump
-        with:
-          github_token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
-          changelog_increment_filename: release_body.md
+    - name: Fast Forward Merge To Develop
+      uses: MaximeHeckel/github-action-merge-fast-forward@v1.1.0
+      with:
+        branchtomerge: main
+        branch: develop
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Build package
-        run: |
-          python -m build
+    - name: Upload Release Body
+      uses: actions/upload-artifact@v4
+      with:
+        name: release-body.md
+        path: release_body.md
 
-      - name: Release
-        uses: softprops/action-gh-release@v1
-        with:
-          body_path: release_body.md
-          tag_name: ${{ env.REVISION }}
-          files: dist/*
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  release:
+    name: Create Release
+    needs: push_to_main
+    runs-on: ubuntu-latest
+    steps:
+    - name: Download Release Body
+      uses: actions/download-artifact@v4
+      with:
+        name: release-body.md
+        path: .
+
+    - name: Check out
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+        ref: 'main'
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.10'
+        cache: 'pip'
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install build
+        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+
+    - name: Build package
+      run: |
+        python -m build
+
+    - name: Release
+      uses: softprops/action-gh-release@v1
+      with:
+        body_path: release_body.md
+        tag_name: ${{ needs.push_to_main.outputs.version }}
+        files: dist/*
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -82,6 +82,9 @@ type: git_repo
 channel: beta
 path: ~/spyglass
 origin: https://github.com/mryel00/spyglass.git
+primary_branch: main
+virtualenv: .venv/bin/python
+requirements: requirements.txt
 managed_services: spyglass
 ```
 > Make sure moonraker.asvc contains `spyglass` in the list: `cat ~/printer_data/moonraker.asvc | grep spyglass`.

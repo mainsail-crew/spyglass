@@ -1,2 +1,2 @@
 aiortc~=1.9.0
-setuptools~=80.7.1
+setuptools~=80.8.0

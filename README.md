@@ -79,7 +79,6 @@ To be able to use Moonraker update manager, add the following lines to your `moo
 ```conf
 [update_manager spyglass]
 type: git_repo
-channel: beta
 path: ~/spyglass
 origin: https://github.com/mryel00/spyglass.git
 primary_branch: main

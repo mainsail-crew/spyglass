@@ -2,6 +2,29 @@
 build-backend = "setuptools.build_meta"
 requires = ["setuptools", "wheel"]
 
+[project]
+name = "spyglass"
+version = "0.17.0"
+description = "A simple mjpeg server for Picamera2"
+authors = [
+    { name="mryel00" },
+    { name="roamingthings" }
+]
+license = "GPL-3.0-only"
+license-files = ["LICENSE", "NOTICE"]
+requires-python = ">=3.8.1"
+dependencies = [
+    "aiortc~=1.9.0",
+    "av~=10.0.0; platform_machine=='armv7l' and python_version=='3.9'",
+    "cffi~=1.17.1; platform_machine=='armv7l' and python_version=='3.9'"
+]
+
+[project.scripts]
+spyglass = "spyglass.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["."]
+
 [tool.pytest.ini_options]
 addopts = [
     "--import-mode=importlib",
@@ -9,7 +32,6 @@ addopts = [
 pythonpath = [
   "."
 ]
-mock_use_standalone_module = true
 
 [tool.commitizen]
 name = "cz_conventional_commits"

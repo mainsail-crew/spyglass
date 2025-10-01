@@ -1,0 +1,7 @@
+{
+    "debian": [
+        "python3-libcamera; vendor == 'raspberry-pi' and distro_version >= '11'",
+        "python3-kms++; vendor == 'raspberry-pi' and distro_version >= '11'",
+        "python3-picamera2; vendor == 'raspberry-pi' and distro_version >= '11'",
+    ]
+}

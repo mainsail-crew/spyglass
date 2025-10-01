@@ -53,12 +53,6 @@ jobs:
     needs: push_to_main
     runs-on: ubuntu-latest
     steps:
-    - name: Download Release Body
-      uses: actions/download-artifact@v4
-      with:
-        name: release-body.md
-        path: .
-
     - name: Check out
       uses: actions/checkout@v4
       with:
@@ -80,6 +74,12 @@ jobs:
     - name: Build package
       run: |
         python -m build
+    
+    - name: Download Release Body
+      uses: actions/download-artifact@v4
+      with:
+        name: release-body.md
+        path: .
 
     - name: Release
       uses: softprops/action-gh-release@v1

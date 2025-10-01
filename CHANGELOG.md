@@ -1,3 +1,9 @@
+## v0.17.0 (2025-05-04)
+
+### Feat
+
+- add software encoding for mjpg and jpeg (#105)
+
 ## v0.16.3 (2025-03-09)
 
 ### Fix

@@ -1,4 +1,5 @@
 """Module allowing for ``python -m spyglass ...``."""
+
 from __future__ import annotations
 
 from spyglass.cli import main

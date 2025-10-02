@@ -1,21 +1,22 @@
 #!/usr/bin/python3
 
-import socketserver
 import asyncio
 import socketserver
-
-from http import server, HTTPStatus
+from http import HTTPStatus, server
 
 from spyglass import WEBRTC_ENABLED
-from spyglass.server import jpeg, webrtc_whep, controls
+from spyglass.server import controls, jpeg, webrtc_whep
 from spyglass.url_parsing import check_urls_match
+
 
 class StreamingServer(socketserver.ThreadingMixIn, server.HTTPServer):
     allow_reuse_address = True
     daemon_threads = True
 
+
 class StreamingHandler(server.BaseHTTPRequestHandler):
     loop = asyncio.new_event_loop()
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
@@ -24,7 +25,7 @@ class StreamingHandler(server.BaseHTTPRequestHandler):
             jpeg.start_streaming(self)
         elif self.check_url(self.snapshot_url):
             jpeg.send_snapshot(self)
-        elif self.check_url('/controls'):
+        elif self.check_url("/controls"):
             controls.do_GET(self)
         elif self.check_webrtc():
             pass
@@ -51,7 +52,7 @@ class StreamingHandler(server.BaseHTTPRequestHandler):
 
     def check_url(self, url, match_full_path=True):
         return check_urls_match(url, self.path, match_full_path)
-    
+
     def check_webrtc(self):
         return WEBRTC_ENABLED and self.check_url(self.webrtc_url, match_full_path=False)
 

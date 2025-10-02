@@ -1,13 +1,15 @@
-import libcamera
 import ast
 import pathlib
 
+import libcamera
+
+
 def parse_dictionary_to_html_page(camera, parsed_controls={}, processed_controls={}):
     if not parsed_controls:
-        parsed_controls = 'None'
+        parsed_controls = "None"
     if not processed_controls:
-        processed_controls = 'None'
-    html =  """
+        processed_controls = "None"
+    html = """
             <!DOCTYPE html>
             <html lang="en">
             """
@@ -53,15 +55,17 @@ def parse_dictionary_to_html_page(camera, parsed_controls={}, processed_controls
             """
     return html
 
+
 def get_style():
     file_dir = pathlib.Path(__file__).parent.resolve()
-    controls_style = file_dir / '..' / 'resources' / 'controls_style.css'
-    with (open(controls_style, 'r')) as f:
+    controls_style = file_dir / ".." / "resources" / "controls_style.css"
+    with open(controls_style, "r") as f:
         return f.read()
 
+
 def process_controls(camera, controls: list[tuple[str, str]]) -> dict[str, any]:
-    controls_dict_lower = { k.lower(): k for k in camera.camera_controls.keys() }
-    if controls == None:
+    controls_dict_lower = {k.lower(): k for k in camera.camera_controls.keys()}
+    if controls is None:
         return {}
     processed_controls = {}
     for key, value in controls:
@@ -73,19 +77,22 @@ def process_controls(camera, controls: list[tuple[str, str]]) -> dict[str, any]:
             processed_controls[k] = v
     return processed_controls
 
+
 def parse_from_string(input_string: str) -> any:
     try:
         return ast.literal_eval(input_string)
     except (ValueError, TypeError, SyntaxError):
         pass
 
-    if input_string.lower() in ['true', 'false']:
-        return input_string.lower() == 'true'
+    if input_string.lower() in ["true", "false"]:
+        return input_string.lower() == "true"
 
     return input_string
 
+
 def get_type_str(obj) -> str:
-    return str(type(obj)).split('\'')[1]
+    return str(type(obj)).split("'")[1]
+
 
 def get_libcamera_controls_string(camera_num: str) -> str:
     ctrls_str = ""
@@ -109,7 +116,7 @@ def get_libcamera_controls_string(camera_num: str) -> str:
 
         str_first = f"{k.name} ({get_type_str(min)})"
         str_second = f"min={min} max={max} default={default}"
-        str_indent = (30 - len(str_first)) * ' ' + ': '
-        ctrls_str += str_first + str_indent + str_second + '\n'
+        str_indent = (30 - len(str_first)) * " " + ": "
+        ctrls_str += str_first + str_indent + str_second + "\n"
 
     return ctrls_str.strip()

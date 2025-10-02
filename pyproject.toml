@@ -24,6 +24,7 @@ spyglass = "spyglass.cli:main"
 
 [tool.setuptools.packages.find]
 where = ["."]
+exclude = ["tests", "tests.*"]
 
 [tool.pytest.ini_options]
 addopts = [

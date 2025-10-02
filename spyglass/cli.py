@@ -18,7 +18,6 @@ MAX_WIDTH = MAX_HEIGHT = 1920
 
 
 def main(args=None):
-    global WEBRTC_ENABLED
     """Entry point for hello cli.
 
     The setup_py entry_point wraps this in sys.exit already so this effectively

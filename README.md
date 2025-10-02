@@ -1,7 +1,7 @@
 # Spyglass
 
-> **Please note that this project is in a very early stage. Use at your own risk. Think about contributing to the
-project if you find that something is not working, and you are able to fix it. Every contribution is appreciated.**
+> **Please note that we cannot support 32 bit systems. For more information please
+have a look at [this comment](https://github.com/mryel00/spyglass/issues/116#issuecomment-3361184578).**
 
 A simple mjpeg server for the python module [Picamera2](https://github.com/raspberrypi/picamera2).
 

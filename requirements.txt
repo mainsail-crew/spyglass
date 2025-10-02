@@ -1,2 +1,2 @@
-aiortc~=1.9.0
+aiortc~=1.13.0
 setuptools~=80.9.0

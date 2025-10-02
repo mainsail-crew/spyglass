@@ -1,4 +1,5 @@
-from urllib.parse import urlparse, parse_qsl
+from urllib.parse import parse_qsl, urlparse
+
 
 def check_paths_match(expected_url, incoming_url, match_full_path=True):
     # Assign paths from URL into list

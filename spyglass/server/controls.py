@@ -1,9 +1,11 @@
 from http import HTTPStatus
-from spyglass.url_parsing import get_url_params
-from spyglass.camera_options import parse_dictionary_to_html_page, process_controls
-
 # Used for type hinting
 from typing import TYPE_CHECKING
+
+from spyglass.camera_options import (parse_dictionary_to_html_page,
+                                     process_controls)
+from spyglass.url_parsing import get_url_params
+
 if TYPE_CHECKING:
     from spyglass.server.http_server import StreamingHandler
 

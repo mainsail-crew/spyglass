@@ -6,11 +6,12 @@ Parse command line arguments in, invoke server.
 import argparse
 import re
 import sys
+
 import libcamera
 
-from spyglass import camera_options, logger, WEBRTC_ENABLED, set_webrtc_enabled
-from spyglass.exif import option_to_exif_orientation
+from spyglass import WEBRTC_ENABLED, camera_options, logger, set_webrtc_enabled
 from spyglass.__version__ import __version__
+from spyglass.exif import option_to_exif_orientation
 
 # Maximum resolution for hardware encoding
 MAX_WIDTH = MAX_HEIGHT = 1920

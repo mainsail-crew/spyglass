@@ -4,6 +4,7 @@ from spyglass.camera.camera import Camera
 from spyglass.camera.csi import CSI
 from spyglass.camera.usb import USB
 
+
 def init_camera(
         camera_num: int,
         tuning_filter=None,

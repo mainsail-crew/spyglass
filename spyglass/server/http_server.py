@@ -1,14 +1,13 @@
 #!/usr/bin/python3
 
-import socketserver
 import asyncio
 import socketserver
-
-from http import server, HTTPStatus
+from http import HTTPStatus, server
 
 from spyglass import WEBRTC_ENABLED
-from spyglass.server import jpeg, webrtc_whep, controls
+from spyglass.server import controls, jpeg, webrtc_whep
 from spyglass.url_parsing import check_urls_match
+
 
 class StreamingServer(socketserver.ThreadingMixIn, server.HTTPServer):
     allow_reuse_address = True

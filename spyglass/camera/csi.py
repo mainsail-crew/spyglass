@@ -1,10 +1,11 @@
 import io
-
-from picamera2.outputs import FileOutput
 from threading import Condition
 
-from spyglass import camera, WEBRTC_ENABLED
+from picamera2.outputs import FileOutput
+
+from spyglass import WEBRTC_ENABLED, camera
 from spyglass.server.http_server import StreamingHandler
+
 
 class CSI(camera.Camera):
     def start_and_run_server(self,

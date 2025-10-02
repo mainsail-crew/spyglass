@@ -1,8 +1,9 @@
-from spyglass import logger
 from http import HTTPStatus
-
 # Used for type hinting
 from typing import TYPE_CHECKING
+
+from spyglass import logger
+
 if TYPE_CHECKING:
     from spyglass.server.http_server import StreamingHandler
 

@@ -1,6 +1,7 @@
 import argparse
+from unittest.mock import ANY, MagicMock, patch
+
 import pytest
-from unittest.mock import MagicMock, ANY, patch
 
 AF_SPEED_ENUM_NORMAL = 1
 AF_SPEED_ENUM_FAST = 2

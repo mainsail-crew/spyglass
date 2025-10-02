@@ -1,14 +1,15 @@
-import libcamera
 import threading
-
 from abc import ABC, abstractmethod
+
+import libcamera
 from picamera2 import Picamera2
 
-from spyglass import logger, WEBRTC_ENABLED
-from spyglass.exif import create_exif_header
+from spyglass import WEBRTC_ENABLED, logger
 from spyglass.camera_options import process_controls
-from spyglass.server.http_server import StreamingServer, StreamingHandler
+from spyglass.exif import create_exif_header
+from spyglass.server.http_server import StreamingHandler, StreamingServer
 from spyglass.server.webrtc_whep import PicameraStreamTrack
+
 
 class Camera(ABC):
     def __init__(self, picam2: Picamera2):

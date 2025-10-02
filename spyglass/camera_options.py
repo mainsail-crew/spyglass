@@ -1,6 +1,8 @@
-import libcamera
 import ast
 import pathlib
+
+import libcamera
+
 
 def parse_dictionary_to_html_page(camera, parsed_controls={}, processed_controls={}):
     if not parsed_controls:

@@ -1,19 +1,20 @@
-import uuid
 import asyncio
-
-from spyglass.url_parsing import check_urls_match
+import uuid
 from http import HTTPStatus
-
 # Used for type hinting
 from typing import TYPE_CHECKING
+
+from spyglass.url_parsing import check_urls_match
+
 if TYPE_CHECKING:
     from spyglass.server.http_server import StreamingHandler
 
 from spyglass import WEBRTC_ENABLED
+
 if WEBRTC_ENABLED:
-    from aiortc import RTCSessionDescription, RTCPeerConnection, sdp
-    from aiortc.rtcrtpsender import RTCRtpSender
+    from aiortc import RTCPeerConnection, RTCSessionDescription, sdp
     from aiortc.contrib.media import MediaRelay
+    from aiortc.rtcrtpsender import RTCRtpSender
     pcs: dict[uuid.UUID, RTCPeerConnection] = {}
     max_connections = 20
     media_relay = MediaRelay()
@@ -147,7 +148,9 @@ else:
         pass
 from collections import deque
 from fractions import Fraction
+
 from picamera2.outputs import Output
+
 
 class PicameraStreamTrack(MediaStreamTrack, Output):
     kind = "video"

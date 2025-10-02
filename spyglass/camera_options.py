@@ -65,7 +65,7 @@ def get_style():
 
 def process_controls(camera, controls: list[tuple[str, str]]) -> dict[str, any]:
     controls_dict_lower = {k.lower(): k for k in camera.camera_controls.keys()}
-    if controls == None:
+    if controls is None:
         return {}
     processed_controls = {}
     for key, value in controls:

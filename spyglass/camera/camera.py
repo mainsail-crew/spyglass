@@ -78,7 +78,7 @@ class Camera(ABC):
         logger.info(f"Snapshot endpoint: {snapshot_url}")
         if WEBRTC_ENABLED:
             logger.info(f"WebRTC endpoint: {webrtc_url}")
-        logger.info(f"Controls endpoint: /controls")
+        logger.info("Controls endpoint: /controls")
         address = (bind_address, port)
         streaming_handler.picam2 = self.picam2
         streaming_handler.media_track = self.media_track

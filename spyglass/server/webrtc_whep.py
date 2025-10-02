@@ -1,9 +1,13 @@
 import asyncio
 import uuid
+from collections import deque
+from fractions import Fraction
 from http import HTTPStatus
 
 # Used for type hinting
 from typing import TYPE_CHECKING
+
+from picamera2.outputs import Output
 
 from spyglass.url_parsing import check_urls_match
 
@@ -40,7 +44,7 @@ def do_OPTIONS(handler: "StreamingHandler", webrtc_url="/webrtc"):
             "Access-Control-Allow-Headers", "Authorization, Content-Type, If-Match"
         )
 
-    if handler.headers.get("Access-Control-Request-Method") != None:
+    if handler.headers.get("Access-Control-Request-Method") is not None:
         response_headers()
         handler.end_headers()
     elif check_urls_match(f"{webrtc_url}/whip", handler.path) or check_urls_match(
@@ -169,12 +173,6 @@ else:
 
     class MediaStreamTrack:
         pass
-
-
-from collections import deque
-from fractions import Fraction
-
-from picamera2.outputs import Output
 
 
 class PicameraStreamTrack(MediaStreamTrack, Output):

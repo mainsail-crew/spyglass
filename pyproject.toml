@@ -12,11 +12,9 @@ authors = [
 ]
 license = "GPL-3.0-only"
 license-files = ["LICENSE", "NOTICE"]
-requires-python = ">=3.8.1"
+requires-python = ">=3.9"
 dependencies = [
     "aiortc~=1.13.0",
-    "av~=10.0.0; platform_machine=='armv7l' and python_version=='3.9'",
-    "cffi~=1.17.1; platform_machine=='armv7l' and python_version=='3.9'"
 ]
 
 [project.scripts]

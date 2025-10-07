@@ -1,9 +1,17 @@
 on:
+  workflow_dispatch:
+    inputs:
+      branch:
+        type: string
+        default: ''
   workflow_call:
     inputs:
       branch:
         type: string
         default: ''
+  push:
+    branches:
+      - develop
 jobs:
   build_wheel:
     name: Build wheel

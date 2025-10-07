@@ -77,7 +77,7 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           body_path: release_body.md
-          tag_name: ${{ needs.push_to_main.outputs.version }}
+          tag_name: v${{ needs.push_to_main.outputs.version }}
           files: ./dist/*
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

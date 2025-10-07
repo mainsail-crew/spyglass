@@ -49,6 +49,7 @@ def send_snapshot(handler: "StreamingHandler"):
 
 def send_default_headers(handler: "StreamingHandler"):
     handler.send_response(HTTPStatus.OK)
+    handler.send_header("Access-Control-Allow-Origin", "*")
     handler.send_header("Age", 0)
     handler.send_header("Cache-Control", "no-cache, private")
     handler.send_header("Pragma", "no-cache")

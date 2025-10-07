@@ -1,4 +1,4 @@
-name: Release Spyglass
+name: Release
 
 on:
   workflow_dispatch:

@@ -33,7 +33,7 @@ pythonpath = [
 ]
 
 [tool.commitizen]
-name = "cz_conventional_commits"
+name = "cz_customize"
 version = "0.17.0"
 tag_format = "v$version"
 version_files = [
@@ -42,3 +42,8 @@ version_files = [
     "pyproject.toml:version",
     "README.md:Current version"
 ]
+
+[tool.commitizen.customize]
+bump_map = {"break" = "MAJOR", ".*!" = "MAJOR", "feat" = "MINOR", "fix" = "PATCH", "chore\\(deps\\)" = "PATCH"}
+commit_parser = "^(?P<change_type>break|feat|fix|chore\\(deps\\))(!)?:\\s(?P<message>.*)?"
+change_type_map = {"feat" = "Feat", "fix" = "Fix", "chore(deps)" = "Dependency Update"}

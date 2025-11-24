@@ -1,6 +1,6 @@
 # Spyglass
 
-> **Please note that we cannot support 32 bit systems. For more information please
+> **Please note that we cannot support 32-bit systems. For more information please
 have a look at [this comment](https://github.com/mryel00/spyglass/issues/116#issuecomment-3361184578).**
 
 A simple mjpeg server for the python module [Picamera2](https://github.com/raspberrypi/picamera2).
@@ -57,7 +57,7 @@ Run following commands to install and run Spyglass as a service:
 cd ~
 sudo apt update
 sudo apt install python3-libcamera python3-kms++ python3-picamera2 git -y
-git clone https://github.com/mryel00/spyglass
+git clone https://github.com/mainsail-crew/spyglass
 cd ~/spyglass
 make install
 ```
@@ -80,7 +80,7 @@ To be able to use Moonraker update manager, add the following lines to your `moo
 [update_manager spyglass]
 type: git_repo
 path: ~/spyglass
-origin: https://github.com/mryel00/spyglass.git
+origin: https://github.com/mainsail-crew/spyglass.git
 primary_branch: main
 virtualenv: .venv
 requirements: requirements.txt
@@ -92,7 +92,7 @@ managed_services: spyglass
 
 ### Configuration
 
-After installation you should find a configuration file in `~/printer_data/config/spyglass.conf`.\
+After installation, you should find a configuration file in `~/printer_data/config/spyglass.conf`.\
 Please see [spyglass.conf](resources/spyglass.conf) for the default config file and [CLI arguments](#cli-arguments) for
 all available options.
 
@@ -140,7 +140,7 @@ On startup the following arguments are supported:
 All supported CLI arguments are already inside the [defaul config](resources/spyglass.conf).
 If we add new arguments we will add them there, so please refer to it, if you want to use a new argument.
 
-In the following sections we will only refer to the CLI arguments but you can use the `spyglass.conf` for all these too.
+In the following sections we will only refer to the CLI arguments, but you can use the `spyglass.conf` for all these too.
 
 ### How to use resolutions higher than maximum resolution?
 
@@ -160,7 +160,7 @@ The Raspberry Pi foundation decided to remove the hardware (HW) encoders from th
 This results in overall higher CPU usage on a Pi5 compared to previous generations.
 
 The following sections should only be followed on a Pi5.\
-WebRTC is also a big toll on your CPU. Therefore you should use `--disable_webrtc`.\
+WebRTC is also a big toll on your CPU. Therefore, you should use `--disable_webrtc`.\
 To reduce the CPU usage further you should add `--use_sw_jpg_encoding` to make sure to use the optimized software (SW)
 encoder, instead of the HW encoder falling back to an unoptimized SW encoder.
 
@@ -195,7 +195,7 @@ For example to rotate the image 90 degree clockwise you would start spyglass the
 
 ### How to apply tuning filter?
 Tuning filters are used to normalize or modify the camera image output, for example, using an NoIR camera can lead to a
-pink color, whether applying a filter to it you could remove its tone pink. More information here:
+pink color, whether applying a filter to it, you could remove its tone pink. More information here:
 https://github.com/raspberrypi/picamera2/blob/main/examples/tuning_file.py
 
 
@@ -212,7 +212,7 @@ You can also define your own directory for filters using the `--tuning_filter_di
 ### How to use the WebRTC endpoint?
 
 Spyglass does not deliver a streaming client for WebRTC but only the endpoint. We are using the same WebRTC protocol as
-[MediaMTX](https://github.com/bluenviron/mediamtx). Therefore you need to use e.g. Mainsail or any other client capable
+[MediaMTX](https://github.com/bluenviron/mediamtx). Therefore, you need to use e.g. Mainsail or any other client capable
 of using the MediaMTX stream.
 
 ### How to use Spyglass with Mainsail?
@@ -233,7 +233,7 @@ Alternatively you can use WebRTC. This will take less network bandwidth and migh
 -   Service: `WebRTC (MediaMTX)`
 
 WebRTC needs [aiortc](https://github.com/aiortc/aiortc) installed. This gets automatically installed with `make install`
-for further instructions, please see the [install](#installation) chapter below.
+for further instructions, please see the [installation](#installation) chapter below.
 
 ### How to use the controls endpoint?
 

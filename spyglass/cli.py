@@ -55,8 +55,26 @@ def main(args=None):
     # Has to be imported after WEBRTC_ENABLED got set correctly
     from spyglass.camera import init_camera
 
+    device_path = parsed_args.device_path
+    if device_path:
+        from picamera2 import Picamera2
+
+        devices = Picamera2.global_camera_info()
+        # Picamera2 is using different enumeration than libcamera
+        # Therefore device["Num"] does not have to be the same as camera_num
+        camera_num = None
+        for index, device in enumerate(devices):
+            if device["Id"] == device_path:
+                camera_num = index
+                break
+        if camera_num is None:
+            logger.error(f"No libcamera for path {device_path} found!")
+            return
+    else:
+        camera_num = parsed_args.camera_num
+
     cam = init_camera(
-        parsed_args.camera_num, parsed_args.tuning_filter, parsed_args.tuning_filter_dir
+        camera_num, parsed_args.tuning_filter, parsed_args.tuning_filter_dir
     )
 
     cam.configure(
@@ -314,12 +332,19 @@ def get_parser():
         action="store_true",
         help="List available camera controls and exits.",
     )
-    parser.add_argument(
+    camera_group = parser.add_mutually_exclusive_group()
+    camera_group.add_argument(
         "-n",
         "--camera_num",
         type=int,
         default=0,
         help="Camera number to be used (Works with --list-controls)",
+    )
+    camera_group.add_argument(
+        "-d",
+        "--device_path",
+        type=str,
+        help="Camera device path to be used (Works with --list-controls)",
     )
     return parser
 

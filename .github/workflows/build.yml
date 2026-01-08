@@ -2,6 +2,7 @@ on:
   workflow_dispatch:
     inputs:
       branch:
+        description: 'Branch to build (leave empty for default branch)'
         type: string
         default: ''
   workflow_call:

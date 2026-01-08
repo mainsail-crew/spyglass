@@ -62,14 +62,11 @@ def main(args=None):
         devices = Picamera2.global_camera_info()
         # Picamera2 is using different enumeration than libcamera
         # Therefore device["Num"] does not have to be the same as camera_num
-        camera_num = next(
-            (
-                camera_num
-                for camera_num, device in enumerate(devices)
-                if device["Id"] == device_path
-            ),
-            None,
-        )
+        camera_num = None
+        for index, device in enumerate(devices):
+            if device["Id"] == device_path:
+                camera_num = index
+                break
         if camera_num is None:
             logger.error(f"No libcamera for path {device_path} found!")
             return

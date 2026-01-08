@@ -46,7 +46,7 @@ jobs:
   build_deb:
     name: Build .deb
     needs: build_wheel
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04-arm
     env:
       PKGNAME: spyglass
     strategy:
@@ -71,9 +71,6 @@ jobs:
         with:
           name: wheel
           path: .
-
-      - name: Set up QEMU (for running foreign-arch containers)
-        uses: docker/setup-qemu-action@v3
 
       - name: Build inside Debian container (use repo's build_deb.sh)
         id: build_in_container

@@ -19,7 +19,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check out
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
         with:
           ref: ${{ inputs.branch }}
 
@@ -39,7 +39,7 @@ jobs:
           python -m build
 
       - name: Upload wheel
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: wheel
           path: ./dist/
@@ -60,12 +60,12 @@ jobs:
             platform: linux/arm64
     steps:
       - name: Check out
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
         with:
           ref: ${{ inputs.branch }}
 
       - name: Download wheel
-        uses: actions/download-artifact@v5
+        uses: actions/download-artifact@v7
         with:
           name: wheel
           path: .
@@ -110,7 +110,7 @@ jobs:
             "
 
       - name: Upload deb
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: ${{ matrix.distro }}.${{ matrix.arch }}
           path: ./*.deb

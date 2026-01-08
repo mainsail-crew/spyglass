@@ -12,7 +12,7 @@ authors = [
 ]
 license = "GPL-3.0-only"
 license-files = ["LICENSE", "NOTICE"]
-requires-python = ">=3.9"
+requires-python = ">=3.10"
 dependencies = [
     "aiortc~=1.14.0",
 ]

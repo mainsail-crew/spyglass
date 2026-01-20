@@ -8,7 +8,7 @@ A simple mjpeg server for the python module [Picamera2](https://github.com/raspb
 With Spyglass you are able to stream videos from a camera that is supported by [libcamera](http://libcamera.org) like
 the [Raspberry Pi Camera Modules](https://www.raspberrypi.com/documentation/accessories/camera.html).
 
-Current version: 0.17.1
+Current version: 0.18.0
 
 ## Overview
 

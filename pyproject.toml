@@ -4,7 +4,7 @@ requires = ["setuptools", "wheel"]
 
 [project]
 name = "spyglass"
-version = "0.17.1"
+version = "0.18.0"
 description = "A simple mjpeg server for Picamera2"
 authors = [
     { name="mryel00" },
@@ -34,7 +34,7 @@ pythonpath = [
 
 [tool.commitizen]
 name = "cz_customize"
-version = "0.17.1"
+version = "0.18.0"
 tag_format = "v$version"
 version_files = [
     "spyglass/__version__.py",

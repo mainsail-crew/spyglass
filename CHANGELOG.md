@@ -1,3 +1,13 @@
+## v0.18.0 (2026-01-20)
+
+### Feat
+
+- add device_path support (#128)
+
+### Dependency Update
+
+- Update aiortc requirement from ~=1.13.0 to ~=1.14.0 (#127)
+
 ## v0.17.1 (2025-10-07)
 
 ### Fix

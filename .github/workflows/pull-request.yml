@@ -40,3 +40,5 @@ jobs:
     name: Build wheel and .deb
     needs: check
     uses: ./.github/workflows/build.yml
+    with:
+      branch: ${{ github.ref }}

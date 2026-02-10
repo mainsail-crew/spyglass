@@ -1,0 +1,25 @@
+# Configuration for Label Actions - https://github.com/dessant/label-actions
+
+not an Issue:
+  issues:
+    comment: |
+      Ahoi!
+
+      It looks like this ticket is a request for help (or similar).
+      Many helpful people will not see your message here and you are
+      unlikely to get a useful response.
+
+      We use the Github Issue-Tracker only for development related
+      topics, like feature requests, bug reports etc. To get help,
+      please join our Discord-Server or ask in Github Discussions:
+
+      - [discord.gg/mainsail](https://discord.gg/mainsail)
+      - [GitHub Discussions](https://github.com/orgs/mainsail-crew/discussions)
+
+      This ticket will be automatically closed.
+
+      Fair wind and a following sea!
+      ~ Your friendly MainsailGithubBot
+
+      *PS: I'm just an automated script, not a real sailor.*
+    close: true

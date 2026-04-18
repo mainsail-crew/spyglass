@@ -1,4 +1,5 @@
 import argparse
+import sys
 from unittest.mock import MagicMock, patch
 
 import pytest
@@ -23,27 +24,22 @@ DEFAULT_TUNING_FILTER_DIR = None
 DEFAULT_CAMERA_NUM = 0
 
 
-@pytest.fixture(autouse=True)
-def mock_libraries(mocker):
-    mock_libcamera = MagicMock()
-    mock_picamera2 = MagicMock()
-    mock_picamera2.encoders = MagicMock()
-    mock_picamera2.encoders._hw_encoder_available = False
-    mock_picamera2.outputs = MagicMock()
-    mock_picamera2.outputs.Output = MagicMock
-    mocker.patch.dict(
-        "sys.modules",
-        {
-            "libcamera": mock_libcamera,
-            "picamera2": mock_picamera2,
-            "picamera2.encoders": mock_picamera2.encoders,
-            "picamera2.outputs": mock_picamera2.outputs,
-        },
-    )
-    mocker.patch("libcamera.controls.AfModeEnum.Manual", AF_MODE_ENUM_MANUAL)
-    mocker.patch("libcamera.controls.AfModeEnum.Continuous", AF_MODE_ENUM_CONTINUOUS)
-    mocker.patch("libcamera.controls.AfSpeedEnum.Normal", AF_SPEED_ENUM_NORMAL)
-    mocker.patch("libcamera.controls.AfSpeedEnum.Fast", AF_SPEED_ENUM_FAST)
+mock_libcamera = MagicMock()
+mock_picamera2 = MagicMock()
+mock_picamera2.encoders._hw_encoder_available = False
+mock_picamera2.outputs.Output = MagicMock
+sys.modules.update(
+    {
+        "libcamera": mock_libcamera,
+        "picamera2": mock_picamera2,
+        "picamera2.encoders": mock_picamera2.encoders,
+        "picamera2.outputs": mock_picamera2.outputs,
+    }
+)
+mock_libcamera.controls.AfModeEnum.Manual = AF_MODE_ENUM_MANUAL
+mock_libcamera.controls.AfModeEnum.Continuous = AF_MODE_ENUM_CONTINUOUS
+mock_libcamera.controls.AfSpeedEnum.Normal = AF_SPEED_ENUM_NORMAL
+mock_libcamera.controls.AfSpeedEnum.Fast = AF_SPEED_ENUM_FAST
 
 
 def test_parse_bindaddress():

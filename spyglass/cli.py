@@ -218,8 +218,8 @@ def get_parser():
     )
     parser.add_argument(
         "-sw",
-        "--use_sw_jpg_encoding",
         "--use-sw-encoding",
+        "--use_sw_jpg_encoding",
         action="store_true",
         help="Use software encoding for JPEG and MJPG (Disables WebRTC)",
     )

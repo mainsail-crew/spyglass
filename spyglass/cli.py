@@ -217,7 +217,7 @@ def get_parser():
     parser.add_argument(
         "-sw",
         "--use_sw_jpg_encoding",
-        action="store_true",
+        action=argparse.BooleanOptionalAction,
         help="Use software encoding for JPEG and MJPG (recommended on Pi5)",
     )
     parser.add_argument(

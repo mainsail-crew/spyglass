@@ -27,16 +27,17 @@ DEFAULT_CAMERA_NUM = 0
 def mock_libraries(mocker):
     mock_libcamera = MagicMock()
     mock_picamera2 = MagicMock()
-    mock_picamera2_encoders = MagicMock()
-    mock_picamera2_outputs = MagicMock()
-    mock_picamera2_outputs.Output = MagicMock
+    mock_picamera2.encoders = MagicMock()
+    mock_picamera2.encoders._hw_encoder_available = False
+    mock_picamera2.outputs = MagicMock()
+    mock_picamera2.outputs.Output = MagicMock
     mocker.patch.dict(
         "sys.modules",
         {
             "libcamera": mock_libcamera,
             "picamera2": mock_picamera2,
-            "picamera2.encoders": mock_picamera2_encoders,
-            "picamera2.outputs": mock_picamera2_outputs,
+            "picamera2.encoders": mock_picamera2.encoders,
+            "picamera2.outputs": mock_picamera2.outputs,
         },
     )
     mocker.patch("libcamera.controls.AfModeEnum.Manual", AF_MODE_ENUM_MANUAL)

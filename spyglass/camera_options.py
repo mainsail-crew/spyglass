@@ -94,7 +94,7 @@ def get_type_str(obj) -> str:
     return str(type(obj)).split("'")[1]
 
 
-def get_libcamera_controls_string(camera_num: str) -> str:
+def get_libcamera_controls_string(camera_num: int) -> str:
     ctrls_str = ""
     libcam_cm = libcamera.CameraManager.singleton()
     if camera_num > len(libcam_cm.cameras) - 1:

@@ -93,6 +93,8 @@ run_spyglass() {
     fi
 
     use_sw_encoding=""
+    # For backwards compatibility, USE_SW_JPG_ENCODING will be checked here
+    # Might get removed in future
     if [[ "${USE_SW_ENCODING:-false}" == "true" || "${USE_SW_JPG_ENCODING:-false}" == "true" ]]; then
         use_sw_encoding="--use_sw_encoding"
     fi

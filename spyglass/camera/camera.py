@@ -87,10 +87,9 @@ class Camera(ABC):
         streaming_handler.snapshot_url = snapshot_url
         streaming_handler.webrtc_url = webrtc_url
 
+        streaming_handler.exif_header = None
         if orientation_exif > 0:
             streaming_handler.exif_header = create_exif_header(orientation_exif)
-        else:
-            streaming_handler.exif_header = None
         current_server = StreamingServer(address, streaming_handler)
         async_loop = threading.Thread(target=StreamingHandler.loop.run_forever)
         async_loop.start()

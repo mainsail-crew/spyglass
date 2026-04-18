@@ -58,6 +58,7 @@ def main(args=None):
     from spyglass.camera import init_camera
 
     device_path = parsed_args.device_path
+    camera_num = parsed_args.camera_num
     if device_path:
         from picamera2 import Picamera2
 
@@ -72,8 +73,6 @@ def main(args=None):
         if camera_num is None:
             logger.error(f"No libcamera for path {device_path} found!")
             return
-    else:
-        camera_num = parsed_args.camera_num
 
     cam = init_camera(
         camera_num, parsed_args.tuning_filter, parsed_args.tuning_filter_dir

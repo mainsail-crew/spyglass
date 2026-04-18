@@ -101,18 +101,15 @@ def get_libcamera_controls_string(camera_num: str) -> str:
         return ctrls_str
     cam = libcam_cm.cameras[camera_num]
 
-    def rectangle_to_tuple(rectangle):
-        return (rectangle.x, rectangle.y, rectangle.width, rectangle.height)
+    def parse_value(rectangle):
+        if isinstance(rectangle, Rectangle):
+            return (rectangle.x, rectangle.y, rectangle.width, rectangle.height)
+        return rectangle
 
     for k, v in cam.controls.items():
-        if isinstance(v.min, libcamera.Rectangle):
-            min = rectangle_to_tuple(v.min)
-            max = rectangle_to_tuple(v.max)
-            default = rectangle_to_tuple(v.default)
-        else:
-            min = v.min
-            max = v.max
-            default = v.default
+        min = parse_value(v.min)
+        max = parse_value(v.max)
+        default = parse_value(v.default)
 
         str_first = f"{k.name} ({get_type_str(min)})"
         str_second = f"min={min} max={max} default={default}"

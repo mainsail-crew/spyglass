@@ -229,7 +229,7 @@ def get_parser():
     )
     parser.add_argument(
         "--disable_webrtc",
-        action="store_true",
+        action=argparse.BooleanOptionalAction,
         help="Disables WebRTC encoding (recommended on Pi5)",
     )
     parser.add_argument(

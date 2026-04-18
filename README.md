@@ -18,7 +18,7 @@ Current version: 0.17.1
 -   [FAQ](#faq)
     -   [How can I add CLI arguments to my `spyglass.conf`?](#how-can-i-add-cli-arguments-to-my-spyglassconf)
     -   [How to use resolutions higher than maximum resolution?](#how-to-use-resolutions-higher-than-maximum-resolution)
-    -   [Why is the CPU load on my Pi5 so high?](#why-is-the-cpu-load-on-my-pi5-so-high)
+    -   [Why is there no WebRTC on my Pi5?](#why-is-there-no-webrtc-on-my-pi5)
     -   [How can I rotate the image of my stream?](#how-can-i-rotate-the-image-of-my-stream)
     -   [How to apply tuning filter?](#how-to-apply-tuning-filter)
     -   [How to use the WebRTC endpoint?](#how-to-use-the-webrtc-endpoint)
@@ -128,8 +128,8 @@ On startup the following arguments are supported:
 | `-tf`, `--tuning_filter`       | Set a tuning filter file name.                                                                                                     |              |
 | `-tfd`, `--tuning_filter_dir`  | Set the directory to look for tuning filters.                                                                                      |              |
 | `-n`, `--camera_num`           | Camera number to be used. All cameras with their number can be shown with `libcamera-hello`.                                       | `0`          |
-| `-sw`, `--use_sw_jpg_encoding` | Use software encoding for JPEG and MJPG (recommended on Pi5).                                                                      |              |
-| `--disable_webrtc`             | Disable WebRTC encoding (recommended on Pi5).                                                                                      |              |
+| `-sw`, `--use_sw_encoding`     | Use software encoding for JPEG and MJPG (Disables WebRTC).                                                                         |              |
+| `--force-webrtc`               | Force WebRTC streaming to start.                                                                                                   |              |
 | `--list-controls`              | List all available libcamera controls onto the console. Those can be used with `--controls`.                                       |              |
 
 
@@ -148,21 +148,17 @@ Please note that the maximum recommended resolution is 1920x1080 (16:9).
 
 The absolute maximum resolution is 1920x1920. If you choose a higher resolution spyglass may stop with
 `Maximum supported resolution is 1920x1920`. This is limited by the hardware (HW) encoder of the Pis.\
-You can disable this limit with `--use_sw_jpg_encoding` and `--disable_webrtc`, or the respective config in
-`spyglass.conf`, but it will take way more CPU resources to run the stream and WebRTC won't work anymore.
-Only a Pi5 you don't need to add `--disable_webrtc`, for further information please refer to
-[Pi5 recommendations](#pi5-recommendations).
+You can disable this limit with `--use-sw-encoding`, or the respective config in `spyglass.conf`, but
+it will take way more CPU resources to run the stream and WebRTC won't work anymore.
 
-### Why is the CPU load on my Pi5 so high?
+### Why is there no WebRTC on my Pi5?
 
 The Pi5 is the newest generation of Raspberry Pi SBCs but not all new things come with improvements.
 The Raspberry Pi foundation decided to remove the hardware (HW) encoders from the Pi5.
 This results in overall higher CPU usage on a Pi5 compared to previous generations.
 
-The following sections should only be followed on a Pi5.\
-WebRTC is also a big toll on your CPU. Therefore, you should use `--disable_webrtc`.\
-To reduce the CPU usage further you should add `--use_sw_jpg_encoding` to make sure to use the optimized software (SW)
-encoder, instead of the HW encoder falling back to an unoptimized SW encoder.
+WebRTC is a big toll on your CPU. Therefore we disabled it by default, you can use `--force-webrtc` to enable it, but
+keep an eye on your CPU usage if you run software with critical timings like Klipper.\
 
 ### How can I rotate the image of my stream?
 

@@ -102,7 +102,7 @@ def get_libcamera_controls_string(camera_num: str) -> str:
     cam = libcam_cm.cameras[camera_num]
 
     def parse_value(rectangle):
-        if isinstance(rectangle, Rectangle):
+        if isinstance(rectangle, libcamera.Rectangle):
             return (rectangle.x, rectangle.y, rectangle.width, rectangle.height)
         return rectangle
 

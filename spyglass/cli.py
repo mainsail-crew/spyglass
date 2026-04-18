@@ -41,16 +41,18 @@ def main(args=None):
             print("Available controls:\n" + controls_str)
         return
 
-    use_sw_jpg_encoding = parsed_args.use_sw_jpg_encoding
+    use_sw_encoding = parsed_args.use_sw_encoding
     # Disable max resolution limit for software encoding of JPEG
     width, height = split_resolution(
-        parsed_args.resolution, check_limit=not use_sw_jpg_encoding
+        parsed_args.resolution, check_limit=not use_sw_encoding
     )
     controls = parsed_args.controls
     if parsed_args.controls_string:
         controls += [c.split("=") for c in parsed_args.controls_string.split(",")]
 
-    set_webrtc_enabled(WEBRTC_ENABLED and not parsed_args.disable_webrtc)
+    set_webrtc_enabled(
+        parsed_args.force_webrtc or (WEBRTC_ENABLED and not parsed_args.use_sw_encoding)
+    )
 
     # Has to be imported after WEBRTC_ENABLED got set correctly
     from spyglass.camera import init_camera
@@ -97,7 +99,7 @@ def main(args=None):
             parsed_args.snapshot_url,
             parsed_args.webrtc_url,
             parsed_args.orientation_exif,
-            use_sw_jpg_encoding,
+            use_sw_encoding,
         )
     finally:
         cam.stop()
@@ -217,8 +219,9 @@ def get_parser():
     parser.add_argument(
         "-sw",
         "--use_sw_jpg_encoding",
-        action=argparse.BooleanOptionalAction,
-        help="Use software encoding for JPEG and MJPG (recommended on Pi5)",
+        "--use-sw-encoding",
+        action="store_true",
+        help="Use software encoding for JPEG and MJPG (Disables WebRTC)",
     )
     parser.add_argument(
         "-w",
@@ -228,9 +231,14 @@ def get_parser():
         help="Sets the URL for the WebRTC stream",
     )
     parser.add_argument(
-        "--disable_webrtc",
+        "--force-webrtc",
         action=argparse.BooleanOptionalAction,
-        help="Disables WebRTC encoding (recommended on Pi5)",
+        help="Force WebRTC streaming to start",
+    )
+    parser.add_argument(
+        "--disable_webrtc",
+        action="store_true",
+        help="DEPRECATED",
     )
     parser.add_argument(
         "-af",

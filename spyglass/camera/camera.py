@@ -105,7 +105,7 @@ class Camera(ABC):
         snapshot_url="/snapshot",
         webrtc_url="/webrtc",
         orientation_exif=0,
-        use_sw_jpg_encoding=False,
+        use_sw_encoding=False,
     ):
         pass
 

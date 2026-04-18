@@ -1,6 +1,7 @@
 import io
 from threading import Condition
 
+from picamera2.encoders import _hw_encoder_available
 from picamera2.outputs import FileOutput
 
 from spyglass import WEBRTC_ENABLED, camera
@@ -16,12 +17,12 @@ class CSI(camera.Camera):
         snapshot_url="/snapshot",
         webrtc_url="/webrtc",
         orientation_exif=0,
-        use_sw_jpg_encoding=False,
+        use_sw_encoding=False,
     ):
-        if use_sw_jpg_encoding:
-            from picamera2.encoders import JpegEncoder as MJPEGEncoder
-        else:
+        if _hw_encoder_available and not use_sw_encoding:
             from picamera2.encoders import MJPEGEncoder
+        else:
+            from picamera2.encoders import JpegEncoder as MJPEGEncoder
 
         class StreamingOutput(io.BufferedIOBase):
             def __init__(self):

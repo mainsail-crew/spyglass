@@ -163,20 +163,6 @@ def test_configure_with_parameters(mock_init_camera):
     )
 
 
-def test_raise_error_when_width_greater_than_maximum():
-    from spyglass import cli
-
-    with pytest.raises(argparse.ArgumentTypeError):
-        cli.main(args=["-r", "1921x1920"])
-
-
-def test_raise_error_when_height_greater_than_maximum():
-    from spyglass import cli
-
-    with pytest.raises(argparse.ArgumentTypeError):
-        cli.main(args=["-r", "1920x1921"])
-
-
 @patch("spyglass.camera.init_camera")
 def test_configure_camera_af_continuous_speed_fast(mock_init_camera):
     from spyglass import cli

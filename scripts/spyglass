@@ -101,7 +101,7 @@ run_spyglass() {
 
     force_webrtc=""
     if [[ "${FORCE_WEBRTC:-false}" == "true" ]]; then
-        force_webrtc="--force_webrtc"
+        force_webrtc="--force-webrtc"
     fi
 
     "${PY_BIN}" "$(dirname "${BASE_SPY_PATH}")/run.py" \

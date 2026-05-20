@@ -10,6 +10,9 @@ if TYPE_CHECKING:
 
 
 def start_streaming(handler: "StreamingHandler"):
+    encoder = getattr(handler, "mjpeg_encoder", None)
+    if encoder is not None:
+        encoder.acquire()
     try:
         send_default_headers(handler)
         handler.send_header("Content-Type", "multipart/x-mixed-replace; boundary=FRAME")
@@ -30,9 +33,15 @@ def start_streaming(handler: "StreamingHandler"):
         logger.warning(
             "Removed streaming client %s: %s", handler.client_address, str(e)
         )
+    finally:
+        if encoder is not None:
+            encoder.release()
 
 
 def send_snapshot(handler: "StreamingHandler"):
+    encoder = getattr(handler, "mjpeg_encoder", None)
+    if encoder is not None:
+        encoder.acquire()
     try:
         send_default_headers(handler)
         frame = handler.get_frame()
@@ -45,6 +54,9 @@ def send_snapshot(handler: "StreamingHandler"):
             handler.wfile.write(frame[2:])
     except Exception as e:
         logger.warning("Removed client %s: %s", handler.client_address, str(e))
+    finally:
+        if encoder is not None:
+            encoder.release()
 
 
 def send_default_headers(handler: "StreamingHandler"):

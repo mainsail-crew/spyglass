@@ -5,6 +5,7 @@ from picamera2.encoders import _hw_encoder_available
 from picamera2.outputs import FileOutput
 
 from spyglass import WEBRTC_ENABLED, camera
+from spyglass.camera.lazy_encoder import LazyEncoder
 from spyglass.server.http_server import StreamingHandler
 
 
@@ -41,11 +42,17 @@ class CSI(camera.Camera):
                 output.condition.wait()
                 return output.frame
 
-        self.picam2.start_encoder(MJPEGEncoder(), FileOutput(output))
+        StreamingHandler.mjpeg_encoder = LazyEncoder(
+            self.picam2, MJPEGEncoder, FileOutput(output)
+        )
         if WEBRTC_ENABLED:
             from picamera2.encoders import H264Encoder
 
-            self.picam2.start_encoder(H264Encoder(), self.media_track)
+            StreamingHandler.h264_encoder = LazyEncoder(
+                self.picam2, H264Encoder, self.media_track
+            )
+        else:
+            StreamingHandler.h264_encoder = None
         self.picam2.start()
 
         self._run_server(

@@ -19,6 +19,8 @@ class CSI(camera.Camera):
         webrtc_url="/webrtc",
         orientation_exif=0,
         use_sw_encoding=False,
+        mjpeg_linger_seconds=-1,
+        webrtc_linger_seconds=5,
     ):
         if _hw_encoder_available and not use_sw_encoding:
             from picamera2.encoders import MJPEGEncoder
@@ -43,20 +45,35 @@ class CSI(camera.Camera):
                 return output.frame
 
         session = CameraSession(self.picam2)
-        StreamingHandler.mjpeg_encoder = LazyEncoder(
-            self.picam2, MJPEGEncoder, FileOutput(output), session=session
+        mjpeg_encoder = LazyEncoder(
+            self.picam2,
+            MJPEGEncoder,
+            FileOutput(output),
+            session=session,
+            linger_seconds=mjpeg_linger_seconds,
         )
+        StreamingHandler.mjpeg_encoder = mjpeg_encoder
         if WEBRTC_ENABLED:
             from picamera2.encoders import H264Encoder
 
-            StreamingHandler.h264_encoder = LazyEncoder(
+            h264_encoder = LazyEncoder(
                 self.picam2,
                 H264Encoder,
                 self.media_track,
                 session=session,
+                linger_seconds=webrtc_linger_seconds,
             )
+            StreamingHandler.h264_encoder = h264_encoder
         else:
             StreamingHandler.h264_encoder = None
+
+        # Linger < 0 means "never stop after first start". Pre-warm so the
+        # first consumer (e.g. a timelapse /snapshot poll) hits the warm path
+        # instead of paying libcamera + AE/AWB cold-start latency.
+        if mjpeg_linger_seconds < 0:
+            mjpeg_encoder.acquire()
+        if WEBRTC_ENABLED and webrtc_linger_seconds < 0:
+            h264_encoder.acquire()
 
         self._run_server(
             bind_address,

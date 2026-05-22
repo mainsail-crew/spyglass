@@ -105,6 +105,8 @@ class Camera(ABC):
         webrtc_url="/webrtc",
         orientation_exif=0,
         use_sw_encoding=False,
+        mjpeg_linger_seconds=-1,
+        webrtc_linger_seconds=5,
     ):
         pass
 

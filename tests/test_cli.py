@@ -22,6 +22,8 @@ DEFAULT_CONTROLS = []
 DEFAULT_TUNING_FILTER = None
 DEFAULT_TUNING_FILTER_DIR = None
 DEFAULT_CAMERA_NUM = 0
+DEFAULT_MJPEG_LINGER_SECONDS = -1
+DEFAULT_WEBRTC_LINGER_SECONDS = 5
 
 
 mock_libcamera = MagicMock()
@@ -83,6 +85,53 @@ def test_parse_tuning_filter_dir():
 
     args = cli.get_args(["-tfd", "dir"])
     assert args.tuning_filter_dir == "dir"
+
+
+def test_parse_linger_defaults():
+    from spyglass import cli
+
+    args = cli.get_args([])
+    assert args.mjpeg_linger_seconds == DEFAULT_MJPEG_LINGER_SECONDS
+    assert args.webrtc_linger_seconds == DEFAULT_WEBRTC_LINGER_SECONDS
+
+
+def test_parse_linger_overrides():
+    from spyglass import cli
+
+    args = cli.get_args(
+        ["--mjpeg-linger-seconds", "10", "--webrtc-linger-seconds", "0"]
+    )
+    assert args.mjpeg_linger_seconds == 10
+    assert args.webrtc_linger_seconds == 0
+
+
+def test_parse_linger_overrides_underscore_aliases():
+    from spyglass import cli
+
+    args = cli.get_args(
+        ["--mjpeg_linger_seconds", "-1", "--webrtc_linger_seconds", "30"]
+    )
+    assert args.mjpeg_linger_seconds == -1
+    assert args.webrtc_linger_seconds == 30
+
+
+@patch("spyglass.camera.init_camera")
+def test_run_server_forwards_linger_arguments(mock_init_camera):
+    from spyglass import cli
+
+    cli.main(
+        args=[
+            "--mjpeg-linger-seconds",
+            "0",
+            "--webrtc-linger-seconds",
+            "30",
+            "-sw",
+        ]
+    )
+    cam_instance = mock_init_camera.return_value
+    _, kwargs = cam_instance.start_and_run_server.call_args
+    assert kwargs["mjpeg_linger_seconds"] == 0
+    assert kwargs["webrtc_linger_seconds"] == 30
 
 
 @patch("spyglass.camera.init_camera")
@@ -206,7 +255,15 @@ def test_run_server_with_configuration_from_arguments(mock_init_camera):
     )
     cam_instance = mock_init_camera.return_value
     cam_instance.start_and_run_server.assert_called_once_with(
-        "1.2.3.4", 1234, "streaming-url", "snapshot-url", "webrtc-url", 1, True
+        "1.2.3.4",
+        1234,
+        "streaming-url",
+        "snapshot-url",
+        "webrtc-url",
+        1,
+        True,
+        mjpeg_linger_seconds=DEFAULT_MJPEG_LINGER_SECONDS,
+        webrtc_linger_seconds=DEFAULT_WEBRTC_LINGER_SECONDS,
     )
 
 
@@ -253,4 +310,6 @@ def test_run_server_with_orientation(mock_init_camera, input_value, expected_out
         "webrtc-url",
         expected_output,
         True,
+        mjpeg_linger_seconds=DEFAULT_MJPEG_LINGER_SECONDS,
+        webrtc_linger_seconds=DEFAULT_WEBRTC_LINGER_SECONDS,
     )

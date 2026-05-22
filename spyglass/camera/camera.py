@@ -56,11 +56,17 @@ class Camera(ABC):
             vflip=int(flip_vertical or upsidedown),
         )
 
+        main_cfg = self._main_stream_config(width, height)
         self.picam2.configure(
             self.picam2.create_video_configuration(
-                main={"size": (width, height)}, controls=controls, transform=transform
+                main=main_cfg, controls=controls, transform=transform
             )
         )
+
+    def _main_stream_config(self, width: int, height: int) -> dict:
+        """Picamera2 main-stream config dict. Subclasses override to pick the
+        most efficient pixel format supported by their camera and encoders."""
+        return {"size": (width, height)}
 
     def _run_server(
         self,

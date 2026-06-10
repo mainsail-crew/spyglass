@@ -33,21 +33,26 @@ class CSI(camera.Camera):
         supported = self._enumerate_supported_main_stream_formats()
         if not supported:
             return None
-        for fmt in _PREFERRED_MAIN_STREAM_FORMATS:
-            if fmt in supported:
-                if fmt != _PREFERRED_MAIN_STREAM_FORMATS[0]:
-                    logger.info(
-                        "Main stream using %r (preferred %r not supported by camera).",
-                        fmt,
-                        _PREFERRED_MAIN_STREAM_FORMATS[0],
-                    )
-                return fmt
-        logger.warning(
-            "Camera reports no encoder-compatible main-stream formats; using "
-            "picamera2 default. Supported formats: %s",
-            sorted(supported),
-        )
-        return None
+
+        preferred_fmts = (f for f in _PREFERRED_MAIN_STREAM_FORMATS if f in supported)
+        fmt = next(preferred_fmts, None)
+
+        if fmt is None:
+            logger.warning(
+                "Camera reports no encoder-compatible main-stream formats; using "
+                "picamera2 default. Supported formats: %s",
+                sorted(supported),
+            )
+            return None
+
+        best_fmt = _PREFERRED_MAIN_STREAM_FORMATS[0]
+        if fmt != best_fmt:
+            logger.info(
+                f"Main stream using %r (preferred %r not supported by camera).",
+                fmt,
+                best_fmt,
+            )
+        return fmt
 
     def _enumerate_supported_main_stream_formats(self) -> set[str]:
         try:

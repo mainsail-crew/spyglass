@@ -33,12 +33,13 @@ class CameraSession:
     def acquire(self):
         with self._lock:
             self._refs += 1
-            if self._refs == 1:
-                try:
-                    self._picam2.start()
-                except Exception:
-                    self._refs -= 1
-                    raise
+            if self._refs > 1:
+                return
+            try:
+                self._picam2.start()
+            except Exception:
+                self._refs -= 1
+                raise
 
     def release(self):
         with self._lock:
@@ -85,33 +86,35 @@ class LazyEncoder:
         with self._lock:
             self._cancel_linger_locked()
             self._refs += 1
-            if self._encoder is None:
-                session_acquired = False
-                try:
-                    if self._session is not None:
-                        self._session.acquire()
-                        session_acquired = True
-                    self._encoder = self._encoder_factory()
-                    self._picam2.start_encoder(self._encoder, self._output)
-                except Exception:
-                    self._refs -= 1
-                    self._encoder = None
-                    if session_acquired and self._session is not None:
-                        self._session.release()
-                    raise
+            if self._encoder is not None:
+                return
+            session_acquired = False
+            try:
+                if self._session is not None:
+                    self._session.acquire()
+                    session_acquired = True
+                self._encoder = self._encoder_factory()
+                self._picam2.start_encoder(self._encoder, self._output)
+            except Exception:
+                self._refs -= 1
+                self._encoder = None
+                if session_acquired and self._session is not None:
+                    self._session.release()
+                raise
 
     def release(self):
         with self._lock:
             if self._refs == 0:
                 return
             self._refs -= 1
-            if self._refs == 0 and self._encoder is not None:
-                if self._linger_seconds < 0:
-                    return
-                if self._linger_seconds == 0:
-                    self._stop_now_locked()
-                else:
-                    self._schedule_linger_locked()
+            if self._refs != 0 or self._encoder is None:
+                return
+            if self._linger_seconds < 0:
+                return
+            if self._linger_seconds == 0:
+                self._stop_now_locked()
+            else:
+                self._schedule_linger_locked()
 
     def _stop_now_locked(self):
         encoder = self._encoder
@@ -123,10 +126,11 @@ class LazyEncoder:
                 self._session.release()
 
     def _cancel_linger_locked(self):
-        if self._stop_timer is not None:
-            self._stop_timer.cancel()
-            self._stop_timer = None
-            self._stop_token += 1
+        if self._stop_timer is None:
+            return
+        self._stop_timer.cancel()
+        self._stop_timer = None
+        self._stop_token += 1
 
     def _schedule_linger_locked(self):
         self._stop_token += 1

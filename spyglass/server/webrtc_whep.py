@@ -79,16 +79,12 @@ async def do_POST_async(handler: "StreamingHandler"):
 
     h264_encoder = getattr(handler, "h264_encoder", None)
     encoder_acquired = False
-    encoder_released = False
 
-    def _release_encoder_once():
-        nonlocal encoder_released
-        if (
-            h264_encoder is not None
-            and encoder_acquired
-            and not encoder_released
-        ):
-            encoder_released = True
+    def _cleanup():
+        nonlocal encoder_acquired
+        pcs.pop(str(secret), None)
+        if h264_encoder is not None and encoder_acquired:
+            encoder_acquired = False
             h264_encoder.release()
 
     @pc.on("connectionstatechange")
@@ -97,8 +93,7 @@ async def do_POST_async(handler: "StreamingHandler"):
         if pc.connectionState == "failed":
             await pc.close()
         elif pc.connectionState == "closed":
-            pcs.pop(str(secret), None)
-            _release_encoder_once()
+            _cleanup()
             print(f"{len(pcs)} connections still open.")
 
     try:
@@ -139,8 +134,7 @@ async def do_POST_async(handler: "StreamingHandler"):
         handler.end_headers()
         handler.wfile.write(bytes(pc.localDescription.sdp, "utf-8"))
     except Exception:
-        pcs.pop(str(secret), None)
-        _release_encoder_once()
+        _cleanup()
         await pc.close()
         raise
 

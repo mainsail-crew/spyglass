@@ -81,7 +81,7 @@ echo "Building .deb with fpm (declaring system package dependencies: ${DEPENDS[*
 fpm -s dir -t deb \
   -n "${PKGNAME}" -v "${VERSION}" \
   --description "Spyglass packaged with a bundled virtualenv and pip-installed app" \
-  --maintainer "Patrick Gehrsitz <mryel00.github@gmail.com>" \
+  --maintainer "Patrick Gehrsitz <github@mryel.de>" \
   --url "https://github.com/mainsail-crew/spyglass" \
   --license "GPLv3" \
   "${FPM_DEPENDS[@]}" \

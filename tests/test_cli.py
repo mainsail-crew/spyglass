@@ -87,53 +87,6 @@ def test_parse_tuning_filter_dir():
     assert args.tuning_filter_dir == "dir"
 
 
-def test_parse_linger_defaults():
-    from spyglass import cli
-
-    args = cli.get_args([])
-    assert args.mjpeg_linger_seconds == DEFAULT_MJPEG_LINGER_SECONDS
-    assert args.webrtc_linger_seconds == DEFAULT_WEBRTC_LINGER_SECONDS
-
-
-def test_parse_linger_overrides():
-    from spyglass import cli
-
-    args = cli.get_args(
-        ["--mjpeg-linger-seconds", "10", "--webrtc-linger-seconds", "0"]
-    )
-    assert args.mjpeg_linger_seconds == 10
-    assert args.webrtc_linger_seconds == 0
-
-
-def test_parse_linger_overrides_underscore_aliases():
-    from spyglass import cli
-
-    args = cli.get_args(
-        ["--mjpeg_linger_seconds", "-1", "--webrtc_linger_seconds", "30"]
-    )
-    assert args.mjpeg_linger_seconds == -1
-    assert args.webrtc_linger_seconds == 30
-
-
-@patch("spyglass.camera.init_camera")
-def test_run_server_forwards_linger_arguments(mock_init_camera):
-    from spyglass import cli
-
-    cli.main(
-        args=[
-            "--mjpeg-linger-seconds",
-            "0",
-            "--webrtc-linger-seconds",
-            "30",
-            "-sw",
-        ]
-    )
-    cam_instance = mock_init_camera.return_value
-    _, kwargs = cam_instance.start_and_run_server.call_args
-    assert kwargs["mjpeg_linger_seconds"] == 0
-    assert kwargs["webrtc_linger_seconds"] == 30
-
-
 @patch("spyglass.camera.init_camera")
 def test_init_camera_with_defaults(
     mock_spyglass_camera,
@@ -262,8 +215,8 @@ def test_run_server_with_configuration_from_arguments(mock_init_camera):
         "webrtc-url",
         1,
         True,
-        mjpeg_linger_seconds=DEFAULT_MJPEG_LINGER_SECONDS,
-        webrtc_linger_seconds=DEFAULT_WEBRTC_LINGER_SECONDS,
+        DEFAULT_MJPEG_LINGER_SECONDS,
+        DEFAULT_WEBRTC_LINGER_SECONDS,
     )
 
 
@@ -310,6 +263,6 @@ def test_run_server_with_orientation(mock_init_camera, input_value, expected_out
         "webrtc-url",
         expected_output,
         True,
-        mjpeg_linger_seconds=DEFAULT_MJPEG_LINGER_SECONDS,
-        webrtc_linger_seconds=DEFAULT_WEBRTC_LINGER_SECONDS,
+        DEFAULT_MJPEG_LINGER_SECONDS,
+        DEFAULT_WEBRTC_LINGER_SECONDS,
     )

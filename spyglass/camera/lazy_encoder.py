@@ -79,14 +79,10 @@ class LazyEncoder:
         self._refs = 0
         self._lock = threading.Lock()
         self._stop_timer = None
-        # Incremented on every cancel/schedule so a stale timer callback that
-        # has already raced past Timer.cancel() can detect it was superseded.
         self._stop_token = 0
 
     def acquire(self):
         with self._lock:
-            # If a linger-stop is pending, cancel it: the encoder is still
-            # running and we just need to claim a fresh reference.
             self._cancel_linger_locked()
             self._refs += 1
             if self._encoder is None:
@@ -98,7 +94,6 @@ class LazyEncoder:
                     self._encoder = self._encoder_factory()
                     self._picam2.start_encoder(self._encoder, self._output)
                 except Exception:
-                    # Roll back so a future caller can retry.
                     self._refs -= 1
                     self._encoder = None
                     if session_acquired and self._session is not None:
@@ -131,7 +126,6 @@ class LazyEncoder:
         if self._stop_timer is not None:
             self._stop_timer.cancel()
             self._stop_timer = None
-            # Invalidate any in-flight callback that already raced past cancel().
             self._stop_token += 1
 
     def _schedule_linger_locked(self):
@@ -147,7 +141,6 @@ class LazyEncoder:
     def _linger_callback(self, token):
         with self._lock:
             if self._stop_token != token:
-                # Superseded by a cancel or a fresh schedule; bail out.
                 return
             self._stop_timer = None
             if self._refs == 0 and self._encoder is not None:

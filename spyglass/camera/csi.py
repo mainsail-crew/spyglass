@@ -67,9 +67,6 @@ class CSI(camera.Camera):
         else:
             StreamingHandler.h264_encoder = None
 
-        # Linger < 0 means "never stop after first start". Pre-warm so the
-        # first consumer (e.g. a timelapse /snapshot poll) hits the warm path
-        # instead of paying libcamera + AE/AWB cold-start latency.
         if mjpeg_linger_seconds < 0:
             mjpeg_encoder.acquire()
         if WEBRTC_ENABLED and webrtc_linger_seconds < 0:
@@ -87,8 +84,6 @@ class CSI(camera.Camera):
         )
 
     def stop(self):
-        # Encoders / camera may already be stopped (no consumers); guard the
-        # systemd shutdown path so we don't error out on that case.
         try:
             self.picam2.stop_encoder()
         except Exception:

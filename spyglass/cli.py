@@ -100,8 +100,8 @@ def main(args=None):
             parsed_args.webrtc_url,
             parsed_args.orientation_exif,
             use_sw_encoding,
-            mjpeg_linger_seconds=parsed_args.mjpeg_linger_seconds,
-            webrtc_linger_seconds=parsed_args.webrtc_linger_seconds,
+            parsed_args.mjpeg_linger_seconds,
+            parsed_args.webrtc_linger_seconds,
         )
     finally:
         cam.stop()

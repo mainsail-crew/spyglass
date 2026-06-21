@@ -15,8 +15,6 @@ class USB(camera.Camera):
         mjpeg_linger_seconds=-1,
         webrtc_linger_seconds=5,
     ):
-        # USB camera path does not use lazy encoders; linger args are accepted
-        # for signature compatibility but ignored.
         def get_frame(inner_self):
             # TODO: Cuts framerate in 1/n with n streams open, add some kind of buffer
             return self.picam2.capture_buffer()

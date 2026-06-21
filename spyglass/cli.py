@@ -350,7 +350,6 @@ def get_parser():
     )
     parser.add_argument(
         "--mjpeg-linger-seconds",
-        "--mjpeg_linger_seconds",
         type=int,
         default=-1,
         help="How long the MJPEG encoder (and the camera, when no other "
@@ -371,7 +370,6 @@ def get_parser():
     )
     parser.add_argument(
         "--webrtc-linger-seconds",
-        "--webrtc_linger_seconds",
         type=int,
         default=5,
         help="How long the WebRTC (H264) encoder (and the camera, when no "

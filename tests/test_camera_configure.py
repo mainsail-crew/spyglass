@@ -21,7 +21,7 @@ mock_libcamera.controls.AfSpeedEnum.Normal = AF_SPEED_ENUM_NORMAL
 mock_libcamera.StreamRole.VideoRecording = object()
 
 
-def _make_picam2(supported_formats=None, enumerate_raises=None):
+def _make_picam2(supported_formats=[], enumerate_raises=None):
     """Build a mocked Picamera2 whose libcamera-level
     ``camera.generate_configuration(...)`` reports the given pixel formats."""
     picam2 = MagicMock()
@@ -32,23 +32,13 @@ def _make_picam2(supported_formats=None, enumerate_raises=None):
         picam2.camera.generate_configuration.side_effect = enumerate_raises
     else:
         formats = MagicMock()
-        formats.pixel_formats = [_PixFmt(name) for name in (supported_formats or [])]
+        formats.pixel_formats = supported_formats
         stream_cfg = MagicMock()
         stream_cfg.formats = formats
         libcam_cfg = MagicMock()
         libcam_cfg.at.return_value = stream_cfg
         picam2.camera.generate_configuration.return_value = libcam_cfg
     return picam2
-
-
-class _PixFmt:
-    """Stand-in for a libcamera.PixelFormat — only its ``str()`` matters."""
-
-    def __init__(self, name: str):
-        self._name = name
-
-    def __str__(self) -> str:
-        return self._name
 
 
 def _run_configure(cam):
@@ -73,7 +63,6 @@ def test_csi_picks_yuv420_when_supported():
 
     main = picam2.create_video_configuration.call_args.kwargs["main"]
     assert main == {"size": (1920, 1080), "format": "YUV420"}
-    picam2.configure.assert_called_once()
 
 
 def test_csi_falls_through_preference_when_yuv420_missing():

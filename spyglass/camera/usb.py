@@ -12,6 +12,8 @@ class USB(camera.Camera):
         webrtc_url="/webrtc",
         orientation_exif=0,
         use_sw_encoding=False,
+        mjpeg_linger_seconds=-1,
+        webrtc_linger_seconds=5,
     ):
         def get_frame(inner_self):
             # TODO: Cuts framerate in 1/n with n streams open, add some kind of buffer

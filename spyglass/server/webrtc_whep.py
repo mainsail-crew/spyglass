@@ -77,46 +77,66 @@ async def do_POST_async(handler: "StreamingHandler"):
     pc = RTCPeerConnection()
     secret = uuid.uuid4()
 
+    h264_encoder = getattr(handler, "h264_encoder", None)
+    encoder_acquired = False
+
+    def _cleanup():
+        nonlocal encoder_acquired
+        pcs.pop(str(secret), None)
+        if h264_encoder is not None and encoder_acquired:
+            encoder_acquired = False
+            h264_encoder.release()
+
     @pc.on("connectionstatechange")
     async def on_connectionstatechange():
         print(f"Connection state {pc.connectionState}")
         if pc.connectionState == "failed":
             await pc.close()
         elif pc.connectionState == "closed":
-            pcs.pop(str(secret))
+            _cleanup()
             print(f"{len(pcs)} connections still open.")
 
-    pcs[str(secret)] = pc
-    track = media_relay.subscribe(handler.media_track)
-    sender = pc.addTrack(track)
-    codecs = RTCRtpSender.getCapabilities("video").codecs
-    transceiver = next(t for t in pc.getTransceivers() if t.sender == sender)
-    transceiver.setCodecPreferences(
-        [codec for codec in codecs if codec.mimeType == "video/H264"]
-    )
+    try:
+        if h264_encoder is not None:
+            h264_encoder.acquire()
+            encoder_acquired = True
 
-    await pc.setRemoteDescription(offer)
-    answer = await pc.createAnswer()
-    await pc.setLocalDescription(answer)
+        pcs[str(secret)] = pc
 
-    while pc.iceGatheringState != "complete":
-        await asyncio.sleep(1)
+        track = media_relay.subscribe(handler.media_track)
+        sender = pc.addTrack(track)
+        codecs = RTCRtpSender.getCapabilities("video").codecs
+        transceiver = next(t for t in pc.getTransceivers() if t.sender == sender)
+        transceiver.setCodecPreferences(
+            [codec for codec in codecs if codec.mimeType == "video/H264"]
+        )
 
-    send_default_headers(HTTPStatus.CREATED, handler)
+        await pc.setRemoteDescription(offer)
+        answer = await pc.createAnswer()
+        await pc.setLocalDescription(answer)
 
-    handler.send_header("Content-Type", "application/sdp")
-    handler.send_header("ETag", "*")
+        while pc.iceGatheringState != "complete":
+            await asyncio.sleep(1)
 
-    handler.send_header("ID", secret)
-    handler.send_header(
-        "Access-Control-Expose-Headers", "ETag, ID, Accept-Patch, Link, Location"
-    )
-    handler.send_header("Accept-Patch", "application/trickle-ice-sdpfrag")
-    handler.headers["Link"] = get_ICE_servers()
-    handler.send_header("Location", f"/whep/{secret}")
-    handler.send_header("Content-Length", len(pc.localDescription.sdp))
-    handler.end_headers()
-    handler.wfile.write(bytes(pc.localDescription.sdp, "utf-8"))
+        send_default_headers(HTTPStatus.CREATED, handler)
+
+        handler.send_header("Content-Type", "application/sdp")
+        handler.send_header("ETag", "*")
+
+        handler.send_header("ID", secret)
+        handler.send_header(
+            "Access-Control-Expose-Headers", "ETag, ID, Accept-Patch, Link, Location"
+        )
+        handler.send_header("Accept-Patch", "application/trickle-ice-sdpfrag")
+        handler.headers["Link"] = get_ICE_servers()
+        handler.send_header("Location", f"/whep/{secret}")
+        handler.send_header("Content-Length", len(pc.localDescription.sdp))
+        handler.end_headers()
+        handler.wfile.write(bytes(pc.localDescription.sdp, "utf-8"))
+    except Exception:
+        _cleanup()
+        await pc.close()
+        raise
 
 
 async def do_PATCH_async(streaming_handler: "StreamingHandler"):

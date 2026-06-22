@@ -121,6 +121,8 @@ run_spyglass() {
     --orientation_exif "${ORIENTATION_EXIF:-h}" \
     --tuning_filter "${TUNING_FILTER:-}"\
     --tuning_filter_dir "${TUNING_FILTER_DIR:-}" \
+    --mjpeg-linger-seconds "${MJPEG_LINGER_SECONDS:--1}" \
+    --webrtc-linger-seconds "${WEBRTC_LINGER_SECONDS:-5}" \
     --controls-string "${CONTROLS:-0=0}" # 0=0 to prevent error on empty string
 }
 

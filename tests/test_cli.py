@@ -22,6 +22,8 @@ DEFAULT_CONTROLS = []
 DEFAULT_TUNING_FILTER = None
 DEFAULT_TUNING_FILTER_DIR = None
 DEFAULT_CAMERA_NUM = 0
+DEFAULT_MJPEG_LINGER_SECONDS = -1
+DEFAULT_WEBRTC_LINGER_SECONDS = 5
 
 
 mock_libcamera = MagicMock()
@@ -206,7 +208,15 @@ def test_run_server_with_configuration_from_arguments(mock_init_camera):
     )
     cam_instance = mock_init_camera.return_value
     cam_instance.start_and_run_server.assert_called_once_with(
-        "1.2.3.4", 1234, "streaming-url", "snapshot-url", "webrtc-url", 1, True
+        "1.2.3.4",
+        1234,
+        "streaming-url",
+        "snapshot-url",
+        "webrtc-url",
+        1,
+        True,
+        DEFAULT_MJPEG_LINGER_SECONDS,
+        DEFAULT_WEBRTC_LINGER_SECONDS,
     )
 
 
@@ -253,4 +263,6 @@ def test_run_server_with_orientation(mock_init_camera, input_value, expected_out
         "webrtc-url",
         expected_output,
         True,
+        DEFAULT_MJPEG_LINGER_SECONDS,
+        DEFAULT_WEBRTC_LINGER_SECONDS,
     )

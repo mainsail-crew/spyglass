@@ -100,6 +100,8 @@ def main(args=None):
             parsed_args.webrtc_url,
             parsed_args.orientation_exif,
             use_sw_encoding,
+            parsed_args.mjpeg_linger_seconds,
+            parsed_args.webrtc_linger_seconds,
         )
     finally:
         cam.stop()
@@ -345,6 +347,45 @@ def get_parser():
         "--list-controls",
         action="store_true",
         help="List available camera controls and exits.",
+    )
+    parser.add_argument(
+        "--mjpeg-linger-seconds",
+        type=int,
+        default=-1,
+        help="How long the MJPEG encoder (and the camera, when no other "
+        "encoder is active) keeps running after the last consumer "
+        "disconnects. Use 0 or a small positive value to free encoder and "
+        "camera resources while idle, reducing CPU use at the cost of "
+        "cold-start latency on the next /snapshot or /stream.\n"
+        "  -1 (default) keeps the encoder running once started; spyglass "
+        "pre-warms it at startup. Preserves the legacy 'always on' "
+        "behavior and the lowest /snapshot latency (e.g. for timelapse "
+        "use cases).\n"
+        "   0 stops the encoder immediately when the last consumer "
+        "disconnects. Lowest idle CPU.\n"
+        " > 0 stops the encoder N seconds after the last consumer "
+        "disconnects; a fresh request within the window cancels the stop. "
+        "Bridges brief reconnects without paying cold-start latency on "
+        "each one.",
+    )
+    parser.add_argument(
+        "--webrtc-linger-seconds",
+        type=int,
+        default=5,
+        help="How long the WebRTC (H264) encoder (and the camera, when no "
+        "other encoder is active) keeps running after the last peer "
+        "disconnects. Use 0 or a small positive value to free encoder and "
+        "camera resources while idle, reducing CPU use at the cost of "
+        "cold-start latency on the next peer connection.\n"
+        "  -1 keeps the encoder running once started; spyglass pre-warms "
+        "it at startup.\n"
+        "   0 stops the encoder immediately when the last peer "
+        "disconnects. Lowest idle CPU; every new peer pays cold-start "
+        "latency.\n"
+        " > 0 (default: 5) stops the encoder N seconds after the last "
+        "peer disconnects; a fresh connection within the window cancels "
+        "the stop. Bridges brief reconnects without paying cold-start "
+        "latency on each one.",
     )
     camera_group = parser.add_mutually_exclusive_group()
     camera_group.add_argument(

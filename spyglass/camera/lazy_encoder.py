@@ -107,7 +107,7 @@ class LazyEncoder:
             if self._refs == 0:
                 return
             self._refs -= 1
-            if self._refs != 0 or self._linger_seconds < 0:
+            if self._refs > 0 or self._linger_seconds < 0:
                 return
             if self._linger_seconds == 0:
                 self._stop_now_locked()

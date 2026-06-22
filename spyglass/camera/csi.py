@@ -37,7 +37,7 @@ class CSI(camera.Camera):
         preferred_fmts = (f for f in _PREFERRED_MAIN_STREAM_FORMATS if f in supported)
         fmt = next(preferred_fmts, None)
 
-        logger.info("Supporte formats: %s", sorted(supported))
+        logger.info("Supported formats: %s", sorted(supported))
         if fmt is None:
             logger.warning(
                 "Camera reports no encoder-compatible main-stream formats; using picamera2 default.",

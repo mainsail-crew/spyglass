@@ -96,7 +96,7 @@ run_spyglass() {
     # For backwards compatibility, USE_SW_JPG_ENCODING will be checked here
     # Might get removed in future
     if [[ "${USE_SW_ENCODING:-false}" == "true" || "${USE_SW_JPG_ENCODING:-false}" == "true" ]]; then
-        use_sw_encoding="--use_sw_encoding"
+        use_sw_encoding="--use-sw-encoding"
     fi
 
     force_webrtc=""
@@ -105,22 +105,22 @@ run_spyglass() {
     fi
 
     "${PY_BIN}" "$(dirname "${BASE_SPY_PATH}")/run.py" \
-    --camera_num "${CAMERA_NUM:-0}" \
+    --camera-num "${CAMERA_NUM:-0}" \
     --bindaddress "${bind_adress}" \
     --port "${HTTP_PORT:-8080}" \
     --resolution "${RESOLUTION:-640x480}" \
     --fps "${FPS:-15}" \
-    --stream_url "${STREAM_URL:-/stream}" \
-    --snapshot_url "${SNAPSHOT_URL:-/snapshot}" \
+    --stream-url "${STREAM_URL:-/stream}" \
+    --snapshot-url "${SNAPSHOT_URL:-/snapshot}" \
     ${use_sw_encoding} \
-    --webrtc_url "${WEBRTC_URL:-/webrtc}" \
+    --webrtc-url "${WEBRTC_URL:-/webrtc}" \
     ${force_webrtc} \
     --autofocus "${AUTO_FOCUS:-continuous}" \
     --lensposition "${FOCAL_DIST:-0.0}" \
     --autofocusspeed "${AF_SPEED:-normal}" \
-    --orientation_exif "${ORIENTATION_EXIF:-h}" \
-    --tuning_filter "${TUNING_FILTER:-}"\
-    --tuning_filter_dir "${TUNING_FILTER_DIR:-}" \
+    --orientation-exif "${ORIENTATION_EXIF:-h}" \
+    --tuning-filter "${TUNING_FILTER:-}"\
+    --tuning-filter-dir "${TUNING_FILTER_DIR:-}" \
     --mjpeg-linger-seconds "${MJPEG_LINGER_SECONDS:--1}" \
     --webrtc-linger-seconds "${WEBRTC_LINGER_SECONDS:-5}" \
     --controls-string "${CONTROLS:-0=0}" # 0=0 to prevent error on empty string

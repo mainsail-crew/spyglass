@@ -127,7 +127,7 @@ On startup the following arguments are supported:
 | `-c`, `--controls`             | Define camera controls to start spyglass with. Can be used multiple times. This argument expects the format \<control\>=\<value\>. |                     |
 | `-tf`, `--tuning-filter`       | Set a tuning filter file name.                                                                                                     |                     |
 | `-tfd`, `--tuning-filter-dir`  | Set the directory to look for tuning filters.                                                                                      |                     |
-| `-n`, `--camera-num`           | Camera number to be used. All cameras with their number can be shown with `libcamera-hello`.                                       | `0`                 |
+| `-n`, `--camera-num`           | Camera number to be used. All cameras with their number can be shown with `rpicam-hello --list-cameras`.                           | `0`                 |
 | `-sw`, `--use-sw-encoding`     | Use software encoding for JPEG and MJPG (Disables WebRTC).                                                                         |                     |
 | `--force-webrtc`               | Force WebRTC streaming to start.                                                                                                   |                     |
 | `--list-controls`              | List all available libcamera controls onto the console. Those can be used with `--controls`.                                       |                     |

@@ -20,6 +20,18 @@ _PREFERRED_MAIN_STREAM_FORMATS = (
 )
 
 
+class StreamingOutput(io.BufferedIOBase):
+    def __init__(self):
+        self.frame = None
+        self.condition = Condition()
+
+    def write(self, buf):
+        with self.condition:
+            self.frame = buf
+            self.condition.notify_all()
+        return len(buf)
+
+
 class CSI(camera.Camera):
     def _main_stream_config(self, width: int, height: int) -> dict:
         cfg = super()._main_stream_config(width, height)
@@ -78,16 +90,6 @@ class CSI(camera.Camera):
             from picamera2.encoders import MJPEGEncoder
         else:
             from picamera2.encoders import JpegEncoder as MJPEGEncoder
-
-        class StreamingOutput(io.BufferedIOBase):
-            def __init__(self):
-                self.frame = None
-                self.condition = Condition()
-
-            def write(self, buf):
-                with self.condition:
-                    self.frame = buf
-                    self.condition.notify_all()
 
         output = StreamingOutput()
 

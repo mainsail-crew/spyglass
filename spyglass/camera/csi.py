@@ -65,7 +65,7 @@ class CSI(camera.Camera):
 
     def start_and_run_server(
         self,
-        config=ServerConfig,
+        config,
         use_sw_encoding=False,
         mjpeg_linger_seconds=-1,
         webrtc_linger_seconds=5,
@@ -120,7 +120,7 @@ class CSI(camera.Camera):
         if WEBRTC_ENABLED and webrtc_linger_seconds < 0:
             h264_encoder.acquire()
 
-        self._run_server(StreamingHandler, get_frame, config)
+        self._run_server(config, StreamingHandler, get_frame)
 
     def stop(self):
         try:

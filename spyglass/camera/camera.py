@@ -81,9 +81,9 @@ class Camera(ABC):
 
     def _run_server(
         self,
+        config,
         streaming_handler: StreamingHandler,
         get_frame,
-        config,
     ):
         logger.info(f"Server listening on {config.bind_address}:{config.port}")
         logger.info(f"Streaming endpoint: {config.stream_url}")

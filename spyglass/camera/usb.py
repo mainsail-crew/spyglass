@@ -17,7 +17,7 @@ class USB(camera.Camera):
 
         self.picam2.start()
 
-        self._run_server(StreamingHandler, get_frame, config)
+        self._run_server(config, StreamingHandler, get_frame)
 
     def stop(self):
         self.picam2.stop()

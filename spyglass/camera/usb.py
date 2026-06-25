@@ -1,16 +1,12 @@
 from spyglass import camera
+from spyglass.camera.camera import ServerConfig
 from spyglass.server.http_server import StreamingHandler
 
 
 class USB(camera.Camera):
     def start_and_run_server(
         self,
-        bind_address,
-        port,
-        stream_url="/stream",
-        snapshot_url="/snapshot",
-        webrtc_url="/webrtc",
-        orientation_exif=0,
+        config,
         use_sw_encoding=False,
         mjpeg_linger_seconds=-1,
         webrtc_linger_seconds=5,
@@ -21,16 +17,7 @@ class USB(camera.Camera):
 
         self.picam2.start()
 
-        self._run_server(
-            bind_address,
-            port,
-            StreamingHandler,
-            get_frame,
-            stream_url=stream_url,
-            snapshot_url=snapshot_url,
-            webrtc_url=webrtc_url,
-            orientation_exif=orientation_exif,
-        )
+        self._run_server(StreamingHandler, get_frame, config)
 
     def stop(self):
         self.picam2.stop()

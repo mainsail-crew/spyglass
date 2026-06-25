@@ -11,6 +11,7 @@ import libcamera
 
 from spyglass import WEBRTC_ENABLED, camera_options, logger, set_webrtc_enabled
 from spyglass.__version__ import __version__
+from spyglass.camera.camera import ServerConfig
 from spyglass.exif import option_to_exif_orientation
 
 
@@ -79,6 +80,15 @@ def main(args=None):
         camera_num, parsed_args.tuning_filter, parsed_args.tuning_filter_dir
     )
 
+    server_config = ServerConfig(
+        parsed_args.bindaddress,
+        parsed_args.port,
+        parsed_args.stream_url,
+        parsed_args.snapshot_url,
+        parsed_args.webrtc_url,
+        parsed_args.orientation_exif,
+    )
+
     cam.configure(
         width,
         height,
@@ -93,12 +103,7 @@ def main(args=None):
     )
     try:
         cam.start_and_run_server(
-            parsed_args.bindaddress,
-            parsed_args.port,
-            parsed_args.stream_url,
-            parsed_args.snapshot_url,
-            parsed_args.webrtc_url,
-            parsed_args.orientation_exif,
+            server_config,
             use_sw_encoding,
             parsed_args.mjpeg_linger_seconds,
             parsed_args.webrtc_linger_seconds,

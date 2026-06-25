@@ -6,6 +6,7 @@ from picamera2.encoders import _hw_encoder_available
 from picamera2.outputs import FileOutput
 
 from spyglass import WEBRTC_ENABLED, camera, logger
+from spyglass.camera.camera import ServerConfig
 from spyglass.camera.lazy_encoder import CameraSession, LazyEncoder
 from spyglass.server.http_server import StreamingHandler
 
@@ -64,12 +65,7 @@ class CSI(camera.Camera):
 
     def start_and_run_server(
         self,
-        bind_address,
-        port,
-        stream_url="/stream",
-        snapshot_url="/snapshot",
-        webrtc_url="/webrtc",
-        orientation_exif=0,
+        config=ServerConfig,
         use_sw_encoding=False,
         mjpeg_linger_seconds=-1,
         webrtc_linger_seconds=5,
@@ -124,16 +120,7 @@ class CSI(camera.Camera):
         if WEBRTC_ENABLED and webrtc_linger_seconds < 0:
             h264_encoder.acquire()
 
-        self._run_server(
-            bind_address,
-            port,
-            StreamingHandler,
-            get_frame,
-            stream_url=stream_url,
-            snapshot_url=snapshot_url,
-            webrtc_url=webrtc_url,
-            orientation_exif=orientation_exif,
-        )
+        self._run_server(StreamingHandler, get_frame, config)
 
     def stop(self):
         try:

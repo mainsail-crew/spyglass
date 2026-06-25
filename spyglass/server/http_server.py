@@ -23,7 +23,7 @@ class StreamingHandler(server.BaseHTTPRequestHandler):
     def do_GET(self):
         if self.check_url(self.stream_url) or self.check_url("/stream"):
             jpeg.start_streaming(self)
-        elif self.check_url(self.snapshot_url) or self.check_url("/stream"):
+        elif self.check_url(self.snapshot_url) or self.check_url("/snapshot"):
             jpeg.send_snapshot(self)
         elif self.check_url("/controls"):
             controls.do_GET(self)

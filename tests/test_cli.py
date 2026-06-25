@@ -4,6 +4,8 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 
+from spyglass.camera.camera import ServerConfig
+
 AF_SPEED_ENUM_NORMAL = 1
 AF_SPEED_ENUM_FAST = 2
 AF_MODE_ENUM_CONTINUOUS = 2
@@ -207,16 +209,11 @@ def test_run_server_with_configuration_from_arguments(mock_init_camera):
         ]
     )
     cam_instance = mock_init_camera.return_value
+    config = ServerConfig(
+        "1.2.3.4", 1234, "streaming-url", "snapshot-url", "webrtc-url", 1
+    )
     cam_instance.start_and_run_server.assert_called_once_with(
-        "1.2.3.4",
-        1234,
-        "streaming-url",
-        "snapshot-url",
-        "webrtc-url",
-        1,
-        True,
-        DEFAULT_MJPEG_LINGER_SECONDS,
-        DEFAULT_WEBRTC_LINGER_SECONDS,
+        config, True, DEFAULT_MJPEG_LINGER_SECONDS, DEFAULT_WEBRTC_LINGER_SECONDS
     )
 
 
@@ -255,14 +252,9 @@ def test_run_server_with_orientation(mock_init_camera, input_value, expected_out
         ]
     )
     cam_instance = mock_init_camera.return_value
+    config = ServerConfig(
+        "1.2.3.4", 1234, "streaming-url", "snapshot-url", "webrtc-url", expected_output
+    )
     cam_instance.start_and_run_server.assert_called_once_with(
-        "1.2.3.4",
-        1234,
-        "streaming-url",
-        "snapshot-url",
-        "webrtc-url",
-        expected_output,
-        True,
-        DEFAULT_MJPEG_LINGER_SECONDS,
-        DEFAULT_WEBRTC_LINGER_SECONDS,
+        config, True, DEFAULT_MJPEG_LINGER_SECONDS, DEFAULT_WEBRTC_LINGER_SECONDS
     )

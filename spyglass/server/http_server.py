@@ -21,9 +21,9 @@ class StreamingHandler(server.BaseHTTPRequestHandler):
         super().__init__(*args, **kwargs)
 
     def do_GET(self):
-        if self.check_url(self.stream_url):
+        if self.check_url(self.stream_url) or self.check_url("/stream"):
             jpeg.start_streaming(self)
-        elif self.check_url(self.snapshot_url):
+        elif self.check_url(self.snapshot_url) or self.check_url("/snapshot"):
             jpeg.send_snapshot(self)
         elif self.check_url("/controls"):
             controls.do_GET(self)
@@ -54,7 +54,10 @@ class StreamingHandler(server.BaseHTTPRequestHandler):
         return check_urls_match(url, self.path, match_full_path)
 
     def check_webrtc(self):
-        return WEBRTC_ENABLED and self.check_url(self.webrtc_url, match_full_path=False)
+        return WEBRTC_ENABLED and (
+            self.check_url(self.webrtc_url, match_full_path=False)
+            or self.check_url("/webrtc", match_full_path=False)
+        )
 
     def run_async_request(self, method):
         asyncio.run_coroutine_threadsafe(method(self), StreamingHandler.loop).result()

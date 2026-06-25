@@ -212,7 +212,7 @@ def get_parser():
         "--stream-url",
         "--stream_url",
         type=str,
-        default="/stream",
+        default="/?action=stream",
         help="Sets the URL for the MJPG stream",
     )
     parser.add_argument(
@@ -220,7 +220,7 @@ def get_parser():
         "--snapshot-url",
         "--snapshot_url",
         type=str,
-        default="/snapshot",
+        default="/?action=snapshot",
         help="Sets the URL for snapshots (single frame of stream)",
     )
     parser.add_argument(

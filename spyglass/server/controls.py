@@ -1,6 +1,4 @@
 from http import HTTPStatus
-
-# Used for type hinting
 from typing import TYPE_CHECKING
 
 from spyglass.camera_options import parse_dictionary_to_html_page, process_controls
@@ -10,7 +8,7 @@ if TYPE_CHECKING:
     from spyglass.server.http_server import StreamingHandler
 
 
-def do_GET(handler: "StreamingHandler"):
+def do_GET(handler: "StreamingHandler") -> None:
     parsed_controls = get_url_params(handler.path)
     processed_controls = process_controls(handler.picam2, parsed_controls)
     handler.picam2.set_controls(processed_controls)
@@ -19,6 +17,6 @@ def do_GET(handler: "StreamingHandler"):
     ).encode("utf-8")
     handler.send_response(HTTPStatus.OK)
     handler.send_header("Content-Type", "text/html")
-    handler.send_header("Content-Length", len(content))
+    handler.send_header("Content-Length", str(len(content)))
     handler.end_headers()
     handler.wfile.write(content)

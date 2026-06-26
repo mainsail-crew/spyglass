@@ -1,14 +1,15 @@
 import ast
 import pathlib
+from typing import Any
 
 import libcamera
 
 
-def parse_dictionary_to_html_page(camera, parsed_controls={}, processed_controls={}):
-    if not parsed_controls:
-        parsed_controls = "None"
-    if not processed_controls:
-        processed_controls = "None"
+def parse_dictionary_to_html_page(
+    camera: Any,
+    parsed_controls: list[tuple[str, str]] | None = None,
+    processed_controls: dict[str, Any] | None = None,
+) -> str:
     html = """
             <!DOCTYPE html>
             <html lang="en">
@@ -24,8 +25,8 @@ def parse_dictionary_to_html_page(camera, parsed_controls={}, processed_controls
     html += f"""
                 <body>
                     <h1>Available camera options</h1>
-                    <h3>Parsed Controls: {parsed_controls}</h3>
-                    <h3>Processed Controls: {processed_controls}</h3>
+                    <h3>Parsed Controls: {parsed_controls if parsed_controls else 'None'}</h3>
+                    <h3>Processed Controls: {processed_controls if processed_controls else 'None'}</h3>
             """
     for control, values in camera.camera_controls.items():
         html += f"""
@@ -56,14 +57,14 @@ def parse_dictionary_to_html_page(camera, parsed_controls={}, processed_controls
     return html
 
 
-def get_style():
+def get_style() -> str:
     file_dir = pathlib.Path(__file__).parent.resolve()
     controls_style = file_dir / ".." / "resources" / "controls_style.css"
     with open(controls_style, "r") as f:
         return f.read()
 
 
-def process_controls(camera, controls: list[tuple[str, str]]) -> dict[str, any]:
+def process_controls(camera: Any, controls: list[tuple[str, str]]) -> dict[str, Any]:
     controls_dict_lower = {k.lower(): k for k in camera.camera_controls.keys()}
     if controls is None:
         return {}
@@ -78,7 +79,7 @@ def process_controls(camera, controls: list[tuple[str, str]]) -> dict[str, any]:
     return processed_controls
 
 
-def parse_from_string(input_string: str) -> any:
+def parse_from_string(input_string: str) -> Any:
     try:
         return ast.literal_eval(input_string)
     except (ValueError, TypeError, SyntaxError):
@@ -90,7 +91,7 @@ def parse_from_string(input_string: str) -> any:
     return input_string
 
 
-def get_type_str(obj) -> str:
+def get_type_str(obj: Any) -> str:
     return str(type(obj)).split("'")[1]
 
 

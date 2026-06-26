@@ -1,6 +1,4 @@
 from http import HTTPStatus
-
-# Used for type hinting
 from typing import TYPE_CHECKING
 
 from spyglass import logger
@@ -9,7 +7,7 @@ if TYPE_CHECKING:
     from spyglass.server.http_server import StreamingHandler
 
 
-def start_streaming(handler: "StreamingHandler"):
+def start_streaming(handler: "StreamingHandler") -> None:
     encoder = getattr(handler, "mjpeg_encoder", None)
     if encoder is not None:
         encoder.acquire()
@@ -38,7 +36,7 @@ def start_streaming(handler: "StreamingHandler"):
             encoder.release()
 
 
-def send_snapshot(handler: "StreamingHandler"):
+def send_snapshot(handler: "StreamingHandler") -> None:
     encoder = getattr(handler, "mjpeg_encoder", None)
     if encoder is not None:
         encoder.acquire()
@@ -59,15 +57,17 @@ def send_snapshot(handler: "StreamingHandler"):
             encoder.release()
 
 
-def send_default_headers(handler: "StreamingHandler"):
+def send_default_headers(handler: "StreamingHandler") -> None:
     handler.send_response(HTTPStatus.OK)
     handler.send_header("Access-Control-Allow-Origin", "*")
-    handler.send_header("Age", 0)
+    handler.send_header("Age", "0")
     handler.send_header("Cache-Control", "no-cache, private")
     handler.send_header("Pragma", "no-cache")
 
 
-def send_jpeg_content_headers(handler: "StreamingHandler", frame, extra_len=0):
+def send_jpeg_content_headers(
+    handler: "StreamingHandler", frame: bytes, extra_len: int = 0
+) -> None:
     handler.send_header("Content-Type", "image/jpeg")
     handler.send_header("Content-Length", str(len(frame) + extra_len))
     handler.end_headers()

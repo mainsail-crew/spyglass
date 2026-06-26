@@ -1,4 +1,4 @@
-def create_exif_header(orientation: int):
+def create_exif_header(orientation: int) -> bytes | None:
     if orientation <= 0:
         return None
 
@@ -49,7 +49,7 @@ def create_exif_header(orientation: int):
     )
 
 
-option_to_exif_orientation = {
+option_to_exif_orientation: dict[str, int] = {
     "h": 1,
     "mh": 2,
     "r180": 3,

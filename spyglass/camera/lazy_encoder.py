@@ -22,15 +22,17 @@ LazyEncoder supports a ``linger_seconds`` parameter:
 """
 
 import threading
+from collections.abc import Callable
+from typing import Any
 
 
 class CameraSession:
-    def __init__(self, picam2):
-        self._picam2 = picam2
-        self._refs = 0
-        self._lock = threading.Lock()
+    def __init__(self, picam2: Any) -> None:
+        self._picam2: Any = picam2
+        self._refs: int = 0
+        self._lock: threading.Lock = threading.Lock()
 
-    def acquire(self):
+    def acquire(self) -> None:
         with self._lock:
             self._refs += 1
             if self._refs > 1:
@@ -41,7 +43,7 @@ class CameraSession:
                 self._refs -= 1
                 raise
 
-    def release(self):
+    def release(self) -> None:
         with self._lock:
             if self._refs == 0:
                 return
@@ -53,12 +55,12 @@ class CameraSession:
 class LazyEncoder:
     def __init__(
         self,
-        picam2,
-        encoder_factory,
-        output,
-        session=None,
-        linger_seconds=0,
-    ):
+        picam2: Any,
+        encoder_factory: Callable[[], Any],
+        output: Any,
+        session: CameraSession | None = None,
+        linger_seconds: float = 0,
+    ) -> None:
         """
         :param picam2: the Picamera2 instance to start/stop the encoder on.
         :param encoder_factory: zero-arg callable returning a fresh Encoder.
@@ -71,18 +73,18 @@ class LazyEncoder:
             new consumer acquires within the window; ``<0`` keeps the encoder
             running forever after the first start.
         """
-        self._picam2 = picam2
-        self._encoder_factory = encoder_factory
-        self._output = output
-        self._session = session
-        self._linger_seconds = linger_seconds
-        self._encoder = None
-        self._refs = 0
-        self._lock = threading.Lock()
-        self._stop_timer = None
-        self._stop_token = 0
+        self._picam2: Any = picam2
+        self._encoder_factory: Callable[[], Any] = encoder_factory
+        self._output: Any = output
+        self._session: CameraSession | None = session
+        self._linger_seconds: float = linger_seconds
+        self._encoder: Any | None = None
+        self._refs: int = 0
+        self._lock: threading.Lock = threading.Lock()
+        self._stop_timer: threading.Timer | None = None
+        self._stop_token: int = 0
 
-    def acquire(self):
+    def acquire(self) -> None:
         with self._lock:
             self._cancel_linger_locked()
             self._refs += 1
@@ -102,7 +104,7 @@ class LazyEncoder:
                     self._session.release()
                 raise
 
-    def release(self):
+    def release(self) -> None:
         with self._lock:
             if self._refs == 0:
                 return
@@ -114,7 +116,7 @@ class LazyEncoder:
             else:
                 self._schedule_linger_locked()
 
-    def _stop_now_locked(self):
+    def _stop_now_locked(self) -> None:
         encoder = self._encoder
         self._encoder = None
         try:
@@ -123,14 +125,14 @@ class LazyEncoder:
             if self._session is not None:
                 self._session.release()
 
-    def _cancel_linger_locked(self):
+    def _cancel_linger_locked(self) -> None:
         if self._stop_timer is None:
             return
         self._stop_timer.cancel()
         self._stop_timer = None
         self._stop_token += 1
 
-    def _schedule_linger_locked(self):
+    def _schedule_linger_locked(self) -> None:
         self._stop_token += 1
         token = self._stop_token
         timer = threading.Timer(
@@ -140,7 +142,7 @@ class LazyEncoder:
         self._stop_timer = timer
         timer.start()
 
-    def _linger_callback(self, token):
+    def _linger_callback(self, token: int) -> None:
         with self._lock:
             if self._stop_token != token:
                 return
@@ -148,9 +150,9 @@ class LazyEncoder:
             if self._refs == 0 and self._encoder is not None:
                 self._stop_now_locked()
 
-    def __enter__(self):
+    def __enter__(self) -> "LazyEncoder":
         self.acquire()
         return self
 
-    def __exit__(self, *exc):
+    def __exit__(self, *exc: Any) -> None:
         self.release()

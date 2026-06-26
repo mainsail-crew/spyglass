@@ -1,5 +1,6 @@
 import io
 from threading import Condition
+from typing import Any
 
 import libcamera
 from picamera2.encoders import _hw_encoder_available
@@ -22,11 +23,11 @@ _PREFERRED_MAIN_STREAM_FORMATS = (
 
 
 class StreamingOutput(io.BufferedIOBase):
-    def __init__(self):
-        self.frame = None
-        self.condition = Condition()
+    def __init__(self) -> None:
+        self.frame: bytes | None = None
+        self.condition: Condition = Condition()
 
-    def write(self, buf):
+    def write(self, buf: bytes) -> int:  # type: ignore[override]
         with self.condition:
             self.frame = buf
             self.condition.notify_all()
@@ -34,7 +35,7 @@ class StreamingOutput(io.BufferedIOBase):
 
 
 class CSI(camera.Camera):
-    def _main_stream_config(self, width: int, height: int) -> dict:
+    def _main_stream_config(self, width: int, height: int) -> dict[str, Any]:
         cfg = super()._main_stream_config(width, height)
         chosen = self._pick_main_stream_format()
         if chosen is not None:
@@ -77,11 +78,11 @@ class CSI(camera.Camera):
 
     def start_and_run_server(
         self,
-        config,
-        use_sw_encoding=False,
-        mjpeg_linger_seconds=-1,
-        webrtc_linger_seconds=5,
-    ):
+        config: ServerConfig,
+        use_sw_encoding: bool = False,
+        mjpeg_linger_seconds: float = -1,
+        webrtc_linger_seconds: float = 5,
+    ) -> None:
         if _hw_encoder_available and not use_sw_encoding:
             from picamera2.encoders import MJPEGEncoder
         else:
@@ -89,9 +90,10 @@ class CSI(camera.Camera):
 
         output = StreamingOutput()
 
-        def get_frame(inner_self):
+        def get_frame(_) -> bytes:
             with output.condition:
                 output.condition.wait()
+                assert output.frame is not None
                 return output.frame
 
         session = CameraSession(self.picam2)
@@ -102,7 +104,8 @@ class CSI(camera.Camera):
             session=session,
             linger_seconds=mjpeg_linger_seconds,
         )
-        StreamingHandler.mjpeg_encoder = mjpeg_encoder
+        handler_cls: Any = StreamingHandler
+        handler_cls.mjpeg_encoder = mjpeg_encoder
         if WEBRTC_ENABLED:
             from picamera2.encoders import H264Encoder
 
@@ -113,18 +116,18 @@ class CSI(camera.Camera):
                 session=session,
                 linger_seconds=webrtc_linger_seconds,
             )
-            StreamingHandler.h264_encoder = h264_encoder
+            handler_cls.h264_encoder = h264_encoder
+            if webrtc_linger_seconds < 0:
+                h264_encoder.acquire()
         else:
-            StreamingHandler.h264_encoder = None
+            handler_cls.h264_encoder = None
 
         if mjpeg_linger_seconds < 0:
             mjpeg_encoder.acquire()
-        if WEBRTC_ENABLED and webrtc_linger_seconds < 0:
-            h264_encoder.acquire()
 
         self._run_server(config, StreamingHandler, get_frame)
 
-    def stop(self):
+    def stop(self) -> None:
         try:
             self.picam2.stop_encoder()
         except Exception:

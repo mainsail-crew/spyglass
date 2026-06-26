@@ -13,6 +13,6 @@ if importlib.util.find_spec("aiortc"):
     WEBRTC_ENABLED = _hw_encoder_available
 
 
-def set_webrtc_enabled(enabled):
+def set_webrtc_enabled(enabled: bool) -> None:
     global WEBRTC_ENABLED
     WEBRTC_ENABLED = enabled

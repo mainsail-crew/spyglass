@@ -23,6 +23,8 @@ LazyEncoder supports a ``linger_seconds`` parameter:
 
 import threading
 
+from picamera2.encoders import Quality
+
 
 class CameraSession:
     def __init__(self, picam2):
@@ -58,6 +60,7 @@ class LazyEncoder:
         output,
         session=None,
         linger_seconds=0,
+        quality: Quality | None = None,
     ):
         """
         :param picam2: the Picamera2 instance to start/stop the encoder on.
@@ -81,6 +84,7 @@ class LazyEncoder:
         self._lock = threading.Lock()
         self._stop_timer = None
         self._stop_token = 0
+        self._quality: Quality = quality
 
     def acquire(self):
         with self._lock:
@@ -94,7 +98,9 @@ class LazyEncoder:
                     self._session.acquire()
                     session_acquired = True
                 self._encoder = self._encoder_factory()
-                self._picam2.start_encoder(self._encoder, self._output)
+                self._picam2.start_encoder(
+                    self._encoder, self._output, quality=self._quality
+                )
             except Exception:
                 self._refs -= 1
                 self._encoder = None

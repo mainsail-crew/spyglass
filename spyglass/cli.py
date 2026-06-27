@@ -8,6 +8,7 @@ import re
 import sys
 
 import libcamera
+from picamera2.encoders import Quality
 
 from spyglass import WEBRTC_ENABLED, camera_options, logger, set_webrtc_enabled
 from spyglass.__version__ import __version__
@@ -107,6 +108,8 @@ def main(args=None):
             use_sw_encoding,
             parsed_args.mjpeg_linger_seconds,
             parsed_args.webrtc_linger_seconds,
+            parsed_args.mjpg_quality,
+            parsed_args.h264_quality,
         )
     finally:
         cam.stop()
@@ -162,6 +165,13 @@ def split_resolution(res):
     w = int(parts[0])
     h = int(parts[1])
     return w, h
+
+
+def parse_quality(quality):
+    try:
+        return Quality[quality.upper()]
+    except:
+        raise argparse.ArgumentTypeError(f"Invalid quality choice: {quality}")
 
 
 # endregion args parsers
@@ -391,6 +401,20 @@ def get_parser():
         "peer disconnects; a fresh connection within the window cancels "
         "the stop. Bridges brief reconnects without paying cold-start "
         "latency on each one.",
+    )
+    parser.add_argument(
+        "--mjpg-quality",
+        type=parse_quality,
+        choices=list(Quality),
+        default=None,
+        help="Sets the quality for the MJPG stream. Higher quality means less artifacts but higher CPU usage.",
+    )
+    parser.add_argument(
+        "--h264-quality",
+        type=parse_quality,
+        choices=list(Quality),
+        default=None,
+        help="Sets the quality for the WebRTC stream. Higher quality means less artifacts but higher CPU usage.",
     )
     camera_group = parser.add_mutually_exclusive_group()
     camera_group.add_argument(

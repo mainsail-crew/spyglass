@@ -1,3 +1,5 @@
+from picamera2.encoders import Quality
+
 from spyglass import camera
 from spyglass.camera.camera import ServerConfig
 from spyglass.server.http_server import StreamingHandler
@@ -10,6 +12,8 @@ class USB(camera.Camera):
         use_sw_encoding=False,
         mjpeg_linger_seconds=-1,
         webrtc_linger_seconds=5,
+        mjpg_quality: Quality | None = None,
+        h264_quality: Quality | None = None,
     ):
         def get_frame(inner_self):
             # TODO: Cuts framerate in 1/n with n streams open, add some kind of buffer

@@ -407,14 +407,14 @@ def get_parser():
         type=parse_quality,
         choices=list(Quality),
         default=None,
-        help="Sets the quality for the MJPG stream. Higher quality means less artifacts but higher CPU usage.",
+        help="Sets the quality for the MJPG stream. Higher quality means less artifacts but higher CPU usage and network bandwidth.",
     )
     parser.add_argument(
         "--h264-quality",
         type=parse_quality,
         choices=list(Quality),
         default=None,
-        help="Sets the quality for the WebRTC stream. Higher quality means less artifacts but higher CPU usage.",
+        help="Sets the quality for the WebRTC stream. Higher quality means less artifacts but higher CPU usage and network bandwidth.",
     )
     camera_group = parser.add_mutually_exclusive_group()
     camera_group.add_argument(

@@ -28,7 +28,9 @@ def test_first_acquire_starts_session_then_encoder():
     lazy.acquire()
 
     picam2.start.assert_called_once_with()
-    picam2.start_encoder.assert_called_once_with(factory.return_value, output)
+    picam2.start_encoder.assert_called_once_with(
+        factory.return_value, output, quality=None
+    )
 
 
 def test_extra_acquires_share_encoder_and_session():

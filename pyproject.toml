@@ -47,3 +47,12 @@ version_files = [
 bump_map = {"break" = "MAJOR", ".*!" = "MAJOR", "feat" = "MINOR", "fix" = "PATCH", "chore\\(deps\\)" = "PATCH"}
 commit_parser = "^(?P<change_type>break|feat|fix|chore\\(deps\\))(!)?:\\s(?P<message>.*)?"
 change_type_map = {"feat" = "Feat", "fix" = "Fix", "chore(deps)" = "Dependency Update"}
+
+
+[tool.basedpyright]
+pythonVersion = "3.10"
+typeCheckingMode = "standard"
+stubPath="typings"
+include=["spyglass", "run.py"]
+
+reportMissingModuleSource=false

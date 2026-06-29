@@ -1,6 +1,0 @@
-{
-  "include": ["spyglass"],
-  "ignore": [],
-  "reportMissingImports": false,
-  "reportMissingModuleSource": false
-}

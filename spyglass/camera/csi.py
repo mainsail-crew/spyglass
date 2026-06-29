@@ -104,7 +104,7 @@ class CSI(camera.Camera):
             session=session,
             linger_seconds=mjpeg_linger_seconds,
         )
-        handler_cls: Any = StreamingHandler
+        handler_cls = StreamingHandler
         handler_cls.mjpeg_encoder = mjpeg_encoder
         if WEBRTC_ENABLED:
             from picamera2.encoders import H264Encoder

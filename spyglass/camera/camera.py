@@ -30,7 +30,11 @@ class Camera(ABC):
         self.media_track = PicameraStreamTrack()
 
     def create_controls(
-        self, fps: int, autofocus: str, lens_position: float, autofocus_speed: str
+        self,
+        fps: int,
+        autofocus: libcamera.controls.AfModeEnum,
+        lens_position: float,
+        autofocus_speed: libcamera.controls.AfSpeedEnum,
     ) -> dict[str, Any]:
         controls = {}
 
@@ -52,9 +56,9 @@ class Camera(ABC):
         width: int,
         height: int,
         fps: int,
-        autofocus: str,
+        autofocus: libcamera.controls.AfModeEnum,
         lens_position: float,
-        autofocus_speed: str,
+        autofocus_speed: libcamera.controls.AfSpeedEnum,
         control_list: list[list[str]] = [],
         upsidedown: bool = False,
         flip_horizontal: bool = False,
@@ -65,8 +69,8 @@ class Camera(ABC):
         controls.update(c)
 
         transform = libcamera.Transform(
-            hflip=int(flip_horizontal or upsidedown),
-            vflip=int(flip_vertical or upsidedown),
+            hflip=flip_horizontal or upsidedown,
+            vflip=flip_vertical or upsidedown,
         )
 
         main_cfg = self._main_stream_config(width, height)

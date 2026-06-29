@@ -3,10 +3,11 @@ import pathlib
 from typing import Any
 
 import libcamera
+from picamera2 import Picamera2
 
 
 def parse_dictionary_to_html_page(
-    camera: Any,
+    camera: Picamera2,
     parsed_controls: list[tuple[str, str]] | None = None,
     processed_controls: dict[str, Any] | None = None,
 ) -> str:
@@ -64,7 +65,9 @@ def get_style() -> str:
         return f.read()
 
 
-def process_controls(camera: Any, controls: list[tuple[str, str]]) -> dict[str, Any]:
+def process_controls(
+    camera: Picamera2, controls: list[tuple[str, str]]
+) -> dict[str, Any]:
     controls_dict_lower = {k.lower(): k for k in camera.camera_controls.keys()}
     if controls is None:
         return {}

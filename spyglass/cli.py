@@ -6,7 +6,6 @@ Parse command line arguments in, invoke server.
 import argparse
 import re
 import sys
-from typing import Any
 
 import libcamera
 
@@ -138,7 +137,7 @@ def orientation_type(arg_value: str) -> int:
         )
 
 
-def parse_autofocus(arg_value: str) -> Any:
+def parse_autofocus(arg_value: str) -> libcamera.controls.AfModeEnum:
     if arg_value == "manual":
         return libcamera.controls.AfModeEnum.Manual
     elif arg_value == "continuous":
@@ -149,7 +148,7 @@ def parse_autofocus(arg_value: str) -> Any:
         )
 
 
-def parse_autofocus_speed(arg_value: str) -> Any:
+def parse_autofocus_speed(arg_value: str) -> libcamera.controls.AfSpeedEnum:
     if arg_value == "normal":
         return libcamera.controls.AfSpeedEnum.Normal
     elif arg_value == "fast":

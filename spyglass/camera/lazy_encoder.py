@@ -25,10 +25,13 @@ import threading
 from collections.abc import Callable
 from typing import Any
 
+from picamera2 import Picamera2
+from picamera2.outputs import Output
+from picamera2.encoders import Encoder
 
 class CameraSession:
-    def __init__(self, picam2: Any) -> None:
-        self._picam2: Any = picam2
+    def __init__(self, picam2: Picamera2) -> None:
+        self._picam2: Picamera2 = picam2
         self._refs: int = 0
         self._lock: threading.Lock = threading.Lock()
 
@@ -55,9 +58,9 @@ class CameraSession:
 class LazyEncoder:
     def __init__(
         self,
-        picam2: Any,
-        encoder_factory: Callable[[], Any],
-        output: Any,
+        picam2: Picamera2,
+        encoder_factory: Callable[[], Encoder],
+        output: Output,
         session: CameraSession | None = None,
         linger_seconds: float = 0,
     ) -> None:
@@ -73,12 +76,12 @@ class LazyEncoder:
             new consumer acquires within the window; ``<0`` keeps the encoder
             running forever after the first start.
         """
-        self._picam2: Any = picam2
-        self._encoder_factory: Callable[[], Any] = encoder_factory
-        self._output: Any = output
+        self._picam2: Picamera2 = picam2
+        self._encoder_factory: Callable[[], Encoder] = encoder_factory
+        self._output: Output = output
         self._session: CameraSession | None = session
         self._linger_seconds: float = linger_seconds
-        self._encoder: Any | None = None
+        self._encoder: Encoder | None = None
         self._refs: int = 0
         self._lock: threading.Lock = threading.Lock()
         self._stop_timer: threading.Timer | None = None

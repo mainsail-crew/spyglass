@@ -88,7 +88,7 @@ class LazyEncoder:
         self._lock: threading.Lock = threading.Lock()
         self._stop_timer: threading.Timer | None = None
         self._stop_token: int = 0
-        self._quality: Quality = quality
+        self._quality: Quality | None = quality
 
     def acquire(self) -> None:
         with self._lock:

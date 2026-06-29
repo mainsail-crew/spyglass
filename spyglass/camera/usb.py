@@ -1,6 +1,6 @@
 from picamera2.encoders import Quality
 
-from spyglass import camera
+from spyglass import camera, logger
 from spyglass.camera.camera import ServerConfig
 from spyglass.server.http_server import StreamingHandler
 
@@ -18,6 +18,9 @@ class USB(camera.Camera):
         def get_frame(inner_self):
             # TODO: Cuts framerate in 1/n with n streams open, add some kind of buffer
             return self.picam2.capture_buffer()
+
+        if mjpg_quality is not None or h264_quality is not None:
+            logger.warning("Setting quality is not supported for USB cameras!")
 
         self.picam2.start()
 

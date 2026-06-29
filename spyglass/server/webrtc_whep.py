@@ -248,7 +248,7 @@ class PicameraStreamTrack(MediaStreamTrack, Output):
 
             await self.condition.wait_for(not_empty)
         img, keyframe, pts = self.img_queue.popleft()
-        packet: Any = av.packet.Packet(img)
+        packet: av.Packet = av.Packet(img)
         packet.pts = pts
         packet.time_base = Fraction(1, 1000000)
         packet.is_keyframe = keyframe

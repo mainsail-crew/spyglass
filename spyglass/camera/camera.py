@@ -6,6 +6,7 @@ from typing import Any
 
 import libcamera
 from picamera2 import Picamera2
+from picamera2.encoders import Quality
 
 from spyglass import WEBRTC_ENABLED, logger
 from spyglass.camera_options import process_controls
@@ -120,6 +121,8 @@ class Camera(ABC):
         use_sw_encoding: bool = False,
         mjpeg_linger_seconds: float = -1,
         webrtc_linger_seconds: float = 5,
+        mjpg_quality: Quality | None = None,
+        h264_quality: Quality | None = None,
     ) -> None:
         pass
 

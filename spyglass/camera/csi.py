@@ -3,7 +3,7 @@ from threading import Condition
 from typing import Any
 
 import libcamera
-from picamera2.encoders import _hw_encoder_available
+from picamera2.encoders import Quality, _hw_encoder_available
 from picamera2.outputs import FileOutput
 
 from spyglass import WEBRTC_ENABLED, camera, logger
@@ -59,7 +59,7 @@ class CSI(camera.Camera):
             )
             return None
 
-        logger.info(f"Main stream using %r.", fmt)
+        logger.info("Main stream using %r.", fmt)
         return fmt
 
     def _enumerate_supported_main_stream_formats(self) -> set[str]:
@@ -82,6 +82,8 @@ class CSI(camera.Camera):
         use_sw_encoding: bool = False,
         mjpeg_linger_seconds: float = -1,
         webrtc_linger_seconds: float = 5,
+        mjpg_quality: Quality | None = None,
+        h264_quality: Quality | None = None,
     ) -> None:
         if _hw_encoder_available and not use_sw_encoding:
             from picamera2.encoders import MJPEGEncoder
@@ -103,6 +105,7 @@ class CSI(camera.Camera):
             FileOutput(output),
             session=session,
             linger_seconds=mjpeg_linger_seconds,
+            quality=mjpg_quality,
         )
         handler_cls = StreamingHandler
         handler_cls.mjpeg_encoder = mjpeg_encoder
@@ -115,6 +118,7 @@ class CSI(camera.Camera):
                 self.media_track,
                 session=session,
                 linger_seconds=webrtc_linger_seconds,
+                quality=h264_quality,
             )
             handler_cls.h264_encoder = h264_encoder
             if webrtc_linger_seconds < 0:

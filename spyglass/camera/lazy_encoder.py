@@ -27,7 +27,8 @@ from typing import Any
 
 from picamera2 import Picamera2
 from picamera2.outputs import Output
-from picamera2.encoders import Encoder
+from picamera2.encoders import Encoder, Quality
+
 
 class CameraSession:
     def __init__(self, picam2: Picamera2) -> None:
@@ -63,6 +64,7 @@ class LazyEncoder:
         output: Output,
         session: CameraSession | None = None,
         linger_seconds: float = 0,
+        quality: Quality | None = None,
     ) -> None:
         """
         :param picam2: the Picamera2 instance to start/stop the encoder on.
@@ -86,6 +88,7 @@ class LazyEncoder:
         self._lock: threading.Lock = threading.Lock()
         self._stop_timer: threading.Timer | None = None
         self._stop_token: int = 0
+        self._quality: Quality = quality
 
     def acquire(self) -> None:
         with self._lock:
@@ -99,7 +102,9 @@ class LazyEncoder:
                     self._session.acquire()
                     session_acquired = True
                 self._encoder = self._encoder_factory()
-                self._picam2.start_encoder(self._encoder, self._output)
+                self._picam2.start_encoder(
+                    self._encoder, self._output, quality=self._quality
+                )
             except Exception:
                 self._refs -= 1
                 self._encoder = None

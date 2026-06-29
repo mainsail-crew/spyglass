@@ -1,41 +1,64 @@
+from __future__ import annotations
+
 import asyncio
 import uuid
 from collections import deque
 from fractions import Fraction
 from http import HTTPStatus
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING
 
-from picamera2.outputs import Output  # type: ignore[assignment]
+from picamera2.outputs import Output
 
+from spyglass import WEBRTC_ENABLED
+from spyglass.camera.lazy_encoder import LazyEncoder
 from spyglass.url_parsing import check_urls_match
 
 if TYPE_CHECKING:
-    from spyglass.server.http_server import StreamingHandler
+    from aiortc import (
+        MediaStreamTrack,
+        RTCPeerConnection,
+        RTCRtpCodecCapability,
+        RTCRtpTransceiver,
+        RTCSessionDescription,
+        sdp,
+    )
+    from aiortc.contrib.media import MediaRelay
+    from aiortc.rtcicetransport import RTCIceCandidate
+    from aiortc.rtcrtpsender import RTCRtpSender
+    from av.packet import Packet
 
-from spyglass import WEBRTC_ENABLED
+    from spyglass.server.http_server import StreamingHandler
+else:
+    if WEBRTC_ENABLED:
+        from aiortc import MediaStreamTrack
+        from av.packet import Packet
+    else:
+
+        class MediaStreamTrack:
+            pass
+
 
 # Module-level variables populated at runtime when WEBRTC_ENABLED is True.
-pcs: dict[str, Any] = {}
+pcs: dict[str, RTCPeerConnection] = {}
 max_connections: int = 20
-media_relay: Any = None
+media_relay: MediaRelay
 
 if WEBRTC_ENABLED:
     from aiortc import RTCPeerConnection, RTCSessionDescription, sdp
     from aiortc.contrib.media import MediaRelay
     from aiortc.rtcrtpsender import RTCRtpSender
 
-    pcs = {}
     max_connections = 20
     media_relay = MediaRelay()
 
 
-def send_default_headers(response_code: int, handler: "StreamingHandler") -> None:
+def send_default_headers(response_code: int, handler: StreamingHandler) -> None:
     handler.send_response(response_code)
     handler.send_header("Access-Control-Allow-Origin", "*")
     handler.send_header("Access-Control-Allow-Credentials", "false")
 
 
-def do_OPTIONS(handler: "StreamingHandler", webrtc_url: str = "/webrtc") -> None:
+def do_OPTIONS(handler: StreamingHandler, webrtc_url: str = "/webrtc") -> None:
     # Adapted from MediaMTX http_server.go
     # https://github.com/bluenviron/mediamtx/blob/main/internal/servers/webrtc/http_server.go#L173-L189
     def response_headers() -> None:
@@ -61,7 +84,7 @@ def do_OPTIONS(handler: "StreamingHandler", webrtc_url: str = "/webrtc") -> None
         handler.end_headers()
 
 
-async def do_POST_async(handler: "StreamingHandler") -> None:
+async def do_POST_async(handler: StreamingHandler) -> None:
     # Adapted from MediaMTX http_server.go
     # https://github.com/bluenviron/mediamtx/blob/main/internal/servers/webrtc/http_server.go#L191-L246
     if handler.headers.get("Content-Type") != "application/sdp":
@@ -82,7 +105,7 @@ async def do_POST_async(handler: "StreamingHandler") -> None:
     pc: RTCPeerConnection = RTCPeerConnection()
     secret = uuid.uuid4()
 
-    h264_encoder: Any = getattr(handler, "h264_encoder", None)
+    h264_encoder: LazyEncoder | None = getattr(handler, "h264_encoder", None)
     encoder_acquired = False
 
     def _cleanup() -> None:
@@ -108,16 +131,20 @@ async def do_POST_async(handler: "StreamingHandler") -> None:
 
         pcs[str(secret)] = pc
 
-        track: Any = media_relay.subscribe(handler.media_track)
-        sender: Any = pc.addTrack(track)
-        codecs: Any = RTCRtpSender.getCapabilities("video").codecs
-        transceiver: Any = next(t for t in pc.getTransceivers() if t.sender == sender)
+        track: MediaStreamTrack = media_relay.subscribe(handler.media_track)
+        sender: RTCRtpSender = pc.addTrack(track)
+        codecs: list[RTCRtpCodecCapability] = RTCRtpSender.getCapabilities(
+            "video"
+        ).codecs
+        transceiver: RTCRtpTransceiver = next(
+            t for t in pc.getTransceivers() if t.sender == sender
+        )
         transceiver.setCodecPreferences(
             [codec for codec in codecs if codec.mimeType == "video/H264"]
         )
 
         await pc.setRemoteDescription(offer)
-        answer: Any = await pc.createAnswer()
+        answer: RTCSessionDescription = await pc.createAnswer()
         await pc.setLocalDescription(answer)
 
         while pc.iceGatheringState != "complete":
@@ -146,7 +173,7 @@ async def do_POST_async(handler: "StreamingHandler") -> None:
         raise
 
 
-async def do_PATCH_async(streaming_handler: "StreamingHandler") -> None:
+async def do_PATCH_async(streaming_handler: StreamingHandler) -> None:
     # Adapted from MediaMTX http_server.go
     # https://github.com/bluenviron/mediamtx/blob/main/internal/servers/webrtc/http_server.go#L248-L287
     if (
@@ -159,9 +186,9 @@ async def do_PATCH_async(streaming_handler: "StreamingHandler") -> None:
         return
     content_length = int(streaming_handler.headers["Content-Length"])
     sdp_str = streaming_handler.rfile.read(content_length).decode("utf-8")
-    candidates: list[Any] = parse_ice_candidates(sdp_str)
+    candidates: list[RTCIceCandidate] = parse_ice_candidates(sdp_str)
     secret = streaming_handler.path.split("/")[-1]
-    pc: Any = pcs[secret]
+    pc: RTCPeerConnection = pcs[secret]
     for candidate in candidates:
         await pc.addIceCandidate(candidate)
 
@@ -173,12 +200,12 @@ def get_ICE_servers() -> str | None:
     return None
 
 
-def parse_ice_candidates(sdp_message: str) -> list[Any]:
+def parse_ice_candidates(sdp_message: str) -> list[RTCIceCandidate]:
     sdp_message = sdp_message.replace("\\r\\n", "\r\n")
 
     lines = sdp_message.splitlines()
 
-    candidates: list[Any] = []
+    candidates: list[RTCIceCandidate] = []
     cand_str = "a=candidate:"
     mid_str = "a=mid:"
     mid = ""
@@ -187,25 +214,10 @@ def parse_ice_candidates(sdp_message: str) -> list[Any]:
             mid = line[len(mid_str) :]
         elif line.startswith(cand_str):
             candidate_str = line[len(cand_str) :]
-            candidate: Any = sdp.candidate_from_sdp(candidate_str)
+            candidate: RTCIceCandidate = sdp.candidate_from_sdp(candidate_str)
             candidate.sdpMid = mid
             candidates.append(candidate)
     return candidates
-
-
-if TYPE_CHECKING:
-    import av
-    from aiortc import MediaStreamTrack, RTCPeerConnection, RTCSessionDescription, sdp
-    from aiortc.contrib.media import MediaRelay
-    from aiortc.rtcrtpsender import RTCRtpSender
-else:
-    if WEBRTC_ENABLED:
-        import av
-        from aiortc import MediaStreamTrack
-    else:
-
-        class MediaStreamTrack:
-            pass
 
 
 class PicameraStreamTrack(MediaStreamTrack, Output):
@@ -213,7 +225,7 @@ class PicameraStreamTrack(MediaStreamTrack, Output):
 
     def __init__(self) -> None:
         super().__init__()
-        self.img_queue: deque[tuple[bytes, bool, Any]] = deque(maxlen=60)
+        self.img_queue: deque[tuple[bytes, bool, int | None]] = deque(maxlen=60)
         from spyglass.server.http_server import StreamingHandler
 
         asyncio.set_event_loop(StreamingHandler.loop)
@@ -224,7 +236,7 @@ class PicameraStreamTrack(MediaStreamTrack, Output):
         frame: bytes,
         keyframe: bool = True,
         timestamp: int | None = None,
-        packet: Any = None,
+        packet: Packet | None = None,
         audio: bool = False,
     ) -> None:
         from spyglass.server.http_server import StreamingHandler
@@ -234,13 +246,13 @@ class PicameraStreamTrack(MediaStreamTrack, Output):
         )
 
     async def put_frame(
-        self, frame: bytes, keyframe: bool = True, timestamp: Any = None
+        self, frame: bytes, keyframe: bool = True, timestamp: int | None = None
     ) -> None:
         async with self.condition:
             self.img_queue.append((frame, keyframe, timestamp))
             self.condition.notify_all()
 
-    async def recv(self) -> Any:
+    async def recv(self) -> Packet:
         async with self.condition:
 
             def not_empty() -> bool:
@@ -248,7 +260,7 @@ class PicameraStreamTrack(MediaStreamTrack, Output):
 
             await self.condition.wait_for(not_empty)
         img, keyframe, pts = self.img_queue.popleft()
-        packet: av.Packet = av.Packet(img)
+        packet: Packet = Packet(img)
         packet.pts = pts
         packet.time_base = Fraction(1, 1000000)
         packet.is_keyframe = keyframe

@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from http import HTTPStatus
 from typing import TYPE_CHECKING
 
@@ -8,7 +10,7 @@ if TYPE_CHECKING:
     from spyglass.server.http_server import StreamingHandler
 
 
-def do_GET(handler: "StreamingHandler") -> None:
+def do_GET(handler: StreamingHandler) -> None:
     parsed_controls = get_url_params(handler.path)
     processed_controls = process_controls(handler.picam2, parsed_controls)
     handler.picam2.set_controls(processed_controls)

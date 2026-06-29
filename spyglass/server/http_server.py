@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+from __future__ import annotations
 
 import asyncio
 import socketserver
@@ -23,8 +23,8 @@ class StreamingServer(socketserver.ThreadingMixIn, server.HTTPServer):
 
 class StreamingHandler(server.BaseHTTPRequestHandler):
     loop = asyncio.new_event_loop()
-    mjpeg_encoder: "LazyEncoder"
-    h264_encoder: "LazyEncoder | None"
+    mjpeg_encoder: LazyEncoder
+    h264_encoder: LazyEncoder | None
     picam2: Picamera2
     stream_url: str
     snapshot_url: str

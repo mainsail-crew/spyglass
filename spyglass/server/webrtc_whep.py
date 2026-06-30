@@ -196,7 +196,7 @@ async def do_PATCH_async(streaming_handler: StreamingHandler) -> None:
     streaming_handler.end_headers()
 
 
-def get_ICE_servers() -> str | None:
+def get_ICE_servers() -> None:
     return None
 
 

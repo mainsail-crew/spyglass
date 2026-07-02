@@ -161,7 +161,7 @@ def parse_autofocus_speed(arg_value: str) -> libcamera.controls.AfSpeedEnum:
 
 
 def split_resolution(res: str) -> tuple[int, int]:
-    parts = res.split("x")
+    parts = res.lower().split("x")
     w = int(parts[0])
     h = int(parts[1])
     return w, h

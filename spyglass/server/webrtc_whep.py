@@ -5,8 +5,9 @@ import uuid
 from collections import deque
 from fractions import Fraction
 from http import HTTPStatus
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Union
 
+from aiortc import RTCIceGatherer, RTCIceServer
 from picamera2.outputs import Output
 
 from spyglass import WEBRTC_ENABLED
@@ -78,7 +79,7 @@ def do_OPTIONS(handler: StreamingHandler, webrtc_url: str = "/webrtc") -> None:
     ):
         response_headers()
         handler.send_header("Access-Control-Expose-Headers", "Link")
-        ice_servers = get_ICE_servers()
+        ice_servers = get_ICE_servers_header()
         if ice_servers is not None:
             handler.headers["Link"] = ice_servers
         handler.end_headers()
@@ -160,7 +161,7 @@ async def do_POST_async(handler: StreamingHandler) -> None:
             "Access-Control-Expose-Headers", "ETag, ID, Accept-Patch, Link, Location"
         )
         handler.send_header("Accept-Patch", "application/trickle-ice-sdpfrag")
-        ice_servers = get_ICE_servers()
+        ice_servers = get_ICE_servers_header()
         if ice_servers is not None:
             handler.headers["Link"] = ice_servers
         handler.send_header("Location", f"/whep/{secret}")
@@ -196,8 +197,17 @@ async def do_PATCH_async(streaming_handler: StreamingHandler) -> None:
     streaming_handler.end_headers()
 
 
-def get_ICE_servers() -> None:
-    return None
+def get_ICE_servers_header() -> str | None:
+    links = []
+    ice_servers: list[RTCIceServer] = RTCIceGatherer.getDefaultIceServers()
+    for ice in ice_servers:
+        urls: Union[str, list[str]] = ice.urls
+        if isinstance(urls, str):
+            urls = [urls]
+
+        links.extend([f'<{url}>; rel="ice-server"' for url in urls if url])
+
+    return ",".join(links) if links else None
 
 
 def parse_ice_candidates(sdp_message: str) -> list[RTCIceCandidate]:

@@ -81,7 +81,7 @@ def do_OPTIONS(handler: StreamingHandler, webrtc_url: str = "/webrtc") -> None:
         handler.send_header("Access-Control-Expose-Headers", "Link")
         ice_servers = get_ICE_servers_header()
         if ice_servers is not None:
-            handler.headers["Link"] = ice_servers
+            handler.send_header("Link", ice_servers)
         handler.end_headers()
 
 
@@ -163,7 +163,7 @@ async def do_POST_async(handler: StreamingHandler) -> None:
         handler.send_header("Accept-Patch", "application/trickle-ice-sdpfrag")
         ice_servers = get_ICE_servers_header()
         if ice_servers is not None:
-            handler.headers["Link"] = ice_servers
+            handler.send_header("Link", ice_servers)
         handler.send_header("Location", f"/whep/{secret}")
         handler.send_header("Content-Length", str(len(pc.localDescription.sdp)))
         handler.end_headers()

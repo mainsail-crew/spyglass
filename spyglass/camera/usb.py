@@ -22,7 +22,7 @@ class USB(camera.Camera):
         if use_sw_encoding:
             logger.warning("Using software encoding is not supported for USB cameras!")
         if mjpeg_linger_seconds != -1 or webrtc_linger_seconds != 5:
-            logger.warning("Using linger sevonds is not supported for USB cameras!")
+            logger.warning("Using linger seconds is not supported for USB cameras!")
         if mjpg_quality is not None or h264_quality is not None:
             logger.warning("Setting quality is not supported for USB cameras!")
 

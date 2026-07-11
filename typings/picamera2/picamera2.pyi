@@ -33,7 +33,7 @@ STILL: Incomplete
 RAW: Incomplete
 VIDEO: Incomplete
 VIEWFINDER: Incomplete
-T = TypeVar('T')
+T = TypeVar("T")
 _log: Incomplete
 
 class Preview(Enum):
@@ -103,7 +103,9 @@ class Picamera2:
     still_configuration_: Incomplete
     video_configuration_: Incomplete
     allocator: Incomplete
-    def __init__(self, camera_num: int = 0, verbose_console=None, tuning=None, allocator=None) -> None: ...
+    def __init__(
+        self, camera_num: int = 0, verbose_console=None, tuning=None, allocator=None
+    ) -> None: ...
     @property
     def camera_manager(self) -> libcamera.CameraManager: ...
     camera: Incomplete
@@ -156,7 +158,12 @@ class Picamera2:
     @title_fields.setter
     def title_fields(self, fields): ...
     def __enter__(self): ...
-    def __exit__(self, exc_type: type[BaseException] | None, exc_val: BaseException | None, exc_traceback: types.TracebackType | None) -> None: ...
+    def __exit__(
+        self,
+        exc_type: type[BaseException] | None,
+        exc_val: BaseException | None,
+        exc_traceback: types.TracebackType | None,
+    ) -> None: ...
     def __del__(self) -> None: ...
     def _grab_camera(self, idx): ...
     _raw_modes: Incomplete
@@ -181,13 +188,57 @@ class Picamera2:
     @staticmethod
     def _add_display_and_encode(config, display, encode) -> None: ...
     _raw_stream_ignore_list: Incomplete
-    def create_preview_configuration(self, main={}, lores=None, raw={}, transform=..., colour_space=..., buffer_count: int = 4, controls={}, display: str = 'main', encode: str = 'main', queue: bool = True, sensor={}, use_case: str = 'preview') -> dict[str, Any]: ...
-    def create_still_configuration(self, main={}, lores=None, raw={}, transform=..., colour_space=..., buffer_count: int = 1, controls={}, display=None, encode=None, queue: bool = True, sensor={}, use_case: str = 'still') -> dict[str, Any]: ...
-    def create_video_configuration(self, main={}, lores=None, raw={}, transform=..., colour_space=None, buffer_count: int = 6, controls={}, display: str = 'main', encode: str = 'main', queue: bool = True, sensor={}, use_case: str = 'video') -> dict[str, Any]: ...
+    def create_preview_configuration(
+        self,
+        main={},
+        lores=None,
+        raw={},
+        transform=...,
+        colour_space=...,
+        buffer_count: int = 4,
+        controls={},
+        display: str = "main",
+        encode: str = "main",
+        queue: bool = True,
+        sensor={},
+        use_case: str = "preview",
+    ) -> dict[str, Any]: ...
+    def create_still_configuration(
+        self,
+        main={},
+        lores=None,
+        raw={},
+        transform=...,
+        colour_space=...,
+        buffer_count: int = 1,
+        controls={},
+        display=None,
+        encode=None,
+        queue: bool = True,
+        sensor={},
+        use_case: str = "still",
+    ) -> dict[str, Any]: ...
+    def create_video_configuration(
+        self,
+        main={},
+        lores=None,
+        raw={},
+        transform=...,
+        colour_space=None,
+        buffer_count: int = 6,
+        controls={},
+        display: str = "main",
+        encode: str = "main",
+        queue: bool = True,
+        sensor={},
+        use_case: str = "video",
+    ) -> dict[str, Any]: ...
     def check_stream_config(self, stream_config, name) -> None: ...
     def check_camera_config(self, camera_config) -> None: ...
     @staticmethod
-    def _update_libcamera_stream_config(libcamera_stream_config, stream_config, buffer_count) -> None: ...
+    def _update_libcamera_stream_config(
+        libcamera_stream_config, stream_config, buffer_count
+    ) -> None: ...
     main_index: int
     lores_index: int
     raw_index: int
@@ -205,7 +256,7 @@ class Picamera2:
     def configure_(self, camera_config) -> None: ...
     def configure(self, camera_config=None) -> None: ...
     def camera_configuration(self) -> dict[str, Any]: ...
-    def stream_configuration(self, name: str = 'main') -> dict[str, Any]: ...
+    def stream_configuration(self, name: str = "main") -> dict[str, Any]: ...
     @property
     def is_mono(self) -> bool: ...
     def start_(self) -> None: ...
@@ -217,200 +268,672 @@ class Picamera2:
     def process_requests(self, display) -> None: ...
     def _run_process_requests(self) -> None: ...
     def wait(self, job: Job[T], timeout=None) -> T: ...
-    def dispatch_functions(self, functions, wait, signal_function=None, immediate: bool = False) -> T | Job[T]: ...
+    def dispatch_functions(
+        self, functions, wait, signal_function=None, immediate: bool = False
+    ) -> T | Job[T]: ...
     def set_frame_drops_(self, num_frames): ...
     def drop_frames_(self): ...
     def wait_for_timestamp_(self, timestamp_ns): ...
     @overload
-    def drop_frames(self, num_frames, wait: None = ..., signal_function: None = ...) -> None: ...
+    def drop_frames(
+        self, num_frames, wait: None = ..., signal_function: None = ...
+    ) -> None: ...
     @overload
-    def drop_frames(self, num_frames, wait: None = ..., signal_function: Callable[[Job], None] = ...) -> Job[None]: ...
+    def drop_frames(
+        self, num_frames, wait: None = ..., signal_function: Callable[[Job], None] = ...
+    ) -> Job[None]: ...
     @overload
-    def drop_frames(self, num_frames, wait: Literal[True] = ..., signal_function: Callable[[Job], None] | None = ...) -> None: ...
+    def drop_frames(
+        self,
+        num_frames,
+        wait: Literal[True] = ...,
+        signal_function: Callable[[Job], None] | None = ...,
+    ) -> None: ...
     @overload
-    def drop_frames(self, num_frames, wait: Literal[False] = ..., signal_function: Callable[[Job], None] | None = ...) -> Job[None]: ...
+    def drop_frames(
+        self,
+        num_frames,
+        wait: Literal[False] = ...,
+        signal_function: Callable[[Job], None] | None = ...,
+    ) -> Job[None]: ...
     def capture_file_(self, file_output, name, format=None, exif_data=None): ...
     @overload
-    def capture_file(self, file_output, name: str = 'main', format=None, wait: None = ..., signal_function: None = ..., exif_data=None) -> dict[str, Any]: ...
+    def capture_file(
+        self,
+        file_output,
+        name: str = "main",
+        format=None,
+        wait: None = ...,
+        signal_function: None = ...,
+        exif_data=None,
+    ) -> dict[str, Any]: ...
     @overload
-    def capture_file(self, file_output, name: str = 'main', format=None, wait: None = ..., signal_function: Callable[[Job], None] = ..., exif_data=None) -> Job[dict[str, Any]]: ...
+    def capture_file(
+        self,
+        file_output,
+        name: str = "main",
+        format=None,
+        wait: None = ...,
+        signal_function: Callable[[Job], None] = ...,
+        exif_data=None,
+    ) -> Job[dict[str, Any]]: ...
     @overload
-    def capture_file(self, file_output, name: str = 'main', format=None, wait: Literal[True] = ..., signal_function: Callable[[Job], None] | None = ..., exif_data=None) -> dict[str, Any]: ...
+    def capture_file(
+        self,
+        file_output,
+        name: str = "main",
+        format=None,
+        wait: Literal[True] = ...,
+        signal_function: Callable[[Job], None] | None = ...,
+        exif_data=None,
+    ) -> dict[str, Any]: ...
     @overload
-    def capture_file(self, file_output, name: str = 'main', format=None, wait: Literal[False] = ..., signal_function: Callable[[Job], None] | None = ..., exif_data=None) -> Job[dict[str, Any]]: ...
+    def capture_file(
+        self,
+        file_output,
+        name: str = "main",
+        format=None,
+        wait: Literal[False] = ...,
+        signal_function: Callable[[Job], None] | None = ...,
+        exif_data=None,
+    ) -> Job[dict[str, Any]]: ...
     def switch_mode_(self, camera_config): ...
     @overload
-    def switch_mode(self, camera_config, wait: None = ..., signal_function: None = ...) -> dict[str, Any]: ...
+    def switch_mode(
+        self, camera_config, wait: None = ..., signal_function: None = ...
+    ) -> dict[str, Any]: ...
     @overload
-    def switch_mode(self, camera_config, wait: None = ..., signal_function: Callable[[Job], None] = ...) -> Job[dict[str, Any]]: ...
+    def switch_mode(
+        self,
+        camera_config,
+        wait: None = ...,
+        signal_function: Callable[[Job], None] = ...,
+    ) -> Job[dict[str, Any]]: ...
     @overload
-    def switch_mode(self, camera_config, wait: Literal[True] = ..., signal_function: Callable[[Job], None] | None = ...) -> dict[str, Any]: ...
+    def switch_mode(
+        self,
+        camera_config,
+        wait: Literal[True] = ...,
+        signal_function: Callable[[Job], None] | None = ...,
+    ) -> dict[str, Any]: ...
     @overload
-    def switch_mode(self, camera_config, wait: Literal[False] = ..., signal_function: Callable[[Job], None] | None = ...) -> Job[dict[str, Any]]: ...
+    def switch_mode(
+        self,
+        camera_config,
+        wait: Literal[False] = ...,
+        signal_function: Callable[[Job], None] | None = ...,
+    ) -> Job[dict[str, Any]]: ...
     @overload
-    def switch_mode_and_drop_frames(self, camera_config, num_frames, wait: None = ..., signal_function: None = ...) -> None: ...
+    def switch_mode_and_drop_frames(
+        self, camera_config, num_frames, wait: None = ..., signal_function: None = ...
+    ) -> None: ...
     @overload
-    def switch_mode_and_drop_frames(self, camera_config, num_frames, wait: None = ..., signal_function: Callable[[Job], None] = ...) -> Job[None]: ...
+    def switch_mode_and_drop_frames(
+        self,
+        camera_config,
+        num_frames,
+        wait: None = ...,
+        signal_function: Callable[[Job], None] = ...,
+    ) -> Job[None]: ...
     @overload
-    def switch_mode_and_drop_frames(self, camera_config, num_frames, wait: Literal[True] = ..., signal_function: Callable[[Job], None] | None = ...) -> None: ...
+    def switch_mode_and_drop_frames(
+        self,
+        camera_config,
+        num_frames,
+        wait: Literal[True] = ...,
+        signal_function: Callable[[Job], None] | None = ...,
+    ) -> None: ...
     @overload
-    def switch_mode_and_drop_frames(self, camera_config, num_frames, wait: Literal[False] = ..., signal_function: Callable[[Job], None] | None = ...) -> Job[None]: ...
+    def switch_mode_and_drop_frames(
+        self,
+        camera_config,
+        num_frames,
+        wait: Literal[False] = ...,
+        signal_function: Callable[[Job], None] | None = ...,
+    ) -> Job[None]: ...
     @overload
-    def switch_mode_and_capture_file(self, camera_config, file_output, name: str = 'main', format=None, wait: None = ..., signal_function: None = ..., exif_data=None, delay: int = 0) -> dict[str, Any]: ...
+    def switch_mode_and_capture_file(
+        self,
+        camera_config,
+        file_output,
+        name: str = "main",
+        format=None,
+        wait: None = ...,
+        signal_function: None = ...,
+        exif_data=None,
+        delay: int = 0,
+    ) -> dict[str, Any]: ...
     @overload
-    def switch_mode_and_capture_file(self, camera_config, file_output, name: str = 'main', format=None, wait: None = ..., signal_function: Callable[[Job], None] = ..., exif_data=None, delay: int = 0) -> Job[dict[str, Any]]: ...
+    def switch_mode_and_capture_file(
+        self,
+        camera_config,
+        file_output,
+        name: str = "main",
+        format=None,
+        wait: None = ...,
+        signal_function: Callable[[Job], None] = ...,
+        exif_data=None,
+        delay: int = 0,
+    ) -> Job[dict[str, Any]]: ...
     @overload
-    def switch_mode_and_capture_file(self, camera_config, file_output, name: str = 'main', format=None, wait: Literal[True] = ..., signal_function: Callable[[Job], None] | None = ..., exif_data=None, delay: int = 0) -> dict[str, Any]: ...
+    def switch_mode_and_capture_file(
+        self,
+        camera_config,
+        file_output,
+        name: str = "main",
+        format=None,
+        wait: Literal[True] = ...,
+        signal_function: Callable[[Job], None] | None = ...,
+        exif_data=None,
+        delay: int = 0,
+    ) -> dict[str, Any]: ...
     @overload
-    def switch_mode_and_capture_file(self, camera_config, file_output, name: str = 'main', format=None, wait: Literal[False] = ..., signal_function: Callable[[Job], None] | None = ..., exif_data=None, delay: int = 0) -> Job[dict[str, Any]]: ...
+    def switch_mode_and_capture_file(
+        self,
+        camera_config,
+        file_output,
+        name: str = "main",
+        format=None,
+        wait: Literal[False] = ...,
+        signal_function: Callable[[Job], None] | None = ...,
+        exif_data=None,
+        delay: int = 0,
+    ) -> Job[dict[str, Any]]: ...
     @overload
-    def switch_mode_and_capture_request(self, camera_config, wait: None = ..., signal_function: None = ..., delay: int = 0) -> CompletedRequest: ...
+    def switch_mode_and_capture_request(
+        self,
+        camera_config,
+        wait: None = ...,
+        signal_function: None = ...,
+        delay: int = 0,
+    ) -> CompletedRequest: ...
     @overload
-    def switch_mode_and_capture_request(self, camera_config, wait: None = ..., signal_function: Callable[[Job], None] = ..., delay: int = 0) -> Job[CompletedRequest]: ...
+    def switch_mode_and_capture_request(
+        self,
+        camera_config,
+        wait: None = ...,
+        signal_function: Callable[[Job], None] = ...,
+        delay: int = 0,
+    ) -> Job[CompletedRequest]: ...
     @overload
-    def switch_mode_and_capture_request(self, camera_config, wait: Literal[True] = ..., signal_function: Callable[[Job], None] | None = ..., delay: int = 0) -> CompletedRequest: ...
+    def switch_mode_and_capture_request(
+        self,
+        camera_config,
+        wait: Literal[True] = ...,
+        signal_function: Callable[[Job], None] | None = ...,
+        delay: int = 0,
+    ) -> CompletedRequest: ...
     @overload
-    def switch_mode_and_capture_request(self, camera_config, wait: Literal[False] = ..., signal_function: Callable[[Job], None] | None = ..., delay: int = 0) -> Job[CompletedRequest]: ...
+    def switch_mode_and_capture_request(
+        self,
+        camera_config,
+        wait: Literal[False] = ...,
+        signal_function: Callable[[Job], None] | None = ...,
+        delay: int = 0,
+    ) -> Job[CompletedRequest]: ...
     def capture_request_(self): ...
     @overload
-    def capture_request(self, wait: None = ..., signal_function: None = ..., flush=None) -> CompletedRequest: ...
+    def capture_request(
+        self, wait: None = ..., signal_function: None = ..., flush=None
+    ) -> CompletedRequest: ...
     @overload
-    def capture_request(self, wait: None = ..., signal_function: Callable[[Job], None] = ..., flush=None) -> Job[CompletedRequest]: ...
+    def capture_request(
+        self, wait: None = ..., signal_function: Callable[[Job], None] = ..., flush=None
+    ) -> Job[CompletedRequest]: ...
     @overload
-    def capture_request(self, wait: Literal[True] = ..., signal_function: Callable[[Job], None] | None = ..., flush=None) -> CompletedRequest: ...
+    def capture_request(
+        self,
+        wait: Literal[True] = ...,
+        signal_function: Callable[[Job], None] | None = ...,
+        flush=None,
+    ) -> CompletedRequest: ...
     @overload
-    def capture_request(self, wait: Literal[False] = ..., signal_function: Callable[[Job], None] | None = ..., flush=None) -> Job[CompletedRequest]: ...
+    def capture_request(
+        self,
+        wait: Literal[False] = ...,
+        signal_function: Callable[[Job], None] | None = ...,
+        flush=None,
+    ) -> Job[CompletedRequest]: ...
     @overload
-    def switch_mode_capture_request_and_stop(self, camera_config, wait: None = ..., signal_function: None = ...) -> CompletedRequest: ...
+    def switch_mode_capture_request_and_stop(
+        self, camera_config, wait: None = ..., signal_function: None = ...
+    ) -> CompletedRequest: ...
     @overload
-    def switch_mode_capture_request_and_stop(self, camera_config, wait: None = ..., signal_function: Callable[[Job], None] = ...) -> Job[CompletedRequest]: ...
+    def switch_mode_capture_request_and_stop(
+        self,
+        camera_config,
+        wait: None = ...,
+        signal_function: Callable[[Job], None] = ...,
+    ) -> Job[CompletedRequest]: ...
     @overload
-    def switch_mode_capture_request_and_stop(self, camera_config, wait: Literal[True] = ..., signal_function: Callable[[Job], None] | None = ...) -> CompletedRequest: ...
+    def switch_mode_capture_request_and_stop(
+        self,
+        camera_config,
+        wait: Literal[True] = ...,
+        signal_function: Callable[[Job], None] | None = ...,
+    ) -> CompletedRequest: ...
     @overload
-    def switch_mode_capture_request_and_stop(self, camera_config, wait: Literal[False] = ..., signal_function: Callable[[Job], None] | None = ...) -> Job[CompletedRequest]: ...
+    def switch_mode_capture_request_and_stop(
+        self,
+        camera_config,
+        wait: Literal[False] = ...,
+        signal_function: Callable[[Job], None] | None = ...,
+    ) -> Job[CompletedRequest]: ...
     @overload
-    def capture_sync_request(self, wait: None = ..., signal_function: None = ...) -> CompletedRequest: ...
+    def capture_sync_request(
+        self, wait: None = ..., signal_function: None = ...
+    ) -> CompletedRequest: ...
     @overload
-    def capture_sync_request(self, wait: None = ..., signal_function: Callable[[Job], None] = ...) -> Job[CompletedRequest]: ...
+    def capture_sync_request(
+        self, wait: None = ..., signal_function: Callable[[Job], None] = ...
+    ) -> Job[CompletedRequest]: ...
     @overload
-    def capture_sync_request(self, wait: Literal[True] = ..., signal_function: Callable[[Job], None] | None = ...) -> CompletedRequest: ...
+    def capture_sync_request(
+        self,
+        wait: Literal[True] = ...,
+        signal_function: Callable[[Job], None] | None = ...,
+    ) -> CompletedRequest: ...
     @overload
-    def capture_sync_request(self, wait: Literal[False] = ..., signal_function: Callable[[Job], None] | None = ...) -> Job[CompletedRequest]: ...
+    def capture_sync_request(
+        self,
+        wait: Literal[False] = ...,
+        signal_function: Callable[[Job], None] | None = ...,
+    ) -> Job[CompletedRequest]: ...
     @contextlib.contextmanager
     def captured_request(self, wait=None, flush=None) -> Generator[Incomplete]: ...
     @contextlib.contextmanager
     def captured_sync_request(self, wait=None) -> Generator[Incomplete]: ...
     def capture_metadata_(self): ...
     @overload
-    def capture_metadata(self, wait: None = ..., signal_function: None = ...) -> dict[str, Any]: ...
+    def capture_metadata(
+        self, wait: None = ..., signal_function: None = ...
+    ) -> dict[str, Any]: ...
     @overload
-    def capture_metadata(self, wait: None = ..., signal_function: Callable[[Job], None] = ...) -> Job[dict[str, Any]]: ...
+    def capture_metadata(
+        self, wait: None = ..., signal_function: Callable[[Job], None] = ...
+    ) -> Job[dict[str, Any]]: ...
     @overload
-    def capture_metadata(self, wait: Literal[True] = ..., signal_function: Callable[[Job], None] | None = ...) -> dict[str, Any]: ...
+    def capture_metadata(
+        self,
+        wait: Literal[True] = ...,
+        signal_function: Callable[[Job], None] | None = ...,
+    ) -> dict[str, Any]: ...
     @overload
-    def capture_metadata(self, wait: Literal[False] = ..., signal_function: Callable[[Job], None] | None = ...) -> Job[dict[str, Any]]: ...
+    def capture_metadata(
+        self,
+        wait: Literal[False] = ...,
+        signal_function: Callable[[Job], None] | None = ...,
+    ) -> Job[dict[str, Any]]: ...
     def capture_buffer_(self, name): ...
     @overload
-    def capture_buffer(self, name: str = 'main', wait: None = ..., signal_function: None = ...) -> NDArray[np.uint8]: ...
+    def capture_buffer(
+        self, name: str = "main", wait: None = ..., signal_function: None = ...
+    ) -> NDArray[np.uint8]: ...
     @overload
-    def capture_buffer(self, name: str = 'main', wait: None = ..., signal_function: Callable[[Job], None] = ...) -> Job[NDArray[np.uint8]]: ...
+    def capture_buffer(
+        self,
+        name: str = "main",
+        wait: None = ...,
+        signal_function: Callable[[Job], None] = ...,
+    ) -> Job[NDArray[np.uint8]]: ...
     @overload
-    def capture_buffer(self, name: str = 'main', wait: Literal[True] = ..., signal_function: Callable[[Job], None] | None = ...) -> NDArray[np.uint8]: ...
+    def capture_buffer(
+        self,
+        name: str = "main",
+        wait: Literal[True] = ...,
+        signal_function: Callable[[Job], None] | None = ...,
+    ) -> NDArray[np.uint8]: ...
     @overload
-    def capture_buffer(self, name: str = 'main', wait: Literal[False] = ..., signal_function: Callable[[Job], None] | None = ...) -> Job[NDArray[np.uint8]]: ...
+    def capture_buffer(
+        self,
+        name: str = "main",
+        wait: Literal[False] = ...,
+        signal_function: Callable[[Job], None] | None = ...,
+    ) -> Job[NDArray[np.uint8]]: ...
     def capture_buffers_and_metadata_(self, names): ...
     @overload
-    def capture_buffers(self, names=['main'], wait: None = ..., signal_function: None = ...) -> tuple[list[NDArray[np.uint8]], dict[str, Any]]: ...
+    def capture_buffers(
+        self, names=["main"], wait: None = ..., signal_function: None = ...
+    ) -> tuple[list[NDArray[np.uint8]], dict[str, Any]]: ...
     @overload
-    def capture_buffers(self, names=['main'], wait: None = ..., signal_function: Callable[[Job], None] = ...) -> Job[tuple[list[NDArray[np.uint8]], dict[str, Any]]]: ...
+    def capture_buffers(
+        self,
+        names=["main"],
+        wait: None = ...,
+        signal_function: Callable[[Job], None] = ...,
+    ) -> Job[tuple[list[NDArray[np.uint8]], dict[str, Any]]]: ...
     @overload
-    def capture_buffers(self, names=['main'], wait: Literal[True] = ..., signal_function: Callable[[Job], None] | None = ...) -> tuple[list[NDArray[np.uint8]], dict[str, Any]]: ...
+    def capture_buffers(
+        self,
+        names=["main"],
+        wait: Literal[True] = ...,
+        signal_function: Callable[[Job], None] | None = ...,
+    ) -> tuple[list[NDArray[np.uint8]], dict[str, Any]]: ...
     @overload
-    def capture_buffers(self, names=['main'], wait: Literal[False] = ..., signal_function: Callable[[Job], None] | None = ...) -> Job[tuple[list[NDArray[np.uint8]], dict[str, Any]]]: ...
+    def capture_buffers(
+        self,
+        names=["main"],
+        wait: Literal[False] = ...,
+        signal_function: Callable[[Job], None] | None = ...,
+    ) -> Job[tuple[list[NDArray[np.uint8]], dict[str, Any]]]: ...
     @overload
-    def switch_mode_and_capture_buffer(self, camera_config, name: str = 'main', wait: None = ..., signal_function: None = ..., delay: int = 0) -> NDArray[np.uint8]: ...
+    def switch_mode_and_capture_buffer(
+        self,
+        camera_config,
+        name: str = "main",
+        wait: None = ...,
+        signal_function: None = ...,
+        delay: int = 0,
+    ) -> NDArray[np.uint8]: ...
     @overload
-    def switch_mode_and_capture_buffer(self, camera_config, name: str = 'main', wait: None = ..., signal_function: Callable[[Job], None] = ..., delay: int = 0) -> Job[NDArray[np.uint8]]: ...
+    def switch_mode_and_capture_buffer(
+        self,
+        camera_config,
+        name: str = "main",
+        wait: None = ...,
+        signal_function: Callable[[Job], None] = ...,
+        delay: int = 0,
+    ) -> Job[NDArray[np.uint8]]: ...
     @overload
-    def switch_mode_and_capture_buffer(self, camera_config, name: str = 'main', wait: Literal[True] = ..., signal_function: Callable[[Job], None] | None = ..., delay: int = 0) -> NDArray[np.uint8]: ...
+    def switch_mode_and_capture_buffer(
+        self,
+        camera_config,
+        name: str = "main",
+        wait: Literal[True] = ...,
+        signal_function: Callable[[Job], None] | None = ...,
+        delay: int = 0,
+    ) -> NDArray[np.uint8]: ...
     @overload
-    def switch_mode_and_capture_buffer(self, camera_config, name: str = 'main', wait: Literal[False] = ..., signal_function: Callable[[Job], None] | None = ..., delay: int = 0) -> Job[NDArray[np.uint8]]: ...
+    def switch_mode_and_capture_buffer(
+        self,
+        camera_config,
+        name: str = "main",
+        wait: Literal[False] = ...,
+        signal_function: Callable[[Job], None] | None = ...,
+        delay: int = 0,
+    ) -> Job[NDArray[np.uint8]]: ...
     @overload
-    def switch_mode_and_capture_buffers(self, camera_config, names=['main'], wait: None = ..., signal_function: None = ..., delay: int = 0) -> tuple[list[NDArray[np.uint8]], dict[str, Any]]: ...
+    def switch_mode_and_capture_buffers(
+        self,
+        camera_config,
+        names=["main"],
+        wait: None = ...,
+        signal_function: None = ...,
+        delay: int = 0,
+    ) -> tuple[list[NDArray[np.uint8]], dict[str, Any]]: ...
     @overload
-    def switch_mode_and_capture_buffers(self, camera_config, names=['main'], wait: None = ..., signal_function: Callable[[Job], None] = ..., delay: int = 0) -> Job[tuple[list[NDArray[np.uint8]], dict[str, Any]]]: ...
+    def switch_mode_and_capture_buffers(
+        self,
+        camera_config,
+        names=["main"],
+        wait: None = ...,
+        signal_function: Callable[[Job], None] = ...,
+        delay: int = 0,
+    ) -> Job[tuple[list[NDArray[np.uint8]], dict[str, Any]]]: ...
     @overload
-    def switch_mode_and_capture_buffers(self, camera_config, names=['main'], wait: Literal[True] = ..., signal_function: Callable[[Job], None] | None = ..., delay: int = 0) -> tuple[list[NDArray[np.uint8]], dict[str, Any]]: ...
+    def switch_mode_and_capture_buffers(
+        self,
+        camera_config,
+        names=["main"],
+        wait: Literal[True] = ...,
+        signal_function: Callable[[Job], None] | None = ...,
+        delay: int = 0,
+    ) -> tuple[list[NDArray[np.uint8]], dict[str, Any]]: ...
     @overload
-    def switch_mode_and_capture_buffers(self, camera_config, names=['main'], wait: Literal[False] = ..., signal_function: Callable[[Job], None] | None = ..., delay: int = 0) -> Job[tuple[list[NDArray[np.uint8]], dict[str, Any]]]: ...
+    def switch_mode_and_capture_buffers(
+        self,
+        camera_config,
+        names=["main"],
+        wait: Literal[False] = ...,
+        signal_function: Callable[[Job], None] | None = ...,
+        delay: int = 0,
+    ) -> Job[tuple[list[NDArray[np.uint8]], dict[str, Any]]]: ...
     def capture_array_(self, name): ...
     @overload
-    def capture_array(self, name: str = 'main', wait: None = ..., signal_function: None = ...) -> NDArray[np.uint8]: ...
+    def capture_array(
+        self, name: str = "main", wait: None = ..., signal_function: None = ...
+    ) -> NDArray[np.uint8]: ...
     @overload
-    def capture_array(self, name: str = 'main', wait: None = ..., signal_function: Callable[[Job], None] = ...) -> Job[NDArray[np.uint8]]: ...
+    def capture_array(
+        self,
+        name: str = "main",
+        wait: None = ...,
+        signal_function: Callable[[Job], None] = ...,
+    ) -> Job[NDArray[np.uint8]]: ...
     @overload
-    def capture_array(self, name: str = 'main', wait: Literal[True] = ..., signal_function: Callable[[Job], None] | None = ...) -> NDArray[np.uint8]: ...
+    def capture_array(
+        self,
+        name: str = "main",
+        wait: Literal[True] = ...,
+        signal_function: Callable[[Job], None] | None = ...,
+    ) -> NDArray[np.uint8]: ...
     @overload
-    def capture_array(self, name: str = 'main', wait: Literal[False] = ..., signal_function: Callable[[Job], None] | None = ...) -> Job[NDArray[np.uint8]]: ...
+    def capture_array(
+        self,
+        name: str = "main",
+        wait: Literal[False] = ...,
+        signal_function: Callable[[Job], None] | None = ...,
+    ) -> Job[NDArray[np.uint8]]: ...
     def capture_arrays_and_metadata_(self, names): ...
     @overload
-    def capture_arrays(self, names=['main'], wait: None = ..., signal_function: None = ...) -> tuple[list[NDArray[np.uint8]], dict[str, Any]]: ...
+    def capture_arrays(
+        self, names=["main"], wait: None = ..., signal_function: None = ...
+    ) -> tuple[list[NDArray[np.uint8]], dict[str, Any]]: ...
     @overload
-    def capture_arrays(self, names=['main'], wait: None = ..., signal_function: Callable[[Job], None] = ...) -> Job[tuple[list[NDArray[np.uint8]], dict[str, Any]]]: ...
+    def capture_arrays(
+        self,
+        names=["main"],
+        wait: None = ...,
+        signal_function: Callable[[Job], None] = ...,
+    ) -> Job[tuple[list[NDArray[np.uint8]], dict[str, Any]]]: ...
     @overload
-    def capture_arrays(self, names=['main'], wait: Literal[True] = ..., signal_function: Callable[[Job], None] | None = ...) -> tuple[list[NDArray[np.uint8]], dict[str, Any]]: ...
+    def capture_arrays(
+        self,
+        names=["main"],
+        wait: Literal[True] = ...,
+        signal_function: Callable[[Job], None] | None = ...,
+    ) -> tuple[list[NDArray[np.uint8]], dict[str, Any]]: ...
     @overload
-    def capture_arrays(self, names=['main'], wait: Literal[False] = ..., signal_function: Callable[[Job], None] | None = ...) -> Job[tuple[list[NDArray[np.uint8]], dict[str, Any]]]: ...
+    def capture_arrays(
+        self,
+        names=["main"],
+        wait: Literal[False] = ...,
+        signal_function: Callable[[Job], None] | None = ...,
+    ) -> Job[tuple[list[NDArray[np.uint8]], dict[str, Any]]]: ...
     @overload
-    def switch_mode_and_capture_array(self, camera_config, name: str = 'main', wait: None = ..., signal_function: None = ..., delay: int = 0) -> NDArray[np.uint8]: ...
+    def switch_mode_and_capture_array(
+        self,
+        camera_config,
+        name: str = "main",
+        wait: None = ...,
+        signal_function: None = ...,
+        delay: int = 0,
+    ) -> NDArray[np.uint8]: ...
     @overload
-    def switch_mode_and_capture_array(self, camera_config, name: str = 'main', wait: None = ..., signal_function: Callable[[Job], None] = ..., delay: int = 0) -> Job[NDArray[np.uint8]]: ...
+    def switch_mode_and_capture_array(
+        self,
+        camera_config,
+        name: str = "main",
+        wait: None = ...,
+        signal_function: Callable[[Job], None] = ...,
+        delay: int = 0,
+    ) -> Job[NDArray[np.uint8]]: ...
     @overload
-    def switch_mode_and_capture_array(self, camera_config, name: str = 'main', wait: Literal[True] = ..., signal_function: Callable[[Job], None] | None = ..., delay: int = 0) -> NDArray[np.uint8]: ...
+    def switch_mode_and_capture_array(
+        self,
+        camera_config,
+        name: str = "main",
+        wait: Literal[True] = ...,
+        signal_function: Callable[[Job], None] | None = ...,
+        delay: int = 0,
+    ) -> NDArray[np.uint8]: ...
     @overload
-    def switch_mode_and_capture_array(self, camera_config, name: str = 'main', wait: Literal[False] = ..., signal_function: Callable[[Job], None] | None = ..., delay: int = 0) -> Job[NDArray[np.uint8]]: ...
+    def switch_mode_and_capture_array(
+        self,
+        camera_config,
+        name: str = "main",
+        wait: Literal[False] = ...,
+        signal_function: Callable[[Job], None] | None = ...,
+        delay: int = 0,
+    ) -> Job[NDArray[np.uint8]]: ...
     @overload
-    def switch_mode_and_capture_arrays(self, camera_config, names=['main'], wait: None = ..., signal_function: None = ..., delay: int = 0) -> tuple[list[NDArray[np.uint8]], dict[str, Any]]: ...
+    def switch_mode_and_capture_arrays(
+        self,
+        camera_config,
+        names=["main"],
+        wait: None = ...,
+        signal_function: None = ...,
+        delay: int = 0,
+    ) -> tuple[list[NDArray[np.uint8]], dict[str, Any]]: ...
     @overload
-    def switch_mode_and_capture_arrays(self, camera_config, names=['main'], wait: None = ..., signal_function: Callable[[Job], None] = ..., delay: int = 0) -> Job[tuple[list[NDArray[np.uint8]], dict[str, Any]]]: ...
+    def switch_mode_and_capture_arrays(
+        self,
+        camera_config,
+        names=["main"],
+        wait: None = ...,
+        signal_function: Callable[[Job], None] = ...,
+        delay: int = 0,
+    ) -> Job[tuple[list[NDArray[np.uint8]], dict[str, Any]]]: ...
     @overload
-    def switch_mode_and_capture_arrays(self, camera_config, names=['main'], wait: Literal[True] = ..., signal_function: Callable[[Job], None] | None = ..., delay: int = 0) -> tuple[list[NDArray[np.uint8]], dict[str, Any]]: ...
+    def switch_mode_and_capture_arrays(
+        self,
+        camera_config,
+        names=["main"],
+        wait: Literal[True] = ...,
+        signal_function: Callable[[Job], None] | None = ...,
+        delay: int = 0,
+    ) -> tuple[list[NDArray[np.uint8]], dict[str, Any]]: ...
     @overload
-    def switch_mode_and_capture_arrays(self, camera_config, names=['main'], wait: Literal[False] = ..., signal_function: Callable[[Job], None] | None = ..., delay: int = 0) -> Job[tuple[list[NDArray[np.uint8]], dict[str, Any]]]: ...
+    def switch_mode_and_capture_arrays(
+        self,
+        camera_config,
+        names=["main"],
+        wait: Literal[False] = ...,
+        signal_function: Callable[[Job], None] | None = ...,
+        delay: int = 0,
+    ) -> Job[tuple[list[NDArray[np.uint8]], dict[str, Any]]]: ...
     def capture_image_(self, name): ...
     @overload
-    def capture_image(self, name: str = 'main', wait: None = ..., signal_function: None = ...) -> Image.Image: ...
+    def capture_image(
+        self, name: str = "main", wait: None = ..., signal_function: None = ...
+    ) -> Image.Image: ...
     @overload
-    def capture_image(self, name: str = 'main', wait: None = ..., signal_function: Callable[[Job], None] = ...) -> Job[Image.Image]: ...
+    def capture_image(
+        self,
+        name: str = "main",
+        wait: None = ...,
+        signal_function: Callable[[Job], None] = ...,
+    ) -> Job[Image.Image]: ...
     @overload
-    def capture_image(self, name: str = 'main', wait: Literal[True] = ..., signal_function: Callable[[Job], None] | None = ...) -> Image.Image: ...
+    def capture_image(
+        self,
+        name: str = "main",
+        wait: Literal[True] = ...,
+        signal_function: Callable[[Job], None] | None = ...,
+    ) -> Image.Image: ...
     @overload
-    def capture_image(self, name: str = 'main', wait: Literal[False] = ..., signal_function: Callable[[Job], None] | None = ...) -> Job[Image.Image]: ...
+    def capture_image(
+        self,
+        name: str = "main",
+        wait: Literal[False] = ...,
+        signal_function: Callable[[Job], None] | None = ...,
+    ) -> Job[Image.Image]: ...
     @overload
-    def switch_mode_and_capture_image(self, camera_config, name: str = 'main', wait: None = ..., signal_function: None = ..., delay: int = 0) -> Image.Image: ...
+    def switch_mode_and_capture_image(
+        self,
+        camera_config,
+        name: str = "main",
+        wait: None = ...,
+        signal_function: None = ...,
+        delay: int = 0,
+    ) -> Image.Image: ...
     @overload
-    def switch_mode_and_capture_image(self, camera_config, name: str = 'main', wait: None = ..., signal_function: Callable[[Job], None] = ..., delay: int = 0) -> Job[Image.Image]: ...
+    def switch_mode_and_capture_image(
+        self,
+        camera_config,
+        name: str = "main",
+        wait: None = ...,
+        signal_function: Callable[[Job], None] = ...,
+        delay: int = 0,
+    ) -> Job[Image.Image]: ...
     @overload
-    def switch_mode_and_capture_image(self, camera_config, name: str = 'main', wait: Literal[True] = ..., signal_function: Callable[[Job], None] | None = ..., delay: int = 0) -> Image.Image: ...
+    def switch_mode_and_capture_image(
+        self,
+        camera_config,
+        name: str = "main",
+        wait: Literal[True] = ...,
+        signal_function: Callable[[Job], None] | None = ...,
+        delay: int = 0,
+    ) -> Image.Image: ...
     @overload
-    def switch_mode_and_capture_image(self, camera_config, name: str = 'main', wait: Literal[False] = ..., signal_function: Callable[[Job], None] | None = ..., delay: int = 0) -> Job[Image.Image]: ...
-    def start_encoder(self, encoder=None, output=None, pts=None, quality=None, name=None) -> None: ...
+    def switch_mode_and_capture_image(
+        self,
+        camera_config,
+        name: str = "main",
+        wait: Literal[False] = ...,
+        signal_function: Callable[[Job], None] | None = ...,
+        delay: int = 0,
+    ) -> Job[Image.Image]: ...
+    def start_encoder(
+        self, encoder=None, output=None, pts=None, quality=None, name=None
+    ) -> None: ...
     def stop_encoder(self, encoders=None) -> None: ...
     @property
     def encoders(self) -> set[Encoder]: ...
     @encoders.setter
     def encoders(self, value) -> None: ...
-    def start_recording(self, encoder, output, pts=None, config=None, quality=None, name=None) -> None: ...
+    def start_recording(
+        self, encoder, output, pts=None, config=None, quality=None, name=None
+    ) -> None: ...
     def stop_recording(self) -> None: ...
     def set_overlay(self, overlay) -> None: ...
-    def start_and_capture_files(self, name: str = 'image{:03d}.jpg', initial_delay: int = 1, preview_mode: str = 'preview', capture_mode: str = 'still', num_files: int = 1, delay: int = 1, show_preview: bool = True, exif_data=None) -> None: ...
-    def start_and_capture_file(self, name: str = 'image.jpg', delay: int = 1, preview_mode: str = 'preview', capture_mode: str = 'still', show_preview: bool = True, exif_data=None) -> None: ...
-    def start_and_record_video(self, output, encoder=None, config=None, quality=..., show_preview: bool = False, duration: int = 0, audio: bool = False) -> None: ...
+    def start_and_capture_files(
+        self,
+        name: str = "image{:03d}.jpg",
+        initial_delay: int = 1,
+        preview_mode: str = "preview",
+        capture_mode: str = "still",
+        num_files: int = 1,
+        delay: int = 1,
+        show_preview: bool = True,
+        exif_data=None,
+    ) -> None: ...
+    def start_and_capture_file(
+        self,
+        name: str = "image.jpg",
+        delay: int = 1,
+        preview_mode: str = "preview",
+        capture_mode: str = "still",
+        show_preview: bool = True,
+        exif_data=None,
+    ) -> None: ...
+    def start_and_record_video(
+        self,
+        output,
+        encoder=None,
+        config=None,
+        quality=...,
+        show_preview: bool = False,
+        duration: int = 0,
+        audio: bool = False,
+    ) -> None: ...
     @overload
-    def autofocus_cycle(self, wait: None = ..., signal_function: None = ...) -> bool: ...
+    def autofocus_cycle(
+        self, wait: None = ..., signal_function: None = ...
+    ) -> bool: ...
     @overload
-    def autofocus_cycle(self, wait: None = ..., signal_function: Callable[[Job], None] = ...) -> Job[bool]: ...
+    def autofocus_cycle(
+        self, wait: None = ..., signal_function: Callable[[Job], None] = ...
+    ) -> Job[bool]: ...
     @overload
-    def autofocus_cycle(self, wait: Literal[True] = ..., signal_function: Callable[[Job], None] | None = ...) -> bool: ...
+    def autofocus_cycle(
+        self,
+        wait: Literal[True] = ...,
+        signal_function: Callable[[Job], None] | None = ...,
+    ) -> bool: ...
     @overload
-    def autofocus_cycle(self, wait: Literal[False] = ..., signal_function: Callable[[Job], None] | None = ...) -> Job[bool]: ...
+    def autofocus_cycle(
+        self,
+        wait: Literal[False] = ...,
+        signal_function: Callable[[Job], None] | None = ...,
+    ) -> Job[bool]: ...

@@ -26,8 +26,8 @@ def parse_dictionary_to_html_page(
     html += f"""
                 <body>
                     <h1>Available camera options</h1>
-                    <h3>Parsed Controls: {parsed_controls if parsed_controls else 'None'}</h3>
-                    <h3>Processed Controls: {processed_controls if processed_controls else 'None'}</h3>
+                    <h3>Parsed Controls: {parsed_controls if parsed_controls else "None"}</h3>
+                    <h3>Processed Controls: {processed_controls if processed_controls else "None"}</h3>
             """
     for control, values in camera.camera_controls.items():
         html += f"""

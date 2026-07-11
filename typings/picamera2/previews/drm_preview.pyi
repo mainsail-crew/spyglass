@@ -18,7 +18,14 @@ class DrmPreview(NullPreview):
     fb: Incomplete
     mem: Incomplete
     fd: Incomplete
-    def __init__(self, x: int = 0, y: int = 0, width: int = 640, height: int = 480, transform=None) -> None: ...
+    def __init__(
+        self,
+        x: int = 0,
+        y: int = 0,
+        width: int = 640,
+        height: int = 480,
+        transform=None,
+    ) -> None: ...
     current: Incomplete
     own_current: Incomplete
     def render_request(self, completed_request) -> None: ...

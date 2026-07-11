@@ -1,7 +1,9 @@
 from urllib.parse import parse_qsl, urlparse
 
 
-def check_paths_match(expected_url: str, incoming_url: str, match_full_path: bool = True) -> bool:
+def check_paths_match(
+    expected_url: str, incoming_url: str, match_full_path: bool = True
+) -> bool:
     # Assign paths from URL into list
     exp_paths = urlparse(expected_url.strip("/")).path.split("/")
     inc_paths = urlparse(incoming_url.strip("/")).path.split("/")
@@ -47,7 +49,9 @@ def check_params_match(expected_url: str, incoming_url: str) -> bool:
     return matching_params == exp_params
 
 
-def check_urls_match(expected_url: str, incoming_url: str, match_full_path: bool = True) -> bool:
+def check_urls_match(
+    expected_url: str, incoming_url: str, match_full_path: bool = True
+) -> bool:
     # Check URL paths
     paths_match = check_paths_match(expected_url, incoming_url, match_full_path)
 

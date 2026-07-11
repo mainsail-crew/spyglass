@@ -21,7 +21,15 @@ class LibavH264Encoder(Encoder):
     _request_release_queue: Incomplete
     _key_frames_requested: int
     _key_frames_generated: int
-    def __init__(self, bitrate=None, repeat: bool = True, iperiod: int = 30, framerate: int = 30, qp=None, profile=None) -> None: ...
+    def __init__(
+        self,
+        bitrate=None,
+        repeat: bool = True,
+        iperiod: int = 30,
+        framerate: int = 30,
+        qp=None,
+        profile=None,
+    ) -> None: ...
     @property
     def use_hw(self): ...
     @use_hw.setter

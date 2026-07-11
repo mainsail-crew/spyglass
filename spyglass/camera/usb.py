@@ -20,11 +20,17 @@ class USB(camera.Camera):
             return self.picam2.capture_buffer()
 
         if use_sw_encoding:
-            logger.warning("Using software encoding is not supported for USB cameras!")
+            logger.warning(
+                "Using software encoding is not supported for USB cameras and will be ignored!"
+            )
         if mjpeg_linger_seconds != -1 or webrtc_linger_seconds != 5:
-            logger.warning("Using linger seconds is not supported for USB cameras!")
+            logger.warning(
+                "Using linger seconds is not supported for USB cameras and will be ignored!"
+            )
         if mjpg_quality is not None or h264_quality is not None:
-            logger.warning("Setting quality is not supported for USB cameras!")
+            logger.warning(
+                "Setting quality is not supported for USB cameras and will be ignored!"
+            )
 
         self.picam2.start()
 

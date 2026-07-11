@@ -48,6 +48,14 @@ bump_map = {"break" = "MAJOR", ".*!" = "MAJOR", "feat" = "MINOR", "fix" = "PATCH
 commit_parser = "^(?P<change_type>break|feat|fix|chore\\(deps\\))(!)?:\\s(?P<message>.*)?"
 change_type_map = {"feat" = "Feat", "fix" = "Fix", "chore(deps)" = "Dependency Update"}
 
+[tool.ruff]
+line-length = 88
+
+[tool.ruff.lint]
+extend-select = ["C90", "I", "UP"]
+
+[tool.ruff.lint.mccabe]
+max-complexity = 10
 
 [tool.basedpyright]
 pythonVersion = "3.10"

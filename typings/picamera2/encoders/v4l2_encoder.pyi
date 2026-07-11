@@ -1,6 +1,6 @@
-from videodev2 import *
 from _typeshed import Incomplete
 from picamera2.encoders.encoder import Encoder as Encoder
+from videodev2 import *
 
 class V4L2Encoder(Encoder):
     bufs: Incomplete

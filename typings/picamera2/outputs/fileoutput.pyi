@@ -1,5 +1,6 @@
-from .output import Output as Output
 from _typeshed import Incomplete
+
+from .output import Output as Output
 
 class FileOutput(Output):
     dead: bool

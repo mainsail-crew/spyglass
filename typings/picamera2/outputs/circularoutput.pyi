@@ -1,5 +1,6 @@
-from .fileoutput import FileOutput as FileOutput
 from _typeshed import Incomplete
+
+from .fileoutput import FileOutput as FileOutput
 
 class CircularOutput(FileOutput):
     _lock: Incomplete

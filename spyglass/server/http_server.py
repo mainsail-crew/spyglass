@@ -78,6 +78,6 @@ class StreamingHandler(server.BaseHTTPRequestHandler):
 
     def run_async_request(
         self,
-        method: Callable[["StreamingHandler"], Coroutine[Any, Any, None]],
+        method: Callable[[StreamingHandler], Coroutine[Any, Any, None]],
     ) -> None:
         asyncio.run_coroutine_threadsafe(method(self), StreamingHandler.loop).result()

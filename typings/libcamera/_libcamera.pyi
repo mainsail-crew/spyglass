@@ -1,4 +1,5 @@
-from typing import ClassVar, Iterator, overload
+from collections.abc import Iterator
+from typing import ClassVar, overload
 
 class Camera:
     def __init__(self, *args, **kwargs) -> None: ...

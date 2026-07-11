@@ -1,7 +1,9 @@
+from enum import Enum
+
+from _typeshed import Incomplete
+
 from ..outputs import Output as Output
 from ..request import _MappedBuffer as _MappedBuffer
-from _typeshed import Incomplete
-from enum import Enum
 
 class Quality(Enum):
     VERY_LOW = 0

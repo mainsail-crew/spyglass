@@ -1,6 +1,8 @@
-from ..request import MappedArray as MappedArray
 from _typeshed import Incomplete
-from picamera2.encoders.encoder import Encoder as Encoder, Quality as Quality
+from picamera2.encoders.encoder import Encoder as Encoder
+from picamera2.encoders.encoder import Quality as Quality
+
+from ..request import MappedArray as MappedArray
 
 class LibavH264Encoder(Encoder):
     _codec: str

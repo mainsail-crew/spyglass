@@ -1,5 +1,7 @@
-from .qt_compatibility import _QT_BINDING as _QT_BINDING, _get_qt_modules as _get_qt_modules
 from _typeshed import Incomplete
+
+from .qt_compatibility import _QT_BINDING as _QT_BINDING
+from .qt_compatibility import _get_qt_modules as _get_qt_modules
 
 cv2_available: bool
 

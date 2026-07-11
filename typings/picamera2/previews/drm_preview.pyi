@@ -1,5 +1,5 @@
-from picamera2.previews.null_preview import *
 from _typeshed import Incomplete
+from picamera2.previews.null_preview import *
 
 class DrmManager:
     lock: Incomplete

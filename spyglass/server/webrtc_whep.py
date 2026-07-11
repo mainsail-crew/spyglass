@@ -5,7 +5,7 @@ import uuid
 from collections import deque
 from fractions import Fraction
 from http import HTTPStatus
-from typing import TYPE_CHECKING, Union
+from typing import TYPE_CHECKING
 
 from aiortc import RTCIceGatherer, RTCIceServer
 from picamera2.outputs import Output
@@ -201,7 +201,7 @@ def get_ICE_servers_header() -> str | None:
     links = []
     ice_servers: list[RTCIceServer] = RTCIceGatherer.getDefaultIceServers()
     for ice in ice_servers:
-        urls: Union[str, list[str]] = ice.urls
+        urls: str | list[str] = ice.urls
         if isinstance(urls, str):
             urls = [urls]
 

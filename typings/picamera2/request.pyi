@@ -1,12 +1,14 @@
+from pathlib import Path
+from typing import Any
+
 import numpy as np
+from _typeshed import Incomplete
+from picamera2.picamera2 import Picamera2 as Picamera2
+from PIL import Image
+
 from .controls import Controls as Controls
 from .sensor_format import SensorFormat as SensorFormat
 from .utils import convert_from_libcamera_type as convert_from_libcamera_type
-from PIL import Image
-from _typeshed import Incomplete
-from pathlib import Path
-from picamera2.picamera2 import Picamera2 as Picamera2
-from typing import Any
 
 _log: Incomplete
 

@@ -1,4 +1,5 @@
 import ctypes
+
 from _typeshed import Incomplete
 
 _log: Incomplete

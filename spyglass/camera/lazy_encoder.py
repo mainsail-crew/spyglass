@@ -26,8 +26,8 @@ from collections.abc import Callable
 from typing import Any
 
 from picamera2 import Picamera2
-from picamera2.outputs import Output
 from picamera2.encoders import Encoder, Quality
+from picamera2.outputs import Output
 
 
 class CameraSession:

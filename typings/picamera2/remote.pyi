@@ -1,8 +1,10 @@
 import multiprocessing as mp
-import picamera2
 import types
+from collections.abc import Callable
+from typing import Any
+
+import picamera2
 from _typeshed import Incomplete
-from typing import Any, Callable
 
 class Process:
     _send_queue: Incomplete

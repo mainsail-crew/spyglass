@@ -1,4 +1,5 @@
 import types
+
 from _typeshed import Incomplete
 
 class Controls:

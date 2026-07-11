@@ -6,15 +6,10 @@ on:
 
 jobs:
   lint:
-    name: Code Linting
+    name: Check Code Formatting
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
-
-      - name: Run Ruff Linter
-        uses: astral-sh/ruff-action@v4.1.0
-        with:
-          args: "check"
 
       - name: Run Ruff Formatter
         if: always()

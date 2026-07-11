@@ -172,7 +172,7 @@ def split_resolution(res: str) -> tuple[int, int]:
 def parse_quality(quality):
     try:
         return Quality[quality.upper()]
-    except:
+    except KeyError:
         raise argparse.ArgumentTypeError(f"Invalid quality choice: {quality}")
 
 

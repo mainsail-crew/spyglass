@@ -88,20 +88,8 @@ def do_OPTIONS(handler: StreamingHandler, webrtc_url: str = "/webrtc") -> None:
 async def do_POST_async(handler: StreamingHandler) -> None:
     # Adapted from MediaMTX http_server.go
     # https://github.com/bluenviron/mediamtx/blob/main/internal/servers/webrtc/http_server.go#L191-L246
-    if handler.headers.get("Content-Type") != "application/sdp":
-        handler.send_error(HTTPStatus.BAD_REQUEST)
+    if not _is_valid_request(handler):
         return
-
-    # Limit simultanous clients to save resources
-    if len(pcs) >= max_connections:
-        handler.send_error(
-            HTTPStatus.TOO_MANY_REQUESTS, message="Too many clients connected"
-        )
-        return
-
-    content_length = int(handler.headers["Content-Length"])
-    offer_text = handler.rfile.read(content_length).decode("utf-8")
-    offer: RTCSessionDescription = RTCSessionDescription(sdp=offer_text, type="offer")
 
     pc: RTCPeerConnection = RTCPeerConnection()
     secret = uuid.uuid4()
@@ -132,46 +120,77 @@ async def do_POST_async(handler: StreamingHandler) -> None:
 
         pcs[str(secret)] = pc
 
-        track: MediaStreamTrack = media_relay.subscribe(handler.media_track)
-        sender: RTCRtpSender = pc.addTrack(track)
-        codecs: list[RTCRtpCodecCapability] = RTCRtpSender.getCapabilities(
-            "video"
-        ).codecs
-        transceiver: RTCRtpTransceiver = next(
-            t for t in pc.getTransceivers() if t.sender == sender
-        )
-        transceiver.setCodecPreferences(
-            [codec for codec in codecs if codec.mimeType == "video/H264"]
-        )
+        _setup_stream_track(handler, pc)
 
-        await pc.setRemoteDescription(offer)
-        answer: RTCSessionDescription = await pc.createAnswer()
-        await pc.setLocalDescription(answer)
+        await _set_descriptions(handler, pc)
 
         while pc.iceGatheringState != "complete":
             await asyncio.sleep(1)
 
-        send_default_headers(HTTPStatus.CREATED, handler)
+        _send_whep_response_headers(handler, secret, pc)
 
-        handler.send_header("Content-Type", "application/sdp")
-        handler.send_header("ETag", "*")
-
-        handler.send_header("ID", str(secret))
-        handler.send_header(
-            "Access-Control-Expose-Headers", "ETag, ID, Accept-Patch, Link, Location"
-        )
-        handler.send_header("Accept-Patch", "application/trickle-ice-sdpfrag")
-        ice_servers = get_ICE_servers_header()
-        if ice_servers is not None:
-            handler.send_header("Link", ice_servers)
-        handler.send_header("Location", f"/whep/{secret}")
-        handler.send_header("Content-Length", str(len(pc.localDescription.sdp)))
-        handler.end_headers()
         handler.wfile.write(bytes(pc.localDescription.sdp, "utf-8"))
     except Exception:
         _cleanup()
         await pc.close()
         raise
+
+
+def _is_valid_request(handler: StreamingHandler) -> bool:
+    if handler.headers.get("Content-Type") != "application/sdp":
+        handler.send_error(HTTPStatus.BAD_REQUEST)
+        return False
+
+    # Limit simultanous clients to save resources
+    if len(pcs) >= max_connections:
+        handler.send_error(
+            HTTPStatus.TOO_MANY_REQUESTS, message="Too many clients connected"
+        )
+        return False
+
+    return True
+
+
+def _setup_stream_track(handler: StreamingHandler, pc: RTCPeerConnection) -> None:
+    track: MediaStreamTrack = media_relay.subscribe(handler.media_track)
+    sender: RTCRtpSender = pc.addTrack(track)
+    codecs: list[RTCRtpCodecCapability] = RTCRtpSender.getCapabilities("video").codecs
+    transceiver: RTCRtpTransceiver = next(
+        t for t in pc.getTransceivers() if t.sender == sender
+    )
+    transceiver.setCodecPreferences(
+        [codec for codec in codecs if codec.mimeType == "video/H264"]
+    )
+
+
+async def _set_descriptions(handler: StreamingHandler, pc: RTCPeerConnection) -> None:
+    content_length = int(handler.headers["Content-Length"])
+    offer_text = handler.rfile.read(content_length).decode("utf-8")
+    offer: RTCSessionDescription = RTCSessionDescription(sdp=offer_text, type="offer")
+    await pc.setRemoteDescription(offer)
+    answer: RTCSessionDescription = await pc.createAnswer()
+    await pc.setLocalDescription(answer)
+
+
+def _send_whep_response_headers(
+    handler: StreamingHandler, secret: uuid.UUID, pc: RTCPeerConnection
+) -> None:
+    send_default_headers(HTTPStatus.CREATED, handler)
+
+    handler.send_header("Content-Type", "application/sdp")
+    handler.send_header("ETag", "*")
+
+    handler.send_header("ID", str(secret))
+    handler.send_header(
+        "Access-Control-Expose-Headers", "ETag, ID, Accept-Patch, Link, Location"
+    )
+    handler.send_header("Accept-Patch", "application/trickle-ice-sdpfrag")
+    ice_servers = get_ICE_servers_header()
+    if ice_servers is not None:
+        handler.send_header("Link", ice_servers)
+    handler.send_header("Location", f"/whep/{secret}")
+    handler.send_header("Content-Length", str(len(pc.localDescription.sdp)))
+    handler.end_headers()
 
 
 async def do_PATCH_async(streaming_handler: StreamingHandler) -> None:

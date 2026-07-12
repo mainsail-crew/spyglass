@@ -5,36 +5,73 @@ on:
     branches: [ develop ]
 
 jobs:
-  check:
-    name: Check syntax and Test
+  type-check:
+    name: Type Check
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v6
+      - uses: actions/checkout@v7
 
       - name: Set up Python
         uses: actions/setup-python@v6
         with:
-          python-version: '3.12'
+          python-version-file: 'pyproject.toml'
+          cache: 'pip'
+
+      - name: Install Dependencies
+        run: |
+          pip install .
+          pip install basedpyright
+
+      - name: Run Basedpyright
+        run: basedpyright
+
+  format-check:
+    name: Format Check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Run Ruff format check
+        uses: astral-sh/ruff-action@v4.1.0
+        with:
+          args: "format --check"
+
+  lint-check:
+    name: Lint Check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Run Ruff check
+        uses: astral-sh/ruff-action@v4.1.0
+        with:
+          args: 'check'
+
+  test-check:
+    name: Test Check
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v7
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version-file: 'pyproject.toml'
           cache: 'pip'
 
       - name: Install dependencies
         run: |
           pip install --upgrade pip
-          pip install flake8
           if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
           if [ -f requirements-test.txt ]; then pip install -r requirements-test.txt; fi
-
-      - name: Run Ruff Linter
-        uses: astral-sh/ruff-action@v4.1.0
 
       - name: Test with pytest
         run: pytest
 
   build:
     name: Build wheel and .deb
-    needs: check
+    needs: lint-check && test-check
     uses: ./.github/workflows/build.yml
     with:
       branch: ${{ github.ref }}

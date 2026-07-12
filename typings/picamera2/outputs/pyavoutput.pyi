@@ -1,5 +1,6 @@
-from .output import Output as Output
 from _typeshed import Incomplete
+
+from .output import Output as Output
 
 class PyavOutput(Output):
     _output_name: Incomplete
@@ -14,4 +15,11 @@ class PyavOutput(Output):
     def _add_stream(self, encoder_stream, codec_name, **kwargs) -> None: ...
     def start(self) -> None: ...
     def stop(self) -> None: ...
-    def outputframe(self, frame, keyframe: bool = True, timestamp=None, packet=None, audio: bool = False) -> None: ...
+    def outputframe(
+        self,
+        frame,
+        keyframe: bool = True,
+        timestamp=None,
+        packet=None,
+        audio: bool = False,
+    ) -> None: ...

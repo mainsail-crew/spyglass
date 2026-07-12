@@ -1,8 +1,10 @@
 import multiprocessing as mp
-import picamera2
 import types
+from collections.abc import Callable
+from typing import Any
+
+import picamera2
 from _typeshed import Incomplete
-from typing import Any, Callable
 
 class Process:
     _send_queue: Incomplete
@@ -11,7 +13,13 @@ class Process:
     _timeout: Incomplete
     _thread: Incomplete
     _process: Incomplete
-    def __init__(self, run: Callable[[RemoteRequest], Any], picam2: picamera2.Picamera2, init: Callable[[], None] | None = None, timeout: float | None = 30) -> None: ...
+    def __init__(
+        self,
+        run: Callable[[RemoteRequest], Any],
+        picam2: picamera2.Picamera2,
+        init: Callable[[], None] | None = None,
+        timeout: float | None = 30,
+    ) -> None: ...
     def _return_thread(self) -> None: ...
     def send(self, request: picamera2.request.CompletedRequest, **kwargs): ...
     def close(self) -> None: ...
@@ -28,7 +36,16 @@ class _RemoteProcess(mp.Process):
     _helper: Incomplete
     _run: Incomplete
     _init_func: Incomplete
-    def __init__(self, send_queue: mp.Queue, return_queue: mp.Queue, picam2: picamera2.Picamera2, run: Callable[[RemoteRequest], Any], init: Callable[[], None], *args, **kwargs) -> None: ...
+    def __init__(
+        self,
+        send_queue: mp.Queue,
+        return_queue: mp.Queue,
+        picam2: picamera2.Picamera2,
+        run: Callable[[RemoteRequest], Any],
+        init: Callable[[], None],
+        *args,
+        **kwargs,
+    ) -> None: ...
     _syscall: Incomplete
     def _child_init(self) -> None: ...
     def run(self) -> None: ...
@@ -42,7 +59,12 @@ class RemoteMappedArray:
     _array: Incomplete
     def __init__(self, request: RemoteRequest, stream_name: str) -> None: ...
     def __enter__(self): ...
-    def __exit__(self, exc_type: type[BaseException] | None, exc_value: BaseException | None, exc_traceback: types.TracebackType | None) -> None: ...
+    def __exit__(
+        self,
+        exc_type: type[BaseException] | None,
+        exc_value: BaseException | None,
+        exc_traceback: types.TracebackType | None,
+    ) -> None: ...
     @property
     def array(self): ...
 
@@ -53,7 +75,9 @@ class RemoteRequest:
     _array_ref_count: int
     _buffers_fd: Incomplete
     _kwargs: Incomplete
-    def __init__(self, request: picamera2.request.CompletedRequest, **kwargs) -> None: ...
+    def __init__(
+        self, request: picamera2.request.CompletedRequest, **kwargs
+    ) -> None: ...
     def _serialize_stream(self, stream_name: str): ...
     _arrays: Incomplete
     _buffers: Incomplete
@@ -66,8 +90,14 @@ class RemoteRequest:
     def make_buffer(self, stream_name: str): ...
     def make_array(self, stream_name: str): ...
     def make_image(self, stream_name: str): ...
-    def save(self, file_output: str, name: str = 'main', format_str: str | None = None, exif_data: dict | None = None): ...
-    def save_dng(self, file_output: str, name: str = 'raw'): ...
+    def save(
+        self,
+        file_output: str,
+        name: str = "main",
+        format_str: str | None = None,
+        exif_data: dict | None = None,
+    ): ...
+    def save_dng(self, file_output: str, name: str = "raw"): ...
 
 class _FakeObject:
     def __init__(self, **kwargs) -> None: ...
@@ -82,8 +112,20 @@ class Pool:
     _processes: Incomplete
     _process_count: Incomplete
     _process_index: int
-    def __init__(self, run: Callable[[RemoteRequest], Any], count: int, picam2: picamera2.Picamera2, init: Callable[[], None] | None = None, timeout: float | None = 30) -> None: ...
+    def __init__(
+        self,
+        run: Callable[[RemoteRequest], Any],
+        count: int,
+        picam2: picamera2.Picamera2,
+        init: Callable[[], None] | None = None,
+        timeout: float | None = 30,
+    ) -> None: ...
     def __enter__(self): ...
-    def __exit__(self, exc_type: type[BaseException] | None, exc_value: BaseException | None, exc_traceback: types.TracebackType | None) -> None: ...
+    def __exit__(
+        self,
+        exc_type: type[BaseException] | None,
+        exc_value: BaseException | None,
+        exc_traceback: types.TracebackType | None,
+    ) -> None: ...
     def send(self, request: picamera2.request.CompletedRequest, **kwargs): ...
     def close(self) -> None: ...

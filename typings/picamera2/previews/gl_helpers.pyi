@@ -1,7 +1,11 @@
+from ctypes import c_bool as c_bool
+from ctypes import c_int as c_int
+from ctypes import c_void_p as c_void_p
+from ctypes import pointer as pointer
+
+from _typeshed import Incomplete
 from OpenGL.GLES2.VERSION.GLES2_2_0 import *
 from OpenGL.GLES3.VERSION.GLES3_3_0 import *
-from _typeshed import Incomplete
-from ctypes import c_bool as c_bool, c_int as c_int, c_void_p as c_void_p, pointer as pointer
 
 def getEGLNativeDisplay() -> None: ...
 def getglEGLImageTargetTexture2DOES(): ...

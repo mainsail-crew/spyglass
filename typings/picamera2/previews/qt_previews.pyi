@@ -1,5 +1,6 @@
-from _typeshed import Incomplete
 from enum import Enum
+
+from _typeshed import Incomplete
 
 class Command(Enum):
     CREATE = 1
@@ -8,7 +9,9 @@ class Command(Enum):
 
 class QtPreviewBase:
     thread: Incomplete
-    def make_picamera2_widget(picam2, width: int = 640, height: int = 480, transform=None) -> None: ...
+    def make_picamera2_widget(
+        picam2, width: int = 640, height: int = 480, transform=None
+    ) -> None: ...
     def get_title() -> None: ...
     previewcreateq: Incomplete
     app: Incomplete
@@ -18,7 +21,9 @@ class QtPreviewBase:
     width: Incomplete
     height: Incomplete
     transform: Incomplete
-    def __init__(self, x=None, y=None, width: int = 640, height: int = 480, transform=None) -> None: ...
+    def __init__(
+        self, x=None, y=None, width: int = 640, height: int = 480, transform=None
+    ) -> None: ...
     event: Incomplete
     qpicamera2: Incomplete
     def start(self, picam2) -> None: ...
@@ -28,9 +33,13 @@ class QtPreviewBase:
     def set_title_function(self, function) -> None: ...
 
 class QtPreview(QtPreviewBase):
-    def make_picamera2_widget(self, picam2, width: int = 640, height: int = 480, transform=None): ...
+    def make_picamera2_widget(
+        self, picam2, width: int = 640, height: int = 480, transform=None
+    ): ...
     def get_title(self): ...
 
 class QtGlPreview(QtPreviewBase):
-    def make_picamera2_widget(self, picam2, width: int = 640, height: int = 480, transform=None): ...
+    def make_picamera2_widget(
+        self, picam2, width: int = 640, height: int = 480, transform=None
+    ): ...
     def get_title(self): ...

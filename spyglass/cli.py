@@ -118,7 +118,9 @@ def main(args: list[str] | None = None) -> None:
 # region args parsers
 
 
-def resolution_type(arg_value: str, pat: re.Pattern[str] = re.compile(r"^\d+x\d+$")) -> str:
+def resolution_type(
+    arg_value: str, pat: re.Pattern[str] = re.compile(r"^\d+x\d+$")
+) -> str:
     if not pat.match(arg_value):
         raise argparse.ArgumentTypeError("invalid value: <width>x<height> expected.")
     return arg_value
@@ -170,7 +172,7 @@ def split_resolution(res: str) -> tuple[int, int]:
 def parse_quality(quality):
     try:
         return Quality[quality.upper()]
-    except:
+    except KeyError:
         raise argparse.ArgumentTypeError(f"Invalid quality choice: {quality}")
 
 
@@ -198,7 +200,7 @@ def get_parser() -> argparse.ArgumentParser:
         "--bindaddress",
         type=str,
         default="0.0.0.0",
-        help="Bind to address for incoming " "connections",
+        help="Bind to address for incoming connections",
     )
     parser.add_argument(
         "-p",

@@ -1,5 +1,6 @@
-from .output import Output as Output
 from _typeshed import Incomplete
+
+from .output import Output as Output
 
 class FfmpegOutput(Output):
     ffmpeg: Incomplete
@@ -15,7 +16,25 @@ class FfmpegOutput(Output):
     timeout: Incomplete
     error_callback: Incomplete
     needs_pacing: bool
-    def __init__(self, output_filename, audio: bool = False, audio_device: str = 'default', audio_sync: float = -0.3, audio_samplerate: int = 48000, audio_codec: str = 'aac', audio_bitrate: int = 128000, audio_filter=None, pts=None) -> None: ...
+    def __init__(
+        self,
+        output_filename,
+        audio: bool = False,
+        audio_device: str = "default",
+        audio_sync: float = -0.3,
+        audio_samplerate: int = 48000,
+        audio_codec: str = "aac",
+        audio_bitrate: int = 128000,
+        audio_filter=None,
+        pts=None,
+    ) -> None: ...
     def start(self): ...
     def stop(self) -> None: ...
-    def outputframe(self, frame, keyframe: bool = True, timestamp=None, packet=None, audio: bool = False) -> None: ...
+    def outputframe(
+        self,
+        frame,
+        keyframe: bool = True,
+        timestamp=None,
+        packet=None,
+        audio: bool = False,
+    ) -> None: ...

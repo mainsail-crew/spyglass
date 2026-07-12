@@ -1,5 +1,6 @@
-from _typeshed import Incomplete
 from enum import Enum
+
+from _typeshed import Incomplete
 
 class Platform(Enum):
     VC4 = 0

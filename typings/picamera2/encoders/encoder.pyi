@@ -1,7 +1,9 @@
+from enum import Enum
+
+from _typeshed import Incomplete
+
 from ..outputs import Output as Output
 from ..request import _MappedBuffer as _MappedBuffer
-from _typeshed import Incomplete
-from enum import Enum
 
 class Quality(Enum):
     VERY_LOW = 0
@@ -78,7 +80,14 @@ class Encoder:
     def _start(self) -> None: ...
     def stop(self) -> None: ...
     def _stop(self) -> None: ...
-    def outputframe(self, frame, keyframe: bool = True, timestamp=None, packet=None, audio: bool = False) -> None: ...
+    def outputframe(
+        self,
+        frame,
+        keyframe: bool = True,
+        timestamp=None,
+        packet=None,
+        audio: bool = False,
+    ) -> None: ...
     def _setup(self, quality) -> None: ...
     def _timestamp(self, request): ...
     def _handle_audio_packet(self, audio_packet) -> None: ...

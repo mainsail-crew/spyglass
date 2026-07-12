@@ -1,5 +1,6 @@
-from .output import Output as Output
 from _typeshed import Incomplete
+
+from .output import Output as Output
 
 class FileOutput(Output):
     dead: bool
@@ -19,7 +20,14 @@ class FileOutput(Output):
     def connectiondead(self): ...
     @connectiondead.setter
     def connectiondead(self, _callback) -> None: ...
-    def outputframe(self, frame, keyframe: bool = True, timestamp=None, packet=None, audio: bool = False) -> None: ...
+    def outputframe(
+        self,
+        frame,
+        keyframe: bool = True,
+        timestamp=None,
+        packet=None,
+        audio: bool = False,
+    ) -> None: ...
     def stop(self) -> None: ...
     def close(self) -> None: ...
     def _write(self, frame, timestamp=None) -> None: ...

@@ -8,6 +8,12 @@ class JpegEncoder(MultiEncoder):
     q: Incomplete
     colour_space: Incomplete
     colour_subsampling: Incomplete
-    def __init__(self, num_threads: int = 4, q=None, colour_space=None, colour_subsampling: str = '420') -> None: ...
+    def __init__(
+        self,
+        num_threads: int = 4,
+        q=None,
+        colour_space=None,
+        colour_subsampling: str = "420",
+    ) -> None: ...
     def encode_func(self, request, name): ...
     def _setup(self, quality) -> None: ...

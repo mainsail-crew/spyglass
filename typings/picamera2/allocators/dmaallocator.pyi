@@ -1,6 +1,13 @@
 from _typeshed import Incomplete
-from picamera2.allocators.allocator import Allocator as Allocator, Sync as Sync
-from picamera2.dma_heap import DMA_BUF_IOCTL_SYNC as DMA_BUF_IOCTL_SYNC, DMA_BUF_SYNC_END as DMA_BUF_SYNC_END, DMA_BUF_SYNC_READ as DMA_BUF_SYNC_READ, DMA_BUF_SYNC_RW as DMA_BUF_SYNC_RW, DMA_BUF_SYNC_START as DMA_BUF_SYNC_START, DmaHeap as DmaHeap, dma_buf_sync as dma_buf_sync
+from picamera2.allocators.allocator import Allocator as Allocator
+from picamera2.allocators.allocator import Sync as Sync
+from picamera2.dma_heap import DMA_BUF_IOCTL_SYNC as DMA_BUF_IOCTL_SYNC
+from picamera2.dma_heap import DMA_BUF_SYNC_END as DMA_BUF_SYNC_END
+from picamera2.dma_heap import DMA_BUF_SYNC_READ as DMA_BUF_SYNC_READ
+from picamera2.dma_heap import DMA_BUF_SYNC_RW as DMA_BUF_SYNC_RW
+from picamera2.dma_heap import DMA_BUF_SYNC_START as DMA_BUF_SYNC_START
+from picamera2.dma_heap import DmaHeap as DmaHeap
+from picamera2.dma_heap import dma_buf_sync as dma_buf_sync
 
 _log: Incomplete
 
@@ -26,5 +33,7 @@ class DmaAllocator(Allocator):
         __write: Incomplete
         def __init__(self, allocator, fb, write) -> None: ...
         def __enter__(self): ...
-        def __exit__(self, exc_type=None, exc_value=None, exc_traceback=None) -> None: ...
+        def __exit__(
+            self, exc_type=None, exc_value=None, exc_traceback=None
+        ) -> None: ...
         def get_buffer(self): ...

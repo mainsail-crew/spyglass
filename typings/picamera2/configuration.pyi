@@ -1,5 +1,6 @@
-from .controls import Controls as Controls
 from _typeshed import Incomplete
+
+from .controls import Controls as Controls
 
 class Configuration:
     def __init__(self, d={}) -> None: ...

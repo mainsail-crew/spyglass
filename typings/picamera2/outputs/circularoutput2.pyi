@@ -1,5 +1,6 @@
-from .output import Output as Output
 from _typeshed import Incomplete
+
+from .output import Output as Output
 
 class CircularOutput2(Output):
     _lock: Incomplete
@@ -17,7 +18,14 @@ class CircularOutput2(Output):
     def open_output(self, output) -> None: ...
     def close_output(self) -> None: ...
     def _flush(self, timestamp_now, output) -> None: ...
-    def outputframe(self, frame, keyframe: bool = True, timestamp=None, packet=None, audio: bool = False) -> None: ...
+    def outputframe(
+        self,
+        frame,
+        keyframe: bool = True,
+        timestamp=None,
+        packet=None,
+        audio: bool = False,
+    ) -> None: ...
     recording: bool
     def start(self) -> None: ...
     def stop(self) -> None: ...

@@ -71,7 +71,6 @@ jobs:
 
   build:
     name: Build wheel and .deb
-    needs: [lint-check, test-check]
     uses: ./.github/workflows/build.yml
     with:
       branch: ${{ github.ref }}

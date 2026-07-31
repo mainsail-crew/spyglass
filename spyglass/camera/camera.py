@@ -60,11 +60,14 @@ class Camera(ABC):
         autofocus: libcamera.controls.AfModeEnum,
         lens_position: float,
         autofocus_speed: libcamera.controls.AfSpeedEnum,
-        control_list: list[list[str]] = [],
+        control_list: list[list[str]] | None = None,
         upsidedown: bool = False,
         flip_horizontal: bool = False,
         flip_vertical: bool = False,
     ) -> None:
+        if control_list is None:
+            control_list = []
+
         controls = self.create_controls(fps, autofocus, lens_position, autofocus_speed)
         c = process_controls(self.picam2, [(ctrl[0], ctrl[1]) for ctrl in control_list])
         controls.update(c)

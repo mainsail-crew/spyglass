@@ -68,13 +68,13 @@ def get_style() -> str:
 def process_controls(
     camera: Picamera2, controls: list[tuple[str, str]]
 ) -> dict[str, Any]:
-    controls_dict_lower = {k.lower(): k for k in camera.camera_controls.keys()}
+    controls_dict_lower = {k.lower(): k for k in camera.camera_controls}
     if controls is None:
         return {}
     processed_controls = {}
     for key, value in controls:
         key = key.lower().strip()
-        if key.lower() in controls_dict_lower.keys():
+        if key.lower() in controls_dict_lower:
             value = value.lower().strip()
             k = controls_dict_lower[key]
             v = parse_from_string(value)

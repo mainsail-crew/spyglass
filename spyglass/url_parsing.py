@@ -20,10 +20,10 @@ def check_paths_match(
     inc_paths = list(filter(None, inc_paths))
 
     # Determine if match
-    if match_full_path and len(exp_paths) == len(inc_paths):
-        return all([exp == inc for exp, inc in zip(exp_paths, inc_paths)])
-    elif not match_full_path and len(exp_paths) <= len(inc_paths):
-        return all([exp == inc for exp, inc in zip(exp_paths, inc_paths)])
+    if (match_full_path and len(exp_paths) == len(inc_paths)) or (
+        not match_full_path and len(exp_paths) <= len(inc_paths)
+    ):
+        return all(exp == inc for exp, inc in zip(exp_paths, inc_paths))
 
     return False
 

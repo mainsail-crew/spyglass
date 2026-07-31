@@ -20,6 +20,12 @@ dependencies = [
 [project.scripts]
 spyglass = "spyglass.cli:main"
 
+[dependency-groups]
+dev = [
+    "ruff~=0.16.0",
+    "basedpyright~=1.39.0"
+]
+
 [tool.setuptools.packages.find]
 where = ["."]
 exclude = ["tests", "tests.*"]
@@ -52,7 +58,8 @@ change_type_map = {"feat" = "Feat", "fix" = "Fix", "chore(deps)" = "Dependency U
 line-length = 88
 
 [tool.ruff.lint]
-extend-select = ["C90", "I", "UP"]
+extend-select = ["C90"]
+ignore = ["PYI"]
 
 [tool.ruff.lint.mccabe]
 max-complexity = 10

@@ -29,7 +29,7 @@ def start_streaming(handler: StreamingHandler) -> None:
                 handler.wfile.write(handler.exif_header)
                 handler.wfile.write(frame[2:])
                 handler.wfile.write(b"\r\n")
-    except Exception as e:
+    except ConnectionError as e:
         logger.warning(
             "Removed streaming client %s: %s", handler.client_address, str(e)
         )
@@ -52,7 +52,7 @@ def send_snapshot(handler: StreamingHandler) -> None:
             send_jpeg_content_headers(handler, frame, len(handler.exif_header) - 2)
             handler.wfile.write(handler.exif_header)
             handler.wfile.write(frame[2:])
-    except Exception as e:
+    except ConnectionError as e:
         logger.warning("Removed client %s: %s", handler.client_address, str(e))
     finally:
         if encoder is not None:

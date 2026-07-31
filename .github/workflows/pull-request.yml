@@ -21,7 +21,7 @@ jobs:
       - name: Install Dependencies
         run: |
           pip install .
-          pip install basedpyright
+          pip install --group dev
 
       - name: Run Basedpyright
         run: basedpyright

@@ -68,7 +68,7 @@ class CSI(camera.Camera):
                 [libcamera.StreamRole.VideoRecording]
             )
             return {str(pf) for pf in libcamera_cfg.at(0).formats.pixel_formats}
-        except Exception as exc:
+        except Exception as exc:  # noqa: BLE001
             logger.warning(
                 "Could not enumerate supported main-stream formats from libcamera "
                 "(%s); using picamera2 default.",
@@ -134,9 +134,9 @@ class CSI(camera.Camera):
     def stop(self) -> None:
         try:
             self.picam2.stop_encoder()
-        except Exception:
+        except Exception:  # noqa: BLE001, S110
             pass
         try:
             self.picam2.stop()
-        except Exception:
+        except Exception:  # noqa: BLE001, S110
             pass

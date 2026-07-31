@@ -52,7 +52,8 @@ change_type_map = {"feat" = "Feat", "fix" = "Fix", "chore(deps)" = "Dependency U
 line-length = 88
 
 [tool.ruff.lint]
-extend-select = ["C90", "I", "UP"]
+extend-select = ["C90"]
+ignore = ["PYI"]
 
 [tool.ruff.lint.mccabe]
 max-complexity = 10

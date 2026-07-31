@@ -21,9 +21,12 @@ mock_libcamera.controls.AfSpeedEnum.Normal = AF_SPEED_ENUM_NORMAL
 mock_libcamera.StreamRole.VideoRecording = object()
 
 
-def _make_picam2(supported_formats=[], enumerate_raises=None):
+def _make_picam2(supported_formats=None, enumerate_raises=None):
     """Build a mocked Picamera2 whose libcamera-level
     ``camera.generate_configuration(...)`` reports the given pixel formats."""
+    if supported_formats is None:
+        supported_formats = []
+
     picam2 = MagicMock()
     picam2.camera_controls = {}
     picam2.create_video_configuration.side_effect = lambda **kw: dict(kw)

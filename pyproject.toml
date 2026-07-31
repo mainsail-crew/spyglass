@@ -20,6 +20,12 @@ dependencies = [
 [project.scripts]
 spyglass = "spyglass.cli:main"
 
+[dependency-groups]
+dev = [
+    "ruff~=0.16.0",
+    "basedpyright~=1.39.0"
+]
+
 [tool.setuptools.packages.find]
 where = ["."]
 exclude = ["tests", "tests.*"]

@@ -22,7 +22,7 @@ spyglass = "spyglass.cli:main"
 
 [dependency-groups]
 dev = [
-    "ruff~=0.16.3",
+    "ruff~=0.16.4",
     "basedpyright~=1.39.10"
 ]
 
